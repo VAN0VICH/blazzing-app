@@ -1,0 +1,33 @@
+{
+	"name": "@blazzing-app/api",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./src/index.ts"
+		}
+	},
+	"license": "MIT",
+	"scripts": {
+		"build": "tsc",
+		"clean": "git clean -xdf .cache .turbo dist node_modules",
+		"dev": "tsc",
+		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
+		"beautify": "biome format src --write",
+		"lint": "biome lint src",
+		"format": "biome format src"
+	},
+	"dependencies": {
+		"@blazzing-app/validators": "workspace:*",
+		"@trpc/server": "^10.45.2",
+		"superjson": "2.2.1",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"@blazzing-app/tsconfig": "workspace:*",
+		"typescript": "^5.5.4"
+	}
+}
