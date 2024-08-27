@@ -1,15 +1,11 @@
 import type { Config } from "drizzle-kit";
-
-if (!process.env.POSTGRES_URL) {
-  throw new Error("Missing POSTGRES_URL");
-}
-
+import { Resource } from "sst";
 
 export default {
-  schema: "./src/**/*.sql.ts",
-  dialect: "postgresql",
-  dbCredentials: {
-		url: process.env.DATABASE_URL,
+	schema: "./src/**/*.sql.ts",
+	dialect: "postgresql",
+	dbCredentials: {
+		url: Resource,
 	},
-  verbose:true,
+	verbose: true,
 } satisfies Config;

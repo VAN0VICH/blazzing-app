@@ -1,48 +1,41 @@
 {
-  "name": "@blazzing-app/ui",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
-  "exports": {
-    ".": {
-      "types": "./dist/src/index.d.ts",
-      "default": "./src/index.ts"
-    },
-    "./*": {
-      "types": "./dist/src/*.d.ts",
-      "default": [
-        "./src/*.ts",
-        "./src/*.tsx"
-      ]
-    }
-  },
-  "license": "MIT",
-  "scripts": {
-    "build": "tsc",
-    "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "dev": "tsc",
-    "typecheck": "tsc --noEmit --emitDeclarationOnly false",
-    "beautify": "biome format ./src --write",
+	"name": "@blazzing-app/ui",
+	"private": true,
+	"version": "0.1.0",
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts",
+		"./*": "./src/*.tsx"
+	},
+	"license": "MIT",
+	"scripts": {
+		"build": "tsc",
+		"clean": "git clean -xdf .cache .turbo dist node_modules",
+		"dev": "tsc",
+		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
+		"beautify": "biome format ./src --write",
 		"lint": "biome lint src",
 		"format": "biome format ./src"
-  },
-  "dependencies": {
-    "@hookform/resolvers": "^3.9.0",
-    "class-variance-authority": "^0.7.0",
-    "react-hook-form": "^7.52.2",
-    "sonner": "^1.5.0",
-    "tailwind-merge": "^2.5.2"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.8.3",
-    "@blazzing-app/tsconfig": "workspace:*",
-    "@types/react": "^18.3.4",
-    "react": "^18.3.1",
-    "typescript": "^5.5.4",
-    "zod": "^3.23.8"
-  },
-  "peerDependencies": {
-    "react": "^18.3.1",
-    "zod": "^3.23.8"
-  }
+	},
+	"dependencies": {
+		"@hookform/resolvers": "^3.9.0",
+		"class-variance-authority": "^0.7.0",
+		"input-otp": "^1.2.4",
+		"lucide-react": "^0.436.0",
+		"react-hook-form": "^7.52.2",
+		"sonner": "^1.5.0",
+		"tailwind-merge": "^2.5.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"@blazzing-app/tsconfig": "workspace:*",
+		"@types/react": "^18.3.4",
+		"react": "^18.3.1",
+		"zod": "^3.23.8",
+		"typescript": "^5.5.4"
+	},
+	"peerDependencies": {
+		"react": "^18.3.1",
+		"zod": "^3.23.8"
+	}
 }

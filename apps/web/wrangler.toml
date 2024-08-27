@@ -1,0 +1,4 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "blazzing-app"
+pages_build_output_dir = "./build/client"
+

@@ -1,0 +1,16 @@
+{
+	"extends": "@blazzing-app/tsconfig/base.json",
+	"include": ["."],
+	"compilerOptions": {
+		"lib": ["DOM", "DOM.Iterable", "ES2022"],
+		"types": ["@remix-run/cloudflare", "vite/client"],
+		"baseUrl": ".",
+		"paths": {
+			"~/*": ["./app/*"]
+		},
+
+		// Vite takes care of building everything, not tsc.
+		"noEmit": true
+	},
+	"exclude": ["node_modules", "build"]
+}

@@ -9,13 +9,13 @@
 		"build": "turbo run build",
 		"clean": "git clean -xdf node_modules",
 		"clean:workspaces": "turbo run clean",
+		"sst:dev": "sst dev",
 		"db:push": "turbo -F @blazzing-app/db push",
 		"db:studio": "turbo -F @blazzing-app/db studio",
 		"dev": "turbo watch dev",
 		"dev:next": "turbo watch dev -F @blazzing-app/nextjs...",
 		"format": "turbo run format",
 		"beautify": "turbo run beautify",
-
 		"format:fix": "turbo run format --continue -- --write --cache --cache-location .cache/.biomecache",
 		"lint": "turbo run lint ",
 		"lint:fix": "turbo run lint --continue -- --fix --cache --cache-location .cache/.biomecache",
@@ -28,5 +28,8 @@
 		"@turbo/gen": "^2.0.13",
 		"turbo": "^2.0.13",
 		"typescript": "^5.5.4"
+	},
+	"dependencies": {
+		"sst": "^3.0.70"
 	}
 }

@@ -1,5 +1,5 @@
 {
-	"name": "@blazzing-app/api",
+	"name": "@blazzing-app/functions",
 	"version": "0.1.0",
 	"private": true,
 	"type": "module",
@@ -21,8 +21,8 @@
 	},
 	"dependencies": {
 		"@blazzing-app/validators": "workspace:*",
-		"@trpc/server": "^10.45.2",
-		"superjson": "2.2.1",
+		"@hono/zod-openapi": "^0.16.0",
+		"hono": "^4.5.9",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
