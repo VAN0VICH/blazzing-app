@@ -9,7 +9,6 @@
 	},
 	"license": "MIT",
 	"scripts": {
-		"build": "tsc",
 		"clean": "git clean -xdf .cache .turbo dist node_modules",
 		"dev": "tsc",
 		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
@@ -19,19 +18,21 @@
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.9.0",
+		"@radix-ui/react-icons": "^1.3.0",
 		"class-variance-authority": "^0.7.0",
 		"input-otp": "^1.2.4",
 		"lucide-react": "^0.436.0",
 		"react-hook-form": "^7.52.2",
 		"sonner": "^1.5.0",
-		"tailwind-merge": "^2.5.2"
+		"tailwind-merge": "^2.5.2",
+		"vaul": "^0.9.1",
+		"react": "^18.3.1",
+		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@blazzing-app/tsconfig": "workspace:*",
 		"@types/react": "^18.3.4",
-		"react": "^18.3.1",
-		"zod": "^3.23.8",
 		"typescript": "^5.5.4"
 	},
 	"peerDependencies": {

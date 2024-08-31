@@ -35,3 +35,6 @@ export function isMacOs() {
 export const isTouchDevice = () => {
 	return "ontouchstart" in window || navigator.maxTouchPoints > 0;
 };
+
+export const capitalize = (str: string | undefined) =>
+	str ? str.charAt(0).toUpperCase() + str.slice(1) : "";

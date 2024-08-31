@@ -5,11 +5,9 @@ export const noSidebarPaths = new Set([
 	"/onboarding",
 ]);
 
-export const noHeaderPaths = new Set([
-	"/dashboard",
-	"/onboarding",
-	"/login",
-	"/verify",
-]);
+export const noHeaderPaths = (pathname: string) => {
+	const paths = ["/dashboard", "/onboarding", "/login", "/verify", "/settings"];
+	return paths.some((path) => pathname.startsWith(path));
+};
 
 export const footerPaths = new Set(["/"]);

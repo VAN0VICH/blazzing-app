@@ -1,15 +1,13 @@
+import {
+	InputOTP,
+	InputOTPGroup,
+	InputOTPSlot,
+	REGEXP_ONLY_DIGITS_AND_CHARS,
+} from "@blazzing-app/ui/input-otp";
 import { LoadingSpinner } from "@blazzing-app/ui/loading";
 import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { getZodConstraint } from "@conform-to/zod";
-import {
-	Box,
-	Button,
-	Flex,
-	Grid,
-	Heading,
-	Text,
-	TextField,
-} from "@radix-ui/themes";
+import { Button, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import { Form } from "@remix-run/react";
 import { z } from "zod";
 import { useIsPending } from "~/hooks/use-is-pending";
@@ -28,7 +26,12 @@ function Verify() {
 	});
 
 	return (
-		<Flex align="center" justify="center">
+		<Flex
+			align={{ initial: "start", md: "center" }}
+			pt={{ initial: "9", md: "0" }}
+			justify="center"
+			height="100vh"
+		>
 			<Grid gap="4">
 				<Heading align="center" size="8" className="font-freeman">
 					Enter code
@@ -38,20 +41,39 @@ function Verify() {
 				</Text>
 				<Form method="POST" {...getFormProps(form)}>
 					<Flex direction="column" justify="center" gap="4" align="center">
-						<Box maxWidth="400px" width={{ initial: "100%", xs: "400px" }}>
-							<TextField.Root
-								size="3"
-								className="w-full"
-								placeholder="Enter code"
+						<Flex
+							justify="center"
+							maxWidth="400px"
+							width={{ initial: "100%", xs: "400px" }}
+						>
+							<InputOTP
+								maxLength={6}
+								pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+								className="bg-component border border-border"
+								disabled={isPending}
+								autoFocus
 								{...getInputProps(fields.otp, { type: "text" })}
-							/>
-						</Box>
+							>
+								<InputOTPGroup>
+									<InputOTPSlot index={0} />
+									<InputOTPSlot index={1} />
+									<InputOTPSlot index={2} />
+									<InputOTPSlot index={3} />
+									<InputOTPSlot index={4} />
+									<InputOTPSlot index={5} />
+								</InputOTPGroup>
+							</InputOTP>
+						</Flex>
 
 						{fields.otp.errors && (
 							<p className="px-1 text-sm text-red-9">{fields.otp.errors[0]}</p>
 						)}
 
-						<Box maxWidth="400px" width={{ initial: "100%", xs: "400px" }}>
+						<Flex
+							justify="center"
+							maxWidth="400px"
+							width={{ initial: "100%", xs: "400px" }}
+						>
 							<Button
 								variant="classic"
 								type="submit"
@@ -62,7 +84,7 @@ function Verify() {
 								{isPending && <LoadingSpinner className="text-white size-4" />}
 								Submit
 							</Button>
-						</Box>
+						</Flex>
 					</Flex>
 				</Form>
 			</Grid>

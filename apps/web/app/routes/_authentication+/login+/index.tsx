@@ -48,7 +48,12 @@ const Login = () => {
 	const isGoogleSubmitting = fetcher.state === "submitting";
 
 	return (
-		<Flex align="center" justify="center" className="py-20 lg:py-0">
+		<Flex
+			height="100vh"
+			justify="center"
+			align={{ initial: "start", md: "center" }}
+			pt={{ initial: "9", md: "0" }}
+		>
 			<Grid gap="4">
 				<Heading size="8" align="center" className="font-freeman pb-4">
 					Welcome to{" "}

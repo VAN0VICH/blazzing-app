@@ -11,28 +11,28 @@ import {
 	ScrollRestoration,
 	useLoaderData,
 } from "@remix-run/react";
-import {} from "@blazzing-app/ui";
 import { GeneralErrorBoundary } from "./components/error-boundary";
-import { Toploader } from "./components/top-loader";
 import { Header } from "./components/layout/header";
+import { Toploader } from "./components/top-loader";
 // import { MobileSidebar, Sidebar } from "./components/layout/sidebar";
+import { Toaster } from "@blazzing-app/ui/toaster";
+import { Theme } from "@radix-ui/themes";
+import "@radix-ui/themes/styles.css";
+import "./tailwind.css";
+import { MobileSidebar, Sidebar } from "./components/layout/sidebar";
 import { ClientHintCheck, getHints } from "./hooks/use-hints";
 import { useNonce } from "./hooks/use-nonce";
 import { useTheme } from "./hooks/use-theme";
 import { prefs, userContext } from "./sessions.server";
 import sonnerStyles from "./sonner.css?url";
-import stylesheet from "./tailwind.css?url";
 import { getDomainUrl } from "./utils/helpers";
+import type { AccentColor, Theme as ThemeType } from "./validators/state";
 import vaulStyles from "./vaul.css?url";
-import "@radix-ui/themes/styles.css";
-import type { Theme as ThemeType } from "./validators/state";
-import { Toaster } from "@blazzing-app/ui/toaster";
-import { Theme } from "@radix-ui/themes";
+import { useAccentColor } from "./hooks/use-accent-color";
 export const links: LinksFunction = () => {
 	return [
 		// Preload svg sprite as a resource to avoid render blocking
 		//TODO: ADD ICON
-		{ rel: "stylesheet", href: stylesheet },
 		{ rel: "stylesheet", href: sonnerStyles },
 		{ rel: "stylesheet", href: vaulStyles },
 	].filter(Boolean);
@@ -46,6 +46,7 @@ export type RootLoaderData = {
 		userPrefs: {
 			theme?: ThemeType;
 			sidebarState?: string;
+			accentColor?: AccentColor;
 		};
 		userContext: {
 			cartID?: string;
@@ -67,6 +68,7 @@ export const loader: LoaderFunction = async (args) => {
 			userPrefs: {
 				theme: prefsCookie.theme,
 				sidebarState: prefsCookie.sidebarState,
+				accentColor: prefsCookie.accentColor,
 			},
 			userContext: {
 				cartID: userContextCookie.cartID,
@@ -79,18 +81,26 @@ function App() {
 	const data = useLoaderData<RootLoaderData>();
 	const nonce = useNonce();
 	const theme = useTheme();
+	const accentColor = useAccentColor();
 
 	return (
-		<Theme accentColor="ruby" grayColor="mauve" appearance={theme}>
-			<Document nonce={nonce} env={data.ENV}>
+		<Document nonce={nonce} env={data.ENV} theme={theme}>
+			<Theme
+				accentColor={accentColor}
+				grayColor="mauve"
+				radius="medium"
+				className="h-full w-full"
+				panelBackground="solid"
+				appearance={theme}
+			>
 				<Toploader />
-				{/* <Sidebar /> */}
-				{/* <MobileSidebar /> */}
+				<Sidebar />
+				<MobileSidebar />
 				<Header />
 				<Outlet />
 				<Toaster />
-			</Document>
-		</Theme>
+			</Theme>
+		</Document>
 	);
 }
 
@@ -101,17 +111,19 @@ function Document({
 	nonce,
 	env = {},
 	allowIndexing = true,
+	theme,
 }: {
 	children: React.ReactNode;
 	nonce: string;
 	env?: Record<string, string>;
 	allowIndexing?: boolean;
+	theme: ThemeType;
 }) {
 	return (
-		<html lang="en">
+		<html lang="en" className={`${theme} `}>
 			<head>
 				<ClientHintCheck nonce={nonce} />
-				<link rel="icon" href="/assets/Logo.png" type="image/png" />
+				{/* <link rel="icon" href="/assets/Logo.png" type="image/png" /> */}
 				<meta charSet="utf-8" />
 				<meta name="viewport" content="width=device-width, initial-scale=1" />
 				{allowIndexing ? null : (
@@ -120,6 +132,7 @@ function Document({
 				<Meta />
 				<Links />
 			</head>
+
 			<body className="font-body bg-background min-w-[280px]">
 				{children}
 				<ScrollRestoration nonce={nonce} />
@@ -137,6 +150,7 @@ function Document({
 export function ErrorBoundary() {
 	// the nonce doesn't rely on the loader so we can access that
 	const nonce = useNonce();
+	const theme = useTheme();
 
 	// NOTE: you cannot use useLoaderData in an ErrorBoundary because the loader
 	// likely failed to run so we have to do the best we can.
@@ -147,7 +161,7 @@ export function ErrorBoundary() {
 	// to give the user a better UX.
 
 	return (
-		<Document nonce={nonce}>
+		<Document nonce={nonce} theme={theme}>
 			<GeneralErrorBoundary />
 		</Document>
 	);
