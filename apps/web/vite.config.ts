@@ -8,7 +8,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
 	plugins: [
-		remixCloudflareDevProxy(),
+		remixCloudflareDevProxy({}),
 		remix({
 			future: {
 				v3_fetcherPersist: true,

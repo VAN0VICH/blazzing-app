@@ -3,6 +3,7 @@ import { Card } from "@blazzing-app/ui/card";
 import { Icons, strokeWidth } from "@blazzing-app/ui/icons";
 import { Box, Dialog, Flex, Heading, IconButton, Kbd } from "@radix-ui/themes";
 import { Link, useFetcher, useLocation } from "@remix-run/react";
+import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useAccentColor } from "~/hooks/use-accent-color";
 import { useSidebarState } from "~/hooks/use-sidebar";
@@ -117,7 +118,7 @@ const Sidebar = () => {
 									to={item.href}
 									key={item.title}
 									className={cn(
-										"group/link flex size-10 w-full items-center gap-3 rounded-[10px] pl-2 hover:bg-mauve-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-brand-7",
+										"group/link flex size-10 w-full items-center gap-3 rounded-[7px] pl-2 hover:bg-mauve-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
 									)}
 									prefetch="viewport"
 								>
@@ -176,56 +177,20 @@ const MobileSidebar = () => {
 		</Flex>
 	);
 };
-// const DialogSidebar = () => {
-// 	return (
-// 		<DropdownMenu.Root>
-// 			<DropdownMenu.Trigger>
-// 				<Button variant="soft">
-// 					Options
-// 					<DropdownMenu.TriggerIcon />
-// 				</Button>
-// 			</DropdownMenu.Trigger>
-// 			<DropdownMenu.Content>
-// 				<DropdownMenu.Item shortcut="⌘ E">Edit</DropdownMenu.Item>
-// 				<DropdownMenu.Item shortcut="⌘ D">Duplicate</DropdownMenu.Item>
-// 				<DropdownMenu.Separator />
-// 				<DropdownMenu.Item shortcut="⌘ N">Archive</DropdownMenu.Item>
-
-// 				<DropdownMenu.Sub>
-// 					<DropdownMenu.SubTrigger>More</DropdownMenu.SubTrigger>
-// 					<DropdownMenu.SubContent>
-// 						<DropdownMenu.Item>Move to project…</DropdownMenu.Item>
-// 						<DropdownMenu.Item>Move to folder…</DropdownMenu.Item>
-
-// 						<DropdownMenu.Separator />
-// 						<DropdownMenu.Item>Advanced options…</DropdownMenu.Item>
-// 					</DropdownMenu.SubContent>
-// 				</DropdownMenu.Sub>
-
-// 				<DropdownMenu.Separator />
-// 				<DropdownMenu.Item>Share</DropdownMenu.Item>
-// 				<DropdownMenu.Item>Add to favorites</DropdownMenu.Item>
-// 				<DropdownMenu.Separator />
-// 				<DropdownMenu.Item shortcut="⌘ ⌫" color="red">
-// 					Delete
-// 				</DropdownMenu.Item>
-// 			</DropdownMenu.Content>
-// 		</DropdownMenu.Root>
-// 	);
-// };
 export const DialogSidebar = () => {
 	const location = useLocation();
 	const splitPath = location.pathname.split("/");
 	const mainPath = splitPath[1];
+	const [opened, setOpened] = React.useState(false);
 	return (
-		<Dialog.Root>
+		<Dialog.Root open={opened} onOpenChange={setOpened}>
 			<Dialog.Trigger className="flex justify-center items-center">
 				<IconButton variant="ghost">
 					<Icons.Menu />
 				</IconButton>
 			</Dialog.Trigger>
 
-			<Dialog.Content maxWidth="450px" className="p-3">
+			<Dialog.Content maxWidth="450px" className="p-3 backdrop-blur-sm">
 				<Flex direction="column" justify="center" align="center" gap="1">
 					{items.map((item) => {
 						const Icon = Icons[item.icon ?? "chevronLeft"];
@@ -236,9 +201,10 @@ export const DialogSidebar = () => {
 								to={item.href}
 								key={item.title}
 								className={cn(
-									"group/link flex h-14 w-full items-center gap-3 rounded-[10px] hover:bg-mauve-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-brand-7",
+									"group/link flex h-14 w-full items-center gap-3 rounded-[10px] hover:bg-mauve-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
 								)}
 								prefetch="viewport"
+								onClick={() => setOpened(false)}
 							>
 								<Flex justify="end" width="40px" align="center">
 									<Icon
