@@ -14,12 +14,10 @@
 		"format": "biome format src",
 		"lint": "biome lint src",
 		"beautify": "biome format ./src --write",
-		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
-		"db": "sst shell drizzle-kit",
-		"db:push": "sst shell drizzle-kit push",
-		"db:studio": "sst shell drizzle-kit studio"
+		"typecheck": "tsc --noEmit --emitDeclarationOnly false"
 	},
 	"dependencies": {
+		"@neondatabase/serverless": "^0.9.4",
 		"drizzle-orm": "^0.33.0",
 		"drizzle-zod": "^0.5.1",
 		"sst": "^3.0.70",

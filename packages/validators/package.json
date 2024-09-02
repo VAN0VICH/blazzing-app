@@ -5,7 +5,9 @@
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
-		"./*": "./src/*.tsx"
+		"./client": "./src/client/entities.ts",
+		"./server": "./src/server/entities.ts",
+		"./api/": "./src/api/"
 	},
 	"license": "MIT",
 	"scripts": {
@@ -21,6 +23,7 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
+		"@blazzing-app/db": "workspace:*",
 		"@blazzing-app/tsconfig": "workspace:*",
 		"typescript": "^5.5.4"
 	}

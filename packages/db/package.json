@@ -1,0 +1,42 @@
+{
+	"name": "@blazzing-app/db",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"main": "src/index.ts",
+	"types": "src/index.ts",
+	"license": "MIT",
+	"exports": {
+		".": "./src/index.ts",
+		"./*": "./src/*.tsx"
+	},
+	"scripts": {
+		"clean": "rm -rf .turbo node_modules",
+		"lint": "biome lint src",
+		"beautify": "biome format ./src --write",
+		"format": "biome format ./src",
+		"migrate": "tsx src/migrate.ts",
+		"typecheck": "tsc --noEmit",
+		"db": "sst shell drizzle-kit",
+		"db:push": "sst shell drizzle-kit push",
+		"db:studio": "sst shell drizzle-kit studio",
+		"db:generate": "sst shell drizzle-kit generate:pg"
+	},
+	"dependencies": {
+		"@effect/schema": "^0.70.4",
+		"@neondatabase/serverless": "^0.9.4",
+		"drizzle-orm": "^0.33.0",
+		"drizzle-zod": "^0.5.1",
+		"pg": "^8.11.5",
+		"replicache": "14.2.2",
+		"sst": "^3.0.70",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"@blazzing-app/tsconfig": "workspace:^0.1.0",
+		"drizzle-kit": "^0.24.0",
+		"tsx": "^4.7.2",
+		"typescript": "^5.5.4"
+	}
+}

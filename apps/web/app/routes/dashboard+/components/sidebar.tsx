@@ -197,7 +197,7 @@ const StoreInfo = () => {
 	return (
 		<Box my="2">
 			<Select.Root defaultValue="apple">
-				<Select.Trigger className="w-full  h-12 px-2">
+				<Select.Trigger className="w-full  h-12 px-2 rounded-[7px]">
 					<Flex align="center" gap="2">
 						<Avatar fallback="F" className="size-9" />
 						<Heading size="1">Hello world</Heading>

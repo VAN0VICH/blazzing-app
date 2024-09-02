@@ -29,7 +29,7 @@ const DashboardNavbar = () => {
 			top="0"
 			width="100%"
 			height="55px"
-			className="bg-component border-b border-border"
+			className="border-b border-border"
 		>
 			<Flex align="center" className="flex-1">
 				<IconButton
