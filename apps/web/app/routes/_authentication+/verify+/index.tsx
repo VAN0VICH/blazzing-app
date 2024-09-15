@@ -33,7 +33,7 @@ function Verify() {
 			height="100vh"
 		>
 			<Grid gap="4">
-				<Heading align="center" size="8" className="font-freeman">
+				<Heading align="center" size="8" className="  ">
 					Enter code
 				</Heading>
 				<Text size="4" as="p" color="gray" align="center">

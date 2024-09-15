@@ -15,7 +15,6 @@
 @import '@radix-ui/colors/orange.css';
 @import '@radix-ui/colors/pink.css';
 @import '@radix-ui/colors/violet.css';
-@import '@radix-ui/colors/mauve.css';
 
 /* Dark theme colors */
 @import '@radix-ui/colors/ruby-dark.css';
@@ -31,7 +30,6 @@
 @import '@radix-ui/colors/orange-dark.css';
 @import '@radix-ui/colors/pink-dark.css';
 @import '@radix-ui/colors/violet-dark.css';
-@import '@radix-ui/colors/mauve-dark.css';
 
 @tailwind base;
 @tailwind components;
@@ -42,7 +40,7 @@
     :root {
       --background:#faf9fb;
       --color-panel-solid:#faf9fb;
-      --component: rgba(255, 255, 255, 0.766);
+      --component: rgb(255, 255, 255);
       --border: #e3dfe6;
       --ring: #e592a3;
       --foreground: 240 10% 3.9%;
@@ -77,8 +75,8 @@
       --background:#1a191b;
 
       --color-panel-solid:#1a191b;
-      --component: #28282db3;
-      --border: #49474e;
+      --component: #2e2e35;
+      --border: #444249;
       --ring: #b3445a;
       --foreground: 0 0% 98%;
 
@@ -109,7 +107,7 @@
   }
   
   .radix-themes {
-    --color-panel-solid:var(--component)
+    --color-panel-solid:var(--component);
   }
   @layer base {
     * {

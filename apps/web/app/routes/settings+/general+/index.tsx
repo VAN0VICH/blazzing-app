@@ -1,9 +1,9 @@
 import { Icons } from "@blazzing-app/ui/icons";
-import { Card } from "@blazzing-app/ui/card";
 import {
 	Avatar,
 	Box,
 	Button,
+	Card,
 	Container,
 	Flex,
 	Grid,
@@ -22,12 +22,12 @@ export default function General() {
 					width={{ initial: "25%", md: "100%" }}
 					my={{ initial: "4", xs: "0" }}
 				>
-					<Heading as="h2" size="6" className="font-freeman" color="gray">
+					<Heading as="h2" size="4" className="text-accent-11">
 						Details
 					</Heading>
 				</Box>
 				<Box width="100%">
-					<Card>
+					<Card className="p-0">
 						<Flex p="4" gap="2" className="border-b border-border">
 							<Avatar size="2" fallback="A" src={undefined} />
 							<Button size="2" variant="classic">
@@ -37,12 +37,12 @@ export default function General() {
 						<Box p="4" className="border-b border-border">
 							<Flex gap="4" pb="2">
 								<Grid gap="2">
-									<label>First name</label>
-									<TextField.Root />
+									<Text>First name</Text>
+									<TextField.Root variant="classic" />
 								</Grid>
 								<Grid gap="2">
-									<label>First name</label>
-									<TextField.Root />
+									<Text>First name</Text>
+									<TextField.Root variant="classic" />
 								</Grid>
 							</Flex>
 							<Text size="2" as="p" color="gray" className="py-2">
@@ -53,18 +53,18 @@ export default function General() {
 						<Box p="4" className="border-b border-border">
 							<Flex justify="between" align="center">
 								<Grid gap="2">
-									<label>Email</label>
+									<Text>Email</Text>
 									<Text>{"opachimari@gmail.com"}</Text>
 								</Grid>
 								<Grid gap="2">
-									<label>Verified</label>
+									<Text>Verified</Text>
 									<Flex justify="center" align="start">
 										<Icons.CircleCheck className="text-green-9" />
 									</Flex>
 								</Grid>
 								<Grid gap="2">
 									<IconButton size="2" variant={"ghost"} color="gray">
-										<Icons.Edit className="size-5 text-slate-10" />
+										<Icons.Edit className="size-5 text- gray-10" />
 									</IconButton>
 								</Grid>
 							</Flex>
@@ -72,12 +72,12 @@ export default function General() {
 						<Box p="4">
 							<Flex align="center" justify="between">
 								<Grid gap="2">
-									<label>{"Phone number (optional)"} </label>
+									<Text>{"Phone number (optional)"} </Text>
 									<Text>{"No phone number"}</Text>
 								</Grid>
 								<Grid gap="2">
 									<IconButton size="2" variant={"ghost"} color="gray">
-										<Icons.Edit className="size-5 text-slate-10" />
+										<Icons.Edit className="size-5 text- gray-10" />
 									</IconButton>
 								</Grid>
 							</Flex>
@@ -95,7 +95,7 @@ export default function General() {
 					width={{ initial: "25%", md: "100%" }}
 					my={{ initial: "4", xs: "0" }}
 				>
-					<Heading as="h2" size="6" className="font-freeman" color="gray">
+					<Heading as="h2" size="4" className="text-accent-11">
 						Stores
 					</Heading>
 				</Box>
@@ -111,7 +111,7 @@ export default function General() {
 					width={{ initial: "25%", md: "100%" }}
 					my={{ initial: "4", xs: "0" }}
 				>
-					<Heading as="h2" size="6" className="font-freeman" color="gray">
+					<Heading as="h2" size="4" className="text-accent-11">
 						Language
 					</Heading>
 				</Box>
@@ -119,7 +119,7 @@ export default function General() {
 					<Card className="p-0">
 						<Box className="border-b border-border" p="4">
 							<Grid gap="2">
-								<label>Language</label>
+								<Text>Language</Text>
 								<Select.Root defaultValue="apple">
 									<Select.Trigger />
 									<Select.Content className="backdrop-blur-sm">
@@ -163,7 +163,7 @@ export default function General() {
 					width={{ initial: "25%", md: "100%" }}
 					my={{ initial: "4", xs: "0" }}
 				>
-					<Heading as="h2" size="6" className="font-freeman" color="gray">
+					<Heading as="h2" size="4" className="text-accent-11">
 						Timezone
 					</Heading>
 				</Box>
@@ -171,7 +171,7 @@ export default function General() {
 					<Card className="p-0">
 						<Box className="border-b border-border" p="4">
 							<Grid gap="2">
-								<label>Timezone</label>
+								<Text>Timezone</Text>
 
 								<Select.Root defaultValue="apple">
 									<Select.Trigger />

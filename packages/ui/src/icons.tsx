@@ -69,11 +69,15 @@ import {
 	ShieldHalf,
 	Sparkles,
 	PiggyBank,
+	Gavel,
+	SlidersHorizontal,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
 export const strokeWidth = 1.5;
 export const Icons = {
+	Rocket,
+	Filters: SlidersHorizontal,
 	Search,
 	Store: Store,
 	Product: PackageOpen,
@@ -145,6 +149,7 @@ export const Icons = {
 	Security: ShieldHalf,
 	Sparkles,
 	Auction: PiggyBank,
+	Gavel,
 	UPC: (props: LucideProps) => (
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" {...props}>
 			<g clipPath="url(#a)">

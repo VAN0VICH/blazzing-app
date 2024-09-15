@@ -53,7 +53,7 @@ const ProfileDropdown = () => {
 					return (
 						<Link key={item.href} to={item.href} prefetch="intent">
 							<DropdownMenu.Item
-								className="h-10 px-2 rounded-[6px] dark:hover:bg-mauve-5 hover:bg-mauve-3 hover:text-accent-9"
+								className="h-10 px-2  hover:bg-gray-3 hover:text-accent-11"
 								shortcut={item.shortcut}
 							>
 								<Icon size={16} /> {item.name}
@@ -63,7 +63,7 @@ const ProfileDropdown = () => {
 				})}
 				<DropdownMenu.Separator className="m-1" />
 				<DropdownMenu.Item
-					className="h-10 rounded-[6px] dark:hover:bg-mauve-5 hover:bg-mauve-3 hover:text-red-9"
+					className="h-10 hover:bg-red-3 hover:text-red-9"
 					color="red"
 				>
 					<Icons.Logout size={16} />

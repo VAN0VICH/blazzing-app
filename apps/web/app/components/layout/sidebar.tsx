@@ -1,13 +1,19 @@
 import { cn } from "@blazzing-app/ui";
-import { Card } from "@blazzing-app/ui/card";
 import { Icons, strokeWidth } from "@blazzing-app/ui/icons";
-import { Box, Dialog, Flex, Heading, IconButton, Kbd } from "@radix-ui/themes";
+import {
+	Box,
+	Card,
+	Dialog,
+	Flex,
+	Heading,
+	IconButton,
+	Kbd,
+} from "@radix-ui/themes";
 import { Link, useFetcher, useLocation } from "@remix-run/react";
 import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useAccentColor } from "~/hooks/use-accent-color";
-import { useSidebarState } from "~/hooks/use-sidebar";
-import type { action } from "~/routes/action+/set-sidebar";
+import { useUserPreferences } from "~/hooks/use-user-preferences";
+import type { action } from "~/routes/action+/set-preferences";
 export type SidebarItem = {
 	title: string;
 	href: string;
@@ -27,12 +33,12 @@ const items: SidebarItem[] = [
 		icon: "Marketplace",
 		items: [],
 	},
-	// {
-	// 	title: "Auctions",
-	// 	href: "/auction",
-	// 	icon: "Billing",
-	// 	items: [],
-	// },
+	{
+		title: "Auctions",
+		href: "/auction",
+		icon: "Billing",
+		items: [],
+	},
 
 	{
 		title: "Settings",
@@ -46,17 +52,16 @@ const noSidebarPaths = new Set(["/", "/onboarding", "/login", "/verify"]);
 
 const Sidebar = () => {
 	const fetcher = useFetcher<typeof action>();
-	const mode = useSidebarState();
+	const { sidebarState } = useUserPreferences();
+	const mode = sidebarState ?? "closed";
 	const nextMode = mode === "open" ? "closed" : "open";
-	const accentColor = useAccentColor();
-	console.log("accent color", accentColor);
 	const location = useLocation();
 	useHotkeys(["s"], () => {
 		fetcher.submit(
 			{ sidebarState: nextMode },
 			{
 				method: "post",
-				action: "/action/set-sidebar",
+				action: "/action/set-preferences",
 			},
 		);
 	});
@@ -66,15 +71,15 @@ const Sidebar = () => {
 		<Flex>
 			<nav
 				className={cn(
-					"hidden group top-0 h-full justify-between lg:flex flex-col fixed z-40 w-14 overflow-hidden transition-all duration-200 ease-in-out hover:w-44 p-1 pr-0",
+					"hidden group top-0 h-full  bg-component justify-between lg:flex flex-col fixed z-40 w-14 overflow-hidden transition-all duration-200 ease-in-out hover:w-44",
 					{
 						"w-44": mode === "open",
 						"hidden lg:hidden": noSidebarPaths.has(location.pathname),
-						"bg-component": mainPath === "settings" || mainPath === "dashboard",
+						"bg-gray-3": location.pathname.startsWith("/dashboard"),
 					},
 				)}
 			>
-				<Card className="w-full h-full px-2">
+				<Box className="bg-component border-r border-border w-full h-full px-2 border-t-0 border-b-0 border-l-0 rounded-none">
 					<Flex
 						className={cn(
 							"w-full justify-center pt-2 group-hover:justify-end group-hover:pr-2",
@@ -118,7 +123,7 @@ const Sidebar = () => {
 									to={item.href}
 									key={item.title}
 									className={cn(
-										"group/link flex size-10 w-full items-center gap-3 rounded-[7px] pl-2 hover:bg-mauve-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
+										"group/link flex size-10 w-full items-center gap-3 pl-3 hover:bg-gray-3 rounded-[5px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
 									)}
 									prefetch="viewport"
 								>
@@ -126,19 +131,19 @@ const Sidebar = () => {
 										<Icon
 											className={cn(
 												`/${mainPath}` === item.href
-													? "text-accent-9"
-													: "group-hover/link:text-accent-9",
+													? "text-accent-11"
+													: "group-hover/link:text-accent-11",
 											)}
 											size={20}
 											strokeWidth={strokeWidth}
 										/>
 									</Flex>
 									<Heading
-										size="3"
+										size="2"
 										className={cn(
-											"w-[350px] font-normal font-roboto opacity-0 group-hover/link:text-accent-9 transition-opacity duration-300 ease-in-out lg:group-hover:opacity-100",
+											"w-[350px] font-normal opacity-0 group-hover/link:text-accent-11 transition-opacity duration-300 ease-in-out lg:group-hover:opacity-100",
 
-											`/${mainPath}` === item.href && "text-accent-9",
+											`/${mainPath}` === item.href && "text-accent-11",
 											mode === "open" ? "opacity-100" : "opacity-0",
 										)}
 									>
@@ -149,7 +154,7 @@ const Sidebar = () => {
 						})}
 					</Flex>
 					<Box />
-				</Card>
+				</Box>
 			</nav>
 		</Flex>
 	);
@@ -201,7 +206,7 @@ export const DialogSidebar = () => {
 								to={item.href}
 								key={item.title}
 								className={cn(
-									"group/link flex h-14 w-full items-center gap-3 rounded-[10px] hover:bg-mauve-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
+									"group/link flex h-14 w-full items-center gap-3 hover:bg-gray-3 rounded-[5px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
 								)}
 								prefetch="viewport"
 								onClick={() => setOpened(false)}
@@ -210,8 +215,8 @@ export const DialogSidebar = () => {
 									<Icon
 										className={cn(
 											`/${mainPath}` === item.href
-												? "text-accent-9"
-												: "text-mauve-11 group-hover/link:text-accent-9",
+												? "text-accent-11"
+												: "text- gray-11 group-hover/link:text-accent-11",
 										)}
 										size={20}
 										strokeWidth={strokeWidth}
@@ -220,9 +225,9 @@ export const DialogSidebar = () => {
 								<Heading
 									size="3"
 									className={cn(
-										"font-normal group-hover/link:text-accent-9",
+										"font-normal group-hover/link:text-accent-11",
 
-										`/${mainPath}` === item.href && "text-accent-9",
+										`/${mainPath}` === item.href && "text-accent-11",
 									)}
 								>
 									{item.title}

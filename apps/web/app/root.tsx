@@ -18,17 +18,16 @@ import { Toploader } from "./components/top-loader";
 import { Toaster } from "@blazzing-app/ui/toaster";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
-import "./tailwind.css";
 import { MobileSidebar, Sidebar } from "./components/layout/sidebar";
 import { ClientHintCheck, getHints } from "./hooks/use-hints";
 import { useNonce } from "./hooks/use-nonce";
-import { useTheme } from "./hooks/use-theme";
+import { useUserPreferences } from "./hooks/use-user-preferences";
 import { prefs, userContext } from "./sessions.server";
 import sonnerStyles from "./sonner.css?url";
+import "./tailwind.css";
 import { getDomainUrl } from "./utils/helpers";
-import type { AccentColor, Theme as ThemeType } from "./validators/state";
+import type { Preferences, Theme as ThemeType } from "./validators/state";
 import vaulStyles from "./vaul.css?url";
-import { useAccentColor } from "./hooks/use-accent-color";
 export const links: LinksFunction = () => {
 	return [
 		// Preload svg sprite as a resource to avoid render blocking
@@ -43,11 +42,7 @@ export type RootLoaderData = {
 		hints: ReturnType<typeof getHints>;
 		origin: string;
 		path: string;
-		userPrefs: {
-			theme?: ThemeType;
-			sidebarState?: string;
-			accentColor?: AccentColor;
-		};
+		userPrefs: Preferences;
 		userContext: {
 			cartID?: string;
 		};
@@ -55,12 +50,21 @@ export type RootLoaderData = {
 };
 
 export const loader: LoaderFunction = async (args) => {
-	const { request } = args;
+	const { request, context } = args;
+	const { REPLICACHE_KEY, PARTYKIT_HOST, SERVER_URL, LIVEKIT_SERVER_URL } =
+		context.cloudflare.env;
 
 	const cookieHeader = request.headers.get("Cookie");
 	const prefsCookie = (await prefs.parse(cookieHeader)) || {};
 	const userContextCookie = (await userContext.parse(cookieHeader)) || {};
 	return json({
+		ENV: {
+			REPLICACHE_KEY,
+			PARTYKIT_HOST,
+			SERVER_URL,
+			LIVEKIT_SERVER_URL,
+		},
+
 		requestInfo: {
 			hints: getHints(request),
 			origin: getDomainUrl(request),
@@ -69,6 +73,8 @@ export const loader: LoaderFunction = async (args) => {
 				theme: prefsCookie.theme,
 				sidebarState: prefsCookie.sidebarState,
 				accentColor: prefsCookie.accentColor,
+				scaling: prefsCookie.scaling,
+				grayColor: prefsCookie.grayColor,
 			},
 			userContext: {
 				cartID: userContextCookie.cartID,
@@ -80,18 +86,16 @@ export const loader: LoaderFunction = async (args) => {
 function App() {
 	const data = useLoaderData<RootLoaderData>();
 	const nonce = useNonce();
-	const theme = useTheme();
-	const accentColor = useAccentColor();
-
+	const preferences = useUserPreferences();
 	return (
-		<Document nonce={nonce} env={data.ENV} theme={theme}>
+		<Document nonce={nonce} env={data.ENV} theme={preferences.theme ?? "light"}>
 			<Theme
-				accentColor={accentColor}
-				grayColor="mauve"
+				accentColor={preferences.accentColor ?? "ruby"}
+				grayColor={preferences.grayColor ?? "mauve"}
 				radius="medium"
-				className="h-full w-full"
 				panelBackground="solid"
-				appearance={theme}
+				appearance={preferences.theme ?? "light"}
+				scaling={preferences.scaling ?? "100%"}
 			>
 				<Toploader />
 				<Sidebar />
@@ -120,7 +124,7 @@ function Document({
 	theme: ThemeType;
 }) {
 	return (
-		<html lang="en" className={`${theme} `}>
+		<html lang="en" className={theme}>
 			<head>
 				<ClientHintCheck nonce={nonce} />
 				{/* <link rel="icon" href="/assets/Logo.png" type="image/png" /> */}
@@ -133,7 +137,7 @@ function Document({
 				<Links />
 			</head>
 
-			<body className="font-body bg-background min-w-[280px]">
+			<body className="min-w-[280px]">
 				{children}
 				<ScrollRestoration nonce={nonce} />
 				<script
@@ -150,7 +154,7 @@ function Document({
 export function ErrorBoundary() {
 	// the nonce doesn't rely on the loader so we can access that
 	const nonce = useNonce();
-	const theme = useTheme();
+	const preferences = useUserPreferences();
 
 	// NOTE: you cannot use useLoaderData in an ErrorBoundary because the loader
 	// likely failed to run so we have to do the best we can.
@@ -161,7 +165,7 @@ export function ErrorBoundary() {
 	// to give the user a better UX.
 
 	return (
-		<Document nonce={nonce} theme={theme}>
+		<Document nonce={nonce} theme={preferences.theme ?? "light"}>
 			<GeneralErrorBoundary />
 		</Document>
 	);

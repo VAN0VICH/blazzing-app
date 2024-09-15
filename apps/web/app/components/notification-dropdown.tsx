@@ -22,7 +22,7 @@ const NotificationDropdown = () => {
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
 				<IconButton variant="surface" size="3">
-					<Icons.Notification className="w-5 h-5 text-slate-11" />
+					<Icons.Notification className="w-5 h-5 text-accent-11" />
 					<span className="sr-only">Notifications</span>
 				</IconButton>
 			</DropdownMenu.Trigger>
@@ -36,14 +36,14 @@ const NotificationDropdown = () => {
 							to="#"
 							key={n.id}
 							prefetch="intent"
-							className="hover:bg-mauve-3 dark:bg-mauve-5 p-1 px-2 items-center gap-2 flex height-[60px] rounded-[5px]"
+							className="hover:bg-gray-3 dark:bg- gray-5 p-1 px-2 items-center gap-2 flex height-[60px]"
 						>
 							<Flex
 								align="center"
 								justify="center"
 								width="40px"
 								height="40px"
-								className="bg-accent-7 rounded-[4px]"
+								className="bg-accent-7"
 							>
 								<Icons.User className="text-accent-10" />
 							</Flex>

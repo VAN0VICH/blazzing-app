@@ -16,20 +16,12 @@ export default $config({
 							: "blazzing-development",
 				},
 				cloudflare: true,
-				"pulumi-stripe": true,
 			},
 		};
 	},
 	async run() {
 		$transform(cloudflare.WorkerScript, (script) => {
 			script.logpush = true;
-		});
-		sst.Linkable.wrap(cloudflare.Record, (record) => {
-			return {
-				properties: {
-					url: $interpolate`https://${record.name}`,
-				},
-			};
 		});
 		const outputs = {};
 		for (const value of readdirSync("./infra/")) {

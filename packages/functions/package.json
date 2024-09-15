@@ -4,30 +4,26 @@
 	"private": true,
 	"type": "module",
 	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./src/index.ts"
-		}
+		".": "./src/index.ts",
+		"./*": "./src/*.tsx"
 	},
 	"license": "MIT",
 	"scripts": {
-		"build": "tsc",
-		"clean": "git clean -xdf .cache .turbo dist node_modules",
-		"dev": "tsc",
-		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
-		"beautify": "biome format src --write",
-		"lint": "biome lint src",
-		"format": "biome format src"
+		"dev": "wrangler dev src/index.ts",
+		"deploy": "wrangler deploy --minify src/index.ts"
 	},
 	"dependencies": {
+		"@blazzing-app/core": "workspace:^",
 		"@blazzing-app/validators": "workspace:*",
+		"@cloudflare/workers-types": "^4.20240529.0",
 		"@hono/zod-openapi": "^0.16.0",
-		"hono": "^4.5.9",
+		"hono": "^4.6.1",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@blazzing-app/tsconfig": "workspace:*",
-		"typescript": "^5.5.4"
+		"@cloudflare/workers-types": "^4.20240529.0",
+		"wrangler": "^3.77.0"
 	}
 }

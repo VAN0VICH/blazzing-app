@@ -8,7 +8,6 @@ function Navbar(props: { children: React.ReactNode }) {
 	const isScrolled = useIsWindowScrolled();
 	const location = useLocation();
 	const { requestInfo } = useLoaderData<RootLoaderData>();
-	console.log("location", location.pathname);
 	if (noHeaderPaths(location.pathname)) return null;
 	return (
 		<header
@@ -20,7 +19,7 @@ function Navbar(props: { children: React.ReactNode }) {
 					isScrolled &&
 					"md:ml-[88px] w-4/12",
 				isScrolled
-					? "mt-4 h-14 w-11/12 rounded-[8px] px-6 dark:shadow-mauve-7 border md:h-14 md:w-8/12 lg:w-2/3 "
+					? "mt-4 h-14 w-11/12 px-6 dark:shadow- gray-7 border md:h-14 md:w-8/12 lg:w-2/3 "
 					: "h-16 w-full xl:px-40",
 			)}
 		/>

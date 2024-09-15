@@ -3,7 +3,7 @@ import { Box, Flex, Heading } from "@radix-ui/themes";
 import { Outlet, useLocation } from "@remix-run/react";
 import { SidebarLayoutWrapper } from "~/components/layout/sidebar-wrapper";
 import { capitalize } from "~/utils/helpers";
-import { SettingsSidebar } from "./sidebar";
+import { SettingsSidebar, SettingsSidebarMobile } from "./sidebar";
 
 export default function SettingsLayout() {
 	const location = useLocation();
@@ -13,24 +13,23 @@ export default function SettingsLayout() {
 		<SidebarLayoutWrapper>
 			<SettingsSidebar>
 				<Box
-					className="md:pl-40 bg-background"
+					className="md:pl-40 bg-gray-3"
 					width="100%"
 					pt="55px"
 					position="relative"
 				>
+					<SettingsSidebarMobile />
 					<Flex
 						top="0"
 						position="fixed"
 						width="100%"
-						align="center"
+						px="4"
 						justify="center"
-						className="bg-component backdrop-blur-sm border-b z-50"
+						align="center"
+						className="bg-component backdrop-blur-sm border-b z-40"
 						height="55px"
 					>
-						<Heading
-							size="6"
-							className={"md:pr-60 py-4 font-freeman text-accent-9"}
-						>
+						<Heading size="6" className={"md:pr-60 py-4   text-accent-11"}>
 							{capitalize(lastPathnamePart)}
 						</Heading>
 					</Flex>

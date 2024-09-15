@@ -1,8 +1,21 @@
 import { cn } from "@blazzing-app/ui";
-import { DialogContent, DialogRoot } from "@blazzing-app/ui/dialog-vaul";
+import {
+	DialogContent,
+	DialogRoot,
+	DialogTrigger,
+} from "@blazzing-app/ui/dialog-vaul";
 import { Icons, strokeWidth } from "@blazzing-app/ui/icons";
-import { Avatar, Box, Flex, Heading, Select, Text } from "@radix-ui/themes";
+import {
+	Avatar,
+	Box,
+	Flex,
+	Heading,
+	IconButton,
+	Select,
+	Text,
+} from "@radix-ui/themes";
 import { Link, useLocation } from "@remix-run/react";
+import React from "react";
 import { useWindowSize } from "~/hooks/use-window-size";
 import { useDashboardState } from "~/zustand/state";
 
@@ -51,6 +64,7 @@ interface DashboardSidebarProps {
 const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 	const { pathname } = useLocation();
 	const mainPath = pathname.split("/")[2];
+	console.log("pathname", pathname);
 
 	return (
 		<Flex width="100%" height="100%" position="relative" inset="0">
@@ -63,7 +77,7 @@ const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 				<ul className="justify-center py-2 items-center flex w-full flex-col gap-2">
 					{items.map((item) => {
 						const Icon = Icons[item.icon ?? "chevronLeft"];
-						const Nav = pathname.startsWith(item.href) ? "div" : Link;
+						const Nav = pathname === item.href ? "div" : Link;
 
 						return (
 							<Nav
@@ -71,9 +85,9 @@ const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 								prefetch="viewport"
 								key={item.title}
 								className={cn(
-									"group relative rounded-[6px] flex h-8 w-full items-center gap-3 px-2 cursor-pointer dark:hover:bg-mauve-5 hover:bg-mauve-3 dark:hover:border-mauve-8  focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
+									"group relative flex h-8 w-full rounded-[5px] items-center gap-3 px-2 cursor-pointer hover:bg-gray-4 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
 									{
-										"bg-component border-b border-b-mauve-7 hover:bg-mauve-1 dark:hover:bg-border hover:border-t-mauve-7 border border-border":
+										"bg-component border-b border-gray-7 hover:bg-component dark:hover:bg-border hover:border-t-gray-7 border border-border":
 											mainPath === item.title.toLowerCase(),
 									},
 								)}
@@ -87,8 +101,8 @@ const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 									<Icon
 										className={cn(
 											mainPath === item.title.toLowerCase()
-												? "text-accent-9"
-												: "group-hover:text-accent-9",
+												? "text-accent-11"
+												: "group-hover:text-accent-11",
 										)}
 										size={20}
 										strokeWidth={strokeWidth}
@@ -99,8 +113,8 @@ const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 										"relative text-sm",
 
 										mainPath === item.title.toLowerCase()
-											? "text-accent-9"
-											: "group-hover:text-accent-9",
+											? "text-accent-11"
+											: "group-hover:text-accent-11",
 									)}
 								>
 									{item.title}
@@ -113,7 +127,7 @@ const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 				<Box />
 			</nav>
 			<Box
-				className="relative md:pl-40 pt-14 w-full bg-mauve-2"
+				className="relative md:pl-40 bg-gray-3 pt-[55px] w-full "
 				minHeight="100vh"
 			>
 				{children}
@@ -123,19 +137,29 @@ const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 };
 export const DashboardSidebarMobile = () => {
 	const { pathname } = useLocation();
-	const opened = useDashboardState((state) => state.opened);
-	const setOpened = useDashboardState((state) => state.setOpened);
-	const windowSize = useWindowSize(100);
-	if (windowSize.width > 768) return null;
+
+	const [opened, setOpened] = React.useState(false);
+	const splitPath = pathname.split("/");
+	const mainPath = splitPath[1];
 	return (
 		<DialogRoot
 			shouldScaleBackground={true}
-			direction="left"
 			open={opened}
 			onOpenChange={setOpened}
+			direction="left"
 		>
-			<DialogContent className="w-72 bg-component m-0 rounded-none">
-				<nav className={cn("flex flex-col px-1 w-full ")}>
+			<DialogTrigger asChild>
+				<IconButton
+					variant="ghost"
+					className={cn("bottom-4 z-50 absolute md:hidden", {
+						hidden: mainPath !== "dashboard",
+					})}
+				>
+					<Icons.Menu size={20} strokeWidth={strokeWidth} />
+				</IconButton>
+			</DialogTrigger>
+			<DialogContent className="w-72 md:hidden bg-component m-0 rounded-none">
+				<nav className={cn("flex flex-col px-1 w-full py-2")}>
 					<StoreInfo />
 					<ul className="justify-center items-center flex w-full flex-col gap-2 py-2">
 						{items.map((item) => {
@@ -148,9 +172,9 @@ export const DashboardSidebarMobile = () => {
 									key={item.title}
 									onClick={() => setOpened(false)}
 									className={cn(
-										"group relative rounded-[10px] flex h-12 lg:8 w-full items-center gap-3 px-2 cursor-pointer dark:hover:bg-component hover:bg-mauve-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
+										"group relative flex h-12 lg:8 w-full items-center gap-3 px-2 cursor-pointer dark:hover:bg-component hover:bg-accent-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
 										{
-											"bg-component hover:bg-mauve-3 dark:hover:bg-border hover:border-t-mauve-7 border border-border":
+											"bg-component hover:bg-accent-3 dark:hover:bg-accent hover:border-t- gray-7 border border-border":
 												pathname === item.href,
 										},
 									)}
@@ -164,8 +188,8 @@ export const DashboardSidebarMobile = () => {
 										<Icon
 											className={cn(
 												pathname === item.href
-													? "text-accent-9"
-													: "text-mauve-11 group-hover:text-accent-9",
+													? "text-accent-11"
+													: "text- gray-11 group-hover:text-accent-11",
 											)}
 											size={20}
 											strokeWidth={strokeWidth}
@@ -173,11 +197,11 @@ export const DashboardSidebarMobile = () => {
 									</Flex>
 									<span
 										className={cn(
-											"relative text-mauve-11 font-light",
+											"relative text- gray-11 font-light",
 
 											pathname === item.href
-												? "text-accent-9"
-												: "text-mauve-11 group-hover:text-accent-9",
+												? "text-accent-11"
+												: "text- gray-11 group-hover:text-accent-11",
 										)}
 									>
 										{item.title}
@@ -197,13 +221,13 @@ const StoreInfo = () => {
 	return (
 		<Box my="2">
 			<Select.Root defaultValue="apple">
-				<Select.Trigger className="w-full  h-12 px-2 rounded-[7px]">
+				<Select.Trigger className="w-full rounded-[5px] h-12 px-2  ">
 					<Flex align="center" gap="2">
 						<Avatar fallback="F" className="size-9" />
 						<Heading size="1">Hello world</Heading>
 					</Flex>
 				</Select.Trigger>
-				<Select.Content className="backdrop-blur-sm">
+				<Select.Content className="backdrop-blur-sm z-50">
 					<Select.Group>
 						<Select.Label>Fruits</Select.Label>
 						<Select.Item value="orange">Orange</Select.Item>

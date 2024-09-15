@@ -11,9 +11,9 @@ export const id = {
 
 const ImageSchema = z.object({
 	id: z.string(),
-	name: z.string(),
+	alt: z.string(),
 	order: z.number(),
-	url: z.string(),
+	url: z.string().optional(),
 	trimmed: z
 		.object({
 			left: z.number(),
@@ -26,10 +26,6 @@ const ImageSchema = z.object({
 	base64: z.string().optional(),
 });
 
-type Image = {
-	id: string;
-	url: string;
-	trimmed?: boolean;
-};
+type Image = z.infer<typeof ImageSchema>;
 export { ImageSchema };
 export type { Image };

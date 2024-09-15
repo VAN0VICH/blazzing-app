@@ -22,6 +22,9 @@
 			},
 			"complexity": {
 				"noStaticOnlyClass": "off"
+			},
+			"correctness": {
+				"noFlatMapIdentity": "off"
 			}
 		}
 	},

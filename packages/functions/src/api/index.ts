@@ -7,6 +7,7 @@ const app = new OpenAPIHono();
 app.use(logger());
 
 const routes = app.route("/hello", HelloApi.route);
+// .route("/auction", AuctionApi.route);
 
 app.doc("/doc", () => ({
 	openapi: "3.0.0",

@@ -13,7 +13,7 @@ export const meta: MetaFunction = () => {
 export default function Index() {
 	return (
 		<div className="font-sans p-4 bg-red-500">
-			<h1 className="text-3xl text-red-500 font-freeman">
+			<h1 className="text-3xl text-red-500   ">
 				Welcome to Remix on Cloudflare
 			</h1>
 			<ul className="list-disc mt-4 pl-6 space-y-2">

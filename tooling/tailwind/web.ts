@@ -76,7 +76,7 @@ export default {
 					stop: "#F796FF",
 				},
 
-				  accent: {
+				accent: {
 					1: "var(--accent-1)",
 					2: "var(--accent-2)",
 					3: "var(--accent-3)",
@@ -89,7 +89,21 @@ export default {
 					10: "var(--accent-10)",
 					11: "var(--accent-11)",
 					12: "var(--accent-12)",
-				  },
+				},
+				gray: {
+					1: "var(--gray-1)",
+					2: "var(--gray-2)",
+					3: "var(--gray-3)",
+					4: "var(--gray-4)",
+					5: "var(--gray-5)",
+					6: "var(--gray-6)",
+					7: "var(--gray-7)",
+					8: "var(--gray-8)",
+					9: "var(--gray-9)",
+					10: "var(--gray-10)",
+					11: "var(--gray-11)",
+					12: "var(--gray-12)",
+				},
 				ruby: {
 					1: "var(--ruby-1)",
 					2: "var(--ruby-2)",
@@ -103,8 +117,8 @@ export default {
 					10: "var(--ruby-10)",
 					11: "var(--ruby-11)",
 					12: "var(--ruby-12)",
-				  },
-				  indigo: {
+				},
+				indigo: {
 					1: "var(--indigo-1)",
 					2: "var(--indigo-2)",
 					3: "var(--indigo-3)",
@@ -117,8 +131,8 @@ export default {
 					10: "var(--indigo-10)",
 					11: "var(--indigo-11)",
 					12: "var(--indigo-12)",
-				  },
-				  cyan: {
+				},
+				cyan: {
 					1: "var(--cyan-1)",
 					2: "var(--cyan-2)",
 					3: "var(--cyan-3)",
@@ -131,8 +145,8 @@ export default {
 					10: "var(--cyan-10)",
 					11: "var(--cyan-11)",
 					12: "var(--cyan-12)",
-				  },
-				  crimson: {
+				},
+				crimson: {
 					1: "var(--crimson-1)",
 					2: "var(--crimson-2)",
 					3: "var(--crimson-3)",
@@ -145,8 +159,8 @@ export default {
 					10: "var(--crimson-10)",
 					11: "var(--crimson-11)",
 					12: "var(--crimson-12)",
-				  },
-				  amber: {
+				},
+				amber: {
 					1: "var(--amber-1)",
 					2: "var(--amber-2)",
 					3: "var(--amber-3)",
@@ -159,8 +173,8 @@ export default {
 					10: "var(--amber-10)",
 					11: "var(--amber-11)",
 					12: "var(--amber-12)",
-				  },
-				  blue: {
+				},
+				blue: {
 					1: "var(--blue-1)",
 					2: "var(--blue-2)",
 					3: "var(--blue-3)",
@@ -173,8 +187,8 @@ export default {
 					10: "var(--blue-10)",
 					11: "var(--blue-11)",
 					12: "var(--blue-12)",
-				  },
-				  bronze: {
+				},
+				bronze: {
 					1: "var(--bronze-1)",
 					2: "var(--bronze-2)",
 					3: "var(--bronze-3)",
@@ -187,8 +201,8 @@ export default {
 					10: "var(--bronze-10)",
 					11: "var(--bronze-11)",
 					12: "var(--bronze-12)",
-				  },
-				  green: {
+				},
+				green: {
 					1: "var(--green-1)",
 					2: "var(--green-2)",
 					3: "var(--green-3)",
@@ -201,8 +215,8 @@ export default {
 					10: "var(--green-10)",
 					11: "var(--green-11)",
 					12: "var(--green-12)",
-				  },
-				  lime: {
+				},
+				lime: {
 					1: "var(--lime-1)",
 					2: "var(--lime-2)",
 					3: "var(--lime-3)",
@@ -215,8 +229,8 @@ export default {
 					10: "var(--lime-10)",
 					11: "var(--lime-11)",
 					12: "var(--lime-12)",
-				  },
-				  orange: {
+				},
+				orange: {
 					1: "var(--orange-1)",
 					2: "var(--orange-2)",
 					3: "var(--orange-3)",
@@ -229,8 +243,8 @@ export default {
 					10: "var(--orange-10)",
 					11: "var(--orange-11)",
 					12: "var(--orange-12)",
-				  },
-				  pink: {
+				},
+				pink: {
 					1: "var(--pink-1)",
 					2: "var(--pink-2)",
 					3: "var(--pink-3)",
@@ -243,8 +257,8 @@ export default {
 					10: "var(--pink-10)",
 					11: "var(--pink-11)",
 					12: "var(--pink-12)",
-				  },
-				  violet: {
+				},
+				violet: {
 					1: "var(--violet-1)",
 					2: "var(--violet-2)",
 					3: "var(--violet-3)",
@@ -257,24 +271,9 @@ export default {
 					10: "var(--violet-10)",
 					11: "var(--violet-11)",
 					12: "var(--violet-12)",
-				  },
+				},
 
-				  mauve: {
-					1: "var(--mauve-1)",
-					2: "var(--mauve-2)",
-					3: "var(--mauve-3)",
-					4: "var(--mauve-4)",
-					5: "var(--mauve-5)",
-					6: "var(--mauve-6)",
-					7: "var(--mauve-7)",
-					8: "var(--mauve-8)",
-					9: "var(--mauve-9)",
-					10: "var(--mauve-10)",
-					11: "var(--mauve-11)",
-					12: "var(--mauve-12)",
-				  },
-
-				  red: {
+				red: {
 					1: "var(--red-1)",
 					2: "var(--red-2)",
 					3: "var(--red-3)",
@@ -287,8 +286,7 @@ export default {
 					10: "var(--red-10)",
 					11: "var(--red-11)",
 					12: "var(--red-12)",
-				  },
-
+				},
 			},
 		},
 	},

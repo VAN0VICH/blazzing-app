@@ -68,7 +68,7 @@ export const productsRelations = relations(products, ({ one, many }) => ({
 		fields: [products.storeID],
 		references: [stores.id],
 	}),
-	defaultVariant: one(variants, {
+	baseVariant: one(variants, {
 		fields: [products.baseVariantID],
 		references: [variants.id],
 	}),

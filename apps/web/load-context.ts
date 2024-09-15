@@ -1,5 +1,4 @@
-import type { PlatformProxy } from "wrangler";
-
+import type { Env, WebBindings } from "@blazzing-app/validators";
 // When using `wrangler.toml` to configure bindings,
 // `wrangler types` will generate types for those bindings
 // into the global `Env` interface.
@@ -7,10 +6,8 @@ import type { PlatformProxy } from "wrangler";
 // even if no `wrangler.toml` exists.
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 
-type Cloudflare = Omit<PlatformProxy<Env>, "dispose">;
-
 declare module "@remix-run/cloudflare" {
 	interface AppLoadContext {
-		cloudflare: Cloudflare;
+		cloudflare: { env: Env; bindings: WebBindings };
 	}
 }

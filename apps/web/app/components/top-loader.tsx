@@ -31,7 +31,7 @@ export function Toploader() {
 				left: 0,
 				right: 0,
 				height: "2px",
-				backgroundColor: "var(--brand-9)",
+				backgroundColor: "var(--accent-9)",
 				width: `${width}%`,
 				opacity: opacity,
 				transition: "width 300ms ease-in-out, opacity 300ms ease-in-out",

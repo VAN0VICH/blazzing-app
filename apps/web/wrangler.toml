@@ -2,3 +2,7 @@
 name = "blazzing-app"
 pages_build_output_dir = "./build/client"
 
+[vars]
+LIVEKIT_SERVER_URL = 'wss://test-42h1qr2q.livekit.cloud'
+LIVEKIT_API_KEY = 'APIs6VDf6iqcGgS'
+LIVEKIT_SECRET_KEY = '8Ny4c2mvJGpLpZVI9sf0NoCEiMl59ZZC7eCoiZtffUED'

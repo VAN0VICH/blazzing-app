@@ -1,11 +1,11 @@
-import type { Config } from "drizzle-kit";
 import { Resource } from "sst";
+import { defineConfig } from "drizzle-kit";
 
-export default {
-	schema: "./src/**/*.sql.ts",
+export default defineConfig({
 	dialect: "postgresql",
 	dbCredentials: {
-		url: Resource,
+		url: Resource.DATABASE_URL.value,
 	},
+	schema: "./schema",
 	verbose: true,
-} satisfies Config;
+});

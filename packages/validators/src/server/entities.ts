@@ -1,6 +1,7 @@
-import type { schema } from "@blazzing-app/db";
+import { schema } from "@blazzing-app/db";
 
 import type { InferSelectModel } from "drizzle-orm";
+import { createSelectSchema } from "drizzle-zod";
 
 export type AuthUser = InferSelectModel<typeof schema.authUsers>;
 export type Store = InferSelectModel<typeof schema.stores>;
@@ -25,3 +26,5 @@ export type Session = InferSelectModel<typeof schema.sessions>;
 export type Customer = InferSelectModel<typeof schema.customers>;
 export type PaymentProfile = InferSelectModel<typeof schema.paymentProfiles>;
 export type StripeAccount = InferSelectModel<typeof schema.stripe>;
+
+export const VariantSchema = createSelectSchema(schema.variants);

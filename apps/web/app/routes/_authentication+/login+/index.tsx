@@ -55,9 +55,9 @@ const Login = () => {
 			pt={{ initial: "9", md: "0" }}
 		>
 			<Grid gap="4">
-				<Heading size="8" align="center" className="font-freeman pb-4">
+				<Heading size="8" align="center" className="   pb-4">
 					Welcome to{" "}
-					<span className="text-balance bg-gradient-to-b from-brand-9 to-brand-11 bg-clip-text font-bold text-transparent lg:tracking-tight ">
+					<span className="text-balance bg-gradient-to-b from-accent-9 to-accent-11 bg-clip-text font-bold text-transparent lg:tracking-tight ">
 						Blazzing App
 					</span>
 				</Heading>
@@ -103,7 +103,7 @@ const Login = () => {
 								disabled={isPending || isGoogleSubmitting}
 							>
 								{(isPending || isGoogleSubmitting) && (
-									<LoadingSpinner className="text-slate-11 size-4 mr-2" />
+									<LoadingSpinner className="text- gray-11 size-4 mr-2" />
 								)}
 								Google
 							</Button>

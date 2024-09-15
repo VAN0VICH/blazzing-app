@@ -2,7 +2,6 @@ import { cn } from "@blazzing-app/ui";
 import { Box } from "@radix-ui/themes";
 import { useLocation } from "@remix-run/react";
 import { noSidebarPaths } from "~/constants";
-import { useOptimisticSidebarMode } from "~/hooks/use-sidebar";
 import { useUserPreferences } from "~/hooks/use-user-preferences";
 
 export function SidebarLayoutWrapper({
@@ -11,9 +10,8 @@ export function SidebarLayoutWrapper({
 	children: React.ReactNode;
 }) {
 	const location = useLocation();
-	const userPreference = useUserPreferences();
-	const optimisticMode = useOptimisticSidebarMode();
-	const mode = optimisticMode ?? userPreference.sidebarState ?? "closed";
+	const { sidebarState } = useUserPreferences();
+	const mode = sidebarState ?? "closed";
 
 	return (
 		<Box

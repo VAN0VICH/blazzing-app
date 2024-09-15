@@ -1,6 +1,9 @@
 export const secret = {
 	DatabaseURL: new sst.Secret("DatabaseURL"),
-	Test: new sst.Secret("Test", "Hello, World!"),
+	LivekitURL: new sst.Secret("LivekitURL"),
+	LivekitApiKey: new sst.Secret("LivekitApiKey"),
+	LivekitSecretKey: new sst.Secret("LivekitSecretKey"),
+	AccountID: new sst.Secret("AccountID"),
 };
 
 export const allSecrets = Object.values(secret);

@@ -1,4 +1,3 @@
-import { cn } from "@blazzing-app/ui";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -7,47 +6,40 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@blazzing-app/ui/breadcrumb";
-import { Icons, strokeWidth } from "@blazzing-app/ui/icons";
-import { Box, Flex, IconButton, Text } from "@radix-ui/themes";
+import { Box, Flex, Text } from "@radix-ui/themes";
 import { Link, useLocation } from "@remix-run/react";
 import { ProfileDropdown } from "~/components/profile-dropdown";
-import { useDashboardState } from "~/zustand/state";
+import { DashboardSidebarMobile } from "./sidebar";
+import { DashboardSearchCombobox } from "./search";
 
 const DashboardNavbar = () => {
-	const location = useLocation();
-
-	const splitPath = location.pathname.split("/");
-	const mainPath = splitPath[1];
-
-	const opened = useDashboardState((state) => state.opened);
-	const setOpened = useDashboardState((state) => state.setOpened);
 	return (
 		<Flex
-			align="center"
 			position="fixed"
-			px="4"
 			top="0"
 			width="100%"
 			height="55px"
-			className="border-b border-border"
+			className="border-b z-40 backdrop-blur-lg border-border"
+			justify="center"
 		>
-			<Flex align="center" className="flex-1">
-				<IconButton
-					variant="ghost"
-					className={cn("bottom-4 z-50 md:hidden", {
-						hidden: mainPath !== "dashboard",
-					})}
-					onClick={() => setOpened(!opened)}
+			<Flex maxWidth="1300px" align="center" px="4" width="100%">
+				<Flex align="center" gap="2" className="flex-1">
+					<DashboardSidebarMobile />
+					<DynamicBreadcrumb />
+				</Flex>
+
+				<Box className="flex-1">
+					<DashboardSearchCombobox />
+				</Box>
+
+				<Flex
+					justify={{ initial: "end", sm: "start" }}
+					align="center"
+					gap="2"
+					className="flex-1"
 				>
-					<Icons.Menu size={20} strokeWidth={strokeWidth} />
-				</IconButton>
-				<DynamicBreadcrumb />
-			</Flex>
-
-			<Box className="flex-1">{/* <DashboardSearchCombobox /> */}</Box>
-
-			<Flex justify="start" align="center" gap="2" className="flex-1">
-				{true && <ProfileDropdown />}
+					{true && <ProfileDropdown />}
+				</Flex>
 			</Flex>
 		</Flex>
 	);
@@ -64,7 +56,7 @@ export function DynamicBreadcrumb() {
 		return null;
 	}
 	return (
-		<Breadcrumb className="px-2 hidden sm:flex">
+		<Breadcrumb className="px-2 pl-10 md:pl-2 hidden sm:flex">
 			<BreadcrumbList>
 				{pathnames.map((name, index) => {
 					const routeTo = `/dashboard/${pathnames
@@ -78,7 +70,7 @@ export function DynamicBreadcrumb() {
 								<BreadcrumbPage>
 									<Text
 										size="2"
-										className="text-ellipsis max-w-[100px] text-accent-9 text-nowrap overflow-hidden"
+										className="text-ellipsis max-w-[100px] text-accent-11 text-nowrap overflow-hidden"
 									>
 										{`${name[0]?.toUpperCase()}${name.substring(1)}`}
 									</Text>
