@@ -14,7 +14,7 @@ export function ShippingStatus({
 			Shipped
 		</Badge>
 	) : status === "delivered" ? (
-		<Badge color="jade" size={size}>
+		<Badge color="green" size={size}>
 			Delivered
 		</Badge>
 	) : (

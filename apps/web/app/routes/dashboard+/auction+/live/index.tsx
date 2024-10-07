@@ -6,14 +6,15 @@ import { Chat } from "~/components/templates/stream/chat";
 import { AuctionActions } from "~/components/templates/stream/auction-actions";
 import { StreamPlayer } from "~/components/templates/stream/stream-player";
 import { TokenContext } from "~/providers/token-context";
+import { type LoaderFunction, redirect, json } from "@remix-run/cloudflare";
 
-// export const loader: LoaderFunction = ({ request }) => {
-// 	const url = new URL(request.url);
-// 	if (!url.searchParams.get("at") || !url.searchParams.get("rt")) {
-// 		return redirect("/dashboard/auction");
-// 	}
-// 	return json({});
-// };
+export const loader: LoaderFunction = ({ request }) => {
+	const url = new URL(request.url);
+	if (!url.searchParams.get("at") || !url.searchParams.get("rt")) {
+		return redirect("/dashboard/auction");
+	}
+	return json({});
+};
 
 export default function LiveAuctionStream() {
 	const [searchParams] = useSearchParams();
@@ -27,20 +28,13 @@ export default function LiveAuctionStream() {
 						serverUrl={window.ENV.LIVEKIT_SERVER_URL}
 						token={roomToken}
 					>
-						<Flex
-							width="100%"
-							height={{
-								initial: "calc(100vh - 85px)",
-								md: "calc(100vh - 55px)",
-							}}
-						>
-							<Flex direction="column" className="flex-1">
-								<Box className="flex-1">
-									<StreamPlayer isHost />
-								</Box>
+						<Flex position="relative" width="100%">
+							<Flex direction="column" className="flex-1" minHeight="1600px">
+								<StreamPlayer isHost />
 								<AuctionActions />
 							</Flex>
-							<Box className="dark:bg-accent-2 bg-gray-3 min-w-[280px] border-l dark:border-accent-5 border-accent-6 hidden lg:block">
+							<Box className="min-w-[280px] hidden lg:block" />
+							<Box className="dark:bg-accent-2 bg-gray-3 right-0 h-full fixed min-w-[280px] border-l dark:border-accent-5 border-accent-6 hidden lg:block">
 								<Chat />
 							</Box>
 						</Flex>

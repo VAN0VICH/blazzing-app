@@ -15,29 +15,25 @@ import { DashboardSearchCombobox } from "./search";
 const DashboardNavbar = () => {
 	return (
 		<Flex
-			position="fixed"
+			position="sticky"
 			top="0"
 			width="100%"
-			height="55px"
+			px="3"
+			height="64px"
 			className="border-b z-40 backdrop-blur-lg border-border"
 			justify="center"
 		>
-			<Flex maxWidth="1300px" align="center" px="4" width="100%">
+			<Flex maxWidth="1700px" align="center" width="100%">
 				<Flex align="center" gap="2" className="flex-1">
 					<DashboardSidebarMobile />
 					<DynamicBreadcrumb />
 				</Flex>
 
-				<Box className="flex-1">
+				<Flex className="flex-1" justify="center">
 					<DashboardSearchCombobox />
-				</Box>
+				</Flex>
 
-				<Flex
-					justify={{ initial: "end", sm: "start" }}
-					align="center"
-					gap="2"
-					className="flex-1"
-				>
+				<Flex justify="end" align="center" gap="2" className="flex-1">
 					{true && <ProfileDropdown />}
 				</Flex>
 			</Flex>
@@ -56,7 +52,7 @@ export function DynamicBreadcrumb() {
 		return null;
 	}
 	return (
-		<Breadcrumb className="px-2 pl-10 md:pl-2 hidden sm:flex">
+		<Breadcrumb className="hidden sm:flex">
 			<BreadcrumbList>
 				{pathnames.map((name, index) => {
 					const routeTo = `/dashboard/${pathnames
@@ -67,11 +63,8 @@ export function DynamicBreadcrumb() {
 					return (
 						<BreadcrumbItem key={routeTo}>
 							{isLast ? (
-								<BreadcrumbPage>
-									<Text
-										size="2"
-										className="text-ellipsis max-w-[100px] text-accent-11 text-nowrap overflow-hidden"
-									>
+								<BreadcrumbPage className="w-[100px] overflow-hidden text-ellipsis">
+									<Text size="2" className="text-accent-11 text-nowrap">
 										{`${name[0]?.toUpperCase()}${name.substring(1)}`}
 									</Text>
 								</BreadcrumbPage>
@@ -81,12 +74,8 @@ export function DynamicBreadcrumb() {
 										to={routeTo}
 										className="focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
 									>
-										<BreadcrumbLink className="overflow-hidden text-ellipsis w-[100px]">
-											<Text
-												size="2"
-												color="gray"
-												className="text-ellipsis max-w-[100px] text-nowrap overflow-hidden"
-											>
+										<BreadcrumbLink className="overflow-hidden max-w-[100px] text-ellipsis w-[100px]">
+											<Text size="2" color="gray" className="text-nowrap ">
 												{`${name[0]?.toUpperCase()}${name.substring(1)}`}
 											</Text>
 										</BreadcrumbLink>

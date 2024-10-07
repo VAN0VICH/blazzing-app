@@ -23,7 +23,7 @@ export const users = pgTable(
 		phone: varchar("phone"),
 		username: varchar("username"),
 		fullName: varchar("full_name"),
-		avatar: json("avatar").$type<Image>(),
+		avatar: json("avatar").$type<Image | string>(),
 		description: text("description"),
 		role: text("role", { enum: ["moderator", "user"] })
 			.notNull()

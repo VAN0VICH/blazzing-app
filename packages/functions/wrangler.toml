@@ -1,14 +1,30 @@
 name = "blazzing-worker"
-compatibility_date = "2024-09-12"
+compatibility_date = "2024-09-09"
 compatibility_flags = [ "nodejs_compat_v2" ]
+
+[[kv_namespaces]]
+binding = "KV"
+id = "7cf103d6bdae4b43bace2c0051307639"
 
 [vars]
 LIVEKIT_SERVER_URL = 'wss://test-42h1qr2q.livekit.cloud'
 LIVEKIT_API_KEY = 'APIs6VDf6iqcGgS'
 LIVEKIT_SECRET_KEY = '8Ny4c2mvJGpLpZVI9sf0NoCEiMl59ZZC7eCoiZtffUED'
+WEB_URL = 'http://localhost:5173'
+GOOGLE_CLIENT_ID = '758405095862-pcsgq2n44gfe9nrar4uvnvhl3m09ek4k.apps.googleusercontent.com'
+GOOGLE_CLIENT_SECRET = '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'
+WORKER_URL = 'http://localhost:8787'
+DATABASE_URL = 'postgresql://blazzing-db_owner:kQjM90Amqfxp@ep-winter-sun-a7yzx22s-pooler.ap-southeast-2.aws.neon.tech/blazzing-db?sslmode=require'
+PARTYKIT_ORIGIN='https://blazzing-app.lordpachimari.partykit.dev'
+ENVIRONMENT = 'development' 
+ACCOUNT_ID = '3551fbe61550836037b63f206e50bc73'
+IMAGE_API_TOKEN = 'OAYaj9uMiWegDscsKGF3cOaC2yrQohs4zYuROMbt'
+STRIPE_SECRET_KEY  = 'sk_test_51PoTQ6GCry79Ovxejg9Fgl3T1xmSKr859nGT9go8eiQp8ACHjknXJdoUP1FAyoVI5CQQQOZoRTo1KZpygX22lhMt00H1pbGlpN'
 
 [env.development]
 LIVEKIT_SERVER_URL = 'wss://test-42h1qr2q.livekit.cloud'
 LIVEKIT_API_KEY = 'APIs6VDf6iqcGgS'
 LIVEKIT_SECRET_KEY = '8Ny4c2mvJGpLpZVI9sf0NoCEiMl59ZZC7eCoiZtffUED'
+
+
 

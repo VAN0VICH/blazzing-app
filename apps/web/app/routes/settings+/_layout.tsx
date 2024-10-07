@@ -13,7 +13,7 @@ export default function SettingsLayout() {
 		<SidebarLayoutWrapper>
 			<SettingsSidebar>
 				<Box
-					className="md:pl-40 bg-gray-3"
+					className="md:pl-40 bg-gray-2"
 					width="100%"
 					pt="55px"
 					position="relative"
@@ -29,7 +29,7 @@ export default function SettingsLayout() {
 						className="bg-component backdrop-blur-sm border-b z-40"
 						height="55px"
 					>
-						<Heading size="6" className={"md:pr-60 py-4   text-accent-11"}>
+						<Heading size="6" className={"md:pr-60 py-4  text-accent-11"}>
 							{capitalize(lastPathnamePart)}
 						</Heading>
 					</Flex>

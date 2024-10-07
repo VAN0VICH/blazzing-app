@@ -15,6 +15,12 @@ const items: DashboardSettingsSidebarItem[] = [
 
 		icon: "Store",
 	},
+	{
+		title: "Payment",
+		href: "/dashboard/settings/payment",
+
+		icon: "Payment",
+	},
 ];
 export const DashboardSettingsSidebar = () => {
 	const { pathname } = useLocation();
@@ -34,7 +40,7 @@ export const DashboardSettingsSidebar = () => {
 								prefetch="viewport"
 								key={item.title}
 								className={cn(
-									"group relative flex h-10 w-full rounded-[5px] items-center gap-3 px-2 cursor-pointer hover:bg-gray-4 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
+									"group relative font-freeman flex h-10 w-full rounded-[5px] items-center gap-3 px-2 cursor-pointer hover:bg-accent-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
 									{
 										"text-accent-11 bg-gray-3":
 											mainPath === item.title.toLowerCase(),

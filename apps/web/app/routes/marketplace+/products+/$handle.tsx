@@ -1,32 +1,102 @@
-import { useNavigate, useSearchParams } from "@remix-run/react";
+import type { Routes } from "@blazzing-app/functions";
+import type { Product, Variant } from "@blazzing-app/validators/client";
+import { json, type LoaderFunction } from "@remix-run/cloudflare";
+import {
+	useLoaderData,
+	useNavigate,
+	useParams,
+	useSearchParams,
+} from "@remix-run/react";
+import { hc } from "hono/client";
 import React, { useEffect } from "react";
+import { useSubscribe } from "replicache-react";
 import { ProductOverview } from "~/components/templates/product/product-overview";
 import { useIsElementScrolled } from "~/hooks/use-is-element-scrolled";
 import { useRequestInfo } from "~/hooks/use-request-info";
-import { product as mockProduct } from "~/temp/mock-entities";
+import { useReplicache } from "~/zustand/replicache";
+import { useMarketplaceStore } from "~/zustand/store";
+type LoaderData = {
+	product: Product;
+};
+export const loader: LoaderFunction = async ({ context, params }) => {
+	const handle = params.handle;
+	if (!handle) {
+		throw new Response(null, {
+			status: 404,
+			statusText: "Not Found",
+		});
+	}
+	const client = hc<Routes>(context.cloudflare.env.WORKER_URL);
+	const productResponse = await client.product.handle.$get({
+		query: {
+			handle,
+		},
+	});
+	if (productResponse.ok) {
+		const { result: product } = await productResponse.json();
+
+		if (!product) {
+			throw new Response(null, {
+				status: 404,
+				statusText: "Not Found",
+			});
+		}
+		return json(
+			{
+				product,
+			},
+			{ headers: { "Cache-Control": "public, max-age=31536000" } },
+		);
+	}
+	throw new Response(null, {
+		status: 404,
+		statusText: "Not Found",
+	});
+};
 export default function Page() {
 	const { userContext } = useRequestInfo();
+	const params = useParams();
+	const { product: serverProduct } = useLoaderData<LoaderData>();
 	const cartID = userContext.cartID;
 	const navigate = useNavigate();
-	const isInitialized = true;
-	const product = mockProduct;
+	const isInitialized = useMarketplaceStore((state) => state.isInitialized);
+	const rep = useReplicache((state) => state.marketplaceRep);
 
-	const [searchParams, setSearchParams] = useSearchParams();
-	const selectedVariantHandle = searchParams.get("variant") ?? undefined;
-	const setSelectedVariantHandle = (handle: string | undefined) => {
-		setSearchParams(
-			(prev) => {
-				const params = new URLSearchParams(prev);
-				if (!handle) {
-					params.delete("variant");
-					return params;
-				}
-				params.set("variant", handle);
-				return params;
-			},
-			{ preventScrollReset: true },
-		);
-	};
+	const baseVariant = useSubscribe(
+		rep,
+		async (tx) => {
+			if (!params.handle) return undefined;
+			const result = await tx
+				.scan({
+					indexName: "handle",
+					start: {
+						key: [params.handle],
+					},
+					limit: 1,
+				})
+				.entries()
+				.toArray();
+
+			const [item] = result;
+			return item?.[1] as Variant | undefined;
+		},
+		{ dependencies: [], default: undefined },
+	);
+	const productMap = useMarketplaceStore((state) => state.productMap);
+	const product = productMap.get(baseVariant?.productID ?? serverProduct.id);
+
+	const variants = useMarketplaceStore((state) =>
+		state.variants.filter(
+			(v) => v.productID === product?.id && v.id !== product?.baseVariantID,
+		),
+	);
+
+	const [selectedVariantHandle, setSelectedVariantHandle] =
+		React.useState<string>();
+
+	const selectedVariant = selectedVariantHandle
+		? variants.find((v) => v.handle === selectedVariantHandle)
+		: undefined;
 
 	useEffect(() => {
 		const handleKeyDown = (event: KeyboardEvent) => {
@@ -56,7 +126,9 @@ export default function Page() {
 
 	const elementRef = React.useRef(null);
 	const isElementScrolled = useIsElementScrolled(elementRef);
-	console.log("isElementScrolled", isElementScrolled);
+
+	console.log("product", product);
+	console.log("server product id", serverProduct.id);
 
 	return (
 		<div
@@ -88,13 +160,13 @@ export default function Page() {
 					</h1>
 				) : (
 					<ProductOverview
-						product={undefined}
-						variants={[]}
-						selectedVariant={undefined}
+						product={product ?? serverProduct}
+						variants={variants}
+						selectedVariant={selectedVariant}
 						setVariantIDOrHandle={setSelectedVariantHandle}
 						selectedVariantIDOrHandle={selectedVariantHandle}
 						cartID={cartID}
-						baseVariant={undefined}
+						baseVariant={baseVariant}
 						isScrolled={isElementScrolled}
 					/>
 				)}

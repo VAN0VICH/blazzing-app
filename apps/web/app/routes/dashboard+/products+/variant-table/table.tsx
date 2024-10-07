@@ -100,7 +100,7 @@ export default function VariantTable({
 			>
 				<Box style={{ height: `${virtualizer.getTotalSize()}px` }}>
 					<Table>
-						<TableHeader className="w-full z-20 sticky top-0">
+						<TableHeader className="w-full z-20 sticky hover:border-x border-border top-0">
 							{table.getHeaderGroups().map((headerGroup) => (
 								<TableRow key={headerGroup.id}>
 									{headerGroup.headers.map((header) => {
@@ -134,10 +134,11 @@ export default function VariantTable({
 													virtualRow.start - index * virtualRow.size
 												}px)`,
 											}}
-											className={cn(row.getIsSelected() && "bg- gray-2")}
+											className={cn(row.getIsSelected() && "bg-gray-2")}
 											onClick={(e) => {
 												e.preventDefault();
 												e.stopPropagation();
+												setVariantID(row.original.id);
 											}}
 											onKeyDown={(e) => handleKeyDown(e, row)}
 										>

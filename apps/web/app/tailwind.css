@@ -1,120 +1,117 @@
-@import url('https://fonts.googleapis.com/css2?family=Freeman:wght@400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Freeman:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
 /* Light theme colors */
-@import '@radix-ui/colors/ruby.css';
-@import '@radix-ui/colors/red.css';
-@import '@radix-ui/colors/indigo.css';
-@import '@radix-ui/colors/cyan.css';
-@import '@radix-ui/colors/crimson.css';
-@import '@radix-ui/colors/amber.css';
-@import '@radix-ui/colors/blue.css';
-@import '@radix-ui/colors/bronze.css';
-@import '@radix-ui/colors/green.css';
-@import '@radix-ui/colors/lime.css';
-@import '@radix-ui/colors/orange.css';
-@import '@radix-ui/colors/pink.css';
-@import '@radix-ui/colors/violet.css';
+@import "@radix-ui/colors/ruby.css";
+@import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/indigo.css";
+@import "@radix-ui/colors/cyan.css";
+@import "@radix-ui/colors/crimson.css";
+@import "@radix-ui/colors/amber.css";
+@import "@radix-ui/colors/blue.css";
+@import "@radix-ui/colors/bronze.css";
+@import "@radix-ui/colors/green.css";
+@import "@radix-ui/colors/lime.css";
+@import "@radix-ui/colors/orange.css";
+@import "@radix-ui/colors/pink.css";
+@import "@radix-ui/colors/violet.css";
+@import "@radix-ui/colors/slate.css";
 
 /* Dark theme colors */
-@import '@radix-ui/colors/ruby-dark.css';
-@import '@radix-ui/colors/red-dark.css';
-@import '@radix-ui/colors/indigo-dark.css';
-@import '@radix-ui/colors/cyan-dark.css';
-@import '@radix-ui/colors/crimson-dark.css';
-@import '@radix-ui/colors/amber-dark.css';
-@import '@radix-ui/colors/blue-dark.css';
-@import '@radix-ui/colors/bronze-dark.css';
-@import '@radix-ui/colors/green-dark.css';
-@import '@radix-ui/colors/lime-dark.css';
-@import '@radix-ui/colors/orange-dark.css';
-@import '@radix-ui/colors/pink-dark.css';
-@import '@radix-ui/colors/violet-dark.css';
+@import "@radix-ui/colors/ruby-dark.css";
+@import "@radix-ui/colors/red-dark.css";
+@import "@radix-ui/colors/indigo-dark.css";
+@import "@radix-ui/colors/cyan-dark.css";
+@import "@radix-ui/colors/crimson-dark.css";
+@import "@radix-ui/colors/amber-dark.css";
+@import "@radix-ui/colors/blue-dark.css";
+@import "@radix-ui/colors/bronze-dark.css";
+@import "@radix-ui/colors/green-dark.css";
+@import "@radix-ui/colors/lime-dark.css";
+@import "@radix-ui/colors/orange-dark.css";
+@import "@radix-ui/colors/pink-dark.css";
+@import "@radix-ui/colors/violet-dark.css";
+@import "@radix-ui/colors/slate-dark.css";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+	:root {
+		--background: #faf9fb;
+		--color-panel-solid: #faf9fb;
+		--component: rgb(255, 255, 255);
+		--border: #e3dfe6;
+		--ring: #e592a3;
+		--foreground: 240 10% 3.9%;
 
-    :root {
-      --background:#faf9fb;
-      --color-panel-solid:#faf9fb;
-      --component: rgb(255, 255, 255);
-      --border: #e3dfe6;
-      --ring: #e592a3;
-      --foreground: 240 10% 3.9%;
+		--muted: 240 4.8% 95.9%;
+		--muted-foreground: 240 3.8% 46.1%;
 
-      --muted: 240 4.8% 95.9%;
-      --muted-foreground: 240 3.8% 46.1%;
-  
-      --popover: 0 0% 100%;
-      --popover-foreground: 240 10% 3.9%;
-  
-      --card: 0 0% 100%;
-      --card-foreground: 240 10% 3.9%;
-  
-      --input: 240 5.9% 90%;
-  
-      --primary: 240 5.9% 10%;
-      --primary-foreground: 0 0% 98%;
-  
-      --secondary: 240 4.8% 95.9%;
-      --secondary-foreground: 240 5.9% 10%;
-  
-      --accent: 240 4.8% 95.9%;
-      --accent-foreground: ;
-  
-      --destructive: 0 84.2% 60.2%;
-      --destructive-foreground: 0 0% 98%;
-  
-    }
+		--popover: 0 0% 100%;
+		--popover-foreground: 240 10% 3.9%;
 
-  
-    .dark {
-      --background:#1a191b;
+		--card: 0 0% 100%;
+		--card-foreground: 240 10% 3.9%;
 
-      --color-panel-solid:#1a191b;
-      --component: #2e2e35;
-      --border: #444249;
-      --ring: #b3445a;
-      --foreground: 0 0% 98%;
+		--input: 240 5.9% 90%;
 
-      --muted: 240 3.7% 15.9%;
-      --muted-foreground: 240 5% 64.9%;
-  
-      --popover: 240 10% 3.9%;
-      --popover-foreground: 0 0% 98%;
-      --navbar: hsla(240, 92.7%, 53%, 0.009);
-      --card: 240 10% 3.9%;
-      --card-foreground: 0 0% 98%;
-  
-      --input: 240 3.7% 15.9%;
-  
-      --primary: 0 0% 98%;
-      --primary-foreground: 240 5.9% 10%;
-  
-      --secondary: 240 3.7% 15.9%;
-      --secondary-foreground: 0 0% 98%;
-  
-      --accent: 240 3.7% 15.9%;
-      --accent-foreground: ;
-  
-      --destructive: 0 62.8% 30.6%;
-      --destructive-foreground: 0 85.7% 97.3%;
+		--primary: 240 5.9% 10%;
+		--primary-foreground: 0 0% 98%;
 
-                }
-  }
-  
-  .radix-themes {
-    --color-panel-solid:var(--component);
-  }
-  @layer base {
-    * {
-      @apply border-border;
-    }
-    body {
-      @apply bg-background text-foreground;
-    }
-  
-  }
+		--secondary: 240 4.8% 95.9%;
+		--secondary-foreground: 240 5.9% 10%;
+
+		--accent: 240 4.8% 95.9%;
+		--accent-foreground: ;
+
+		--destructive: 0 84.2% 60.2%;
+		--destructive-foreground: 0 0% 98%;
+	}
+
+	.dark {
+		--background: #1a191b;
+
+		--color-panel-solid: #1a191b;
+		--component: #2e2e35;
+		--border: #444249;
+		--ring: #b3445a;
+		--foreground: 0 0% 98%;
+
+		--muted: 240 3.7% 15.9%;
+		--muted-foreground: 240 5% 64.9%;
+
+		--popover: 240 10% 3.9%;
+		--popover-foreground: 0 0% 98%;
+		--navbar: hsla(240, 92.7%, 53%, 0.009);
+		--card: 240 10% 3.9%;
+		--card-foreground: 0 0% 98%;
+
+		--input: 240 3.7% 15.9%;
+
+		--primary: 0 0% 98%;
+		--primary-foreground: 240 5.9% 10%;
+
+		--secondary: 240 3.7% 15.9%;
+		--secondary-foreground: 0 0% 98%;
+
+		--accent: 240 3.7% 15.9%;
+		--accent-foreground: ;
+
+		--destructive: 0 62.8% 30.6%;
+		--destructive-foreground: 0 85.7% 97.3%;
+	}
+}
+
+.radix-themes {
+	--color-panel-solid: var(--component);
+}
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+}

@@ -1,10 +1,9 @@
-import { Resource } from "sst";
 import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
 	dialect: "postgresql",
 	dbCredentials: {
-		url: Resource.DATABASE_URL.value,
+		url: process.env.DATABASE_URL || "",
 	},
 	schema: "./schema",
 	verbose: true,

@@ -4,17 +4,21 @@ import { getLineItemPriceAmount } from "@blazzing-app/utils";
 import type { LineItem as LineItemType } from "@blazzing-app/validators/client";
 import {
 	Avatar,
+	Badge,
 	Box,
 	Button,
 	Card,
 	Flex,
 	Grid,
 	Heading,
+	IconButton,
 	Skeleton,
 	Text,
 } from "@radix-ui/themes";
 import { Effect } from "effect";
+import ImagePlaceholder from "~/components/image-placeholder";
 import Price from "~/components/price";
+import { decapitalize } from "~/utils/helpers";
 
 export const LineItem = ({
 	lineItem,
@@ -41,16 +45,28 @@ export const LineItem = ({
 			),
 		) ?? 0;
 	return (
-		<li className="w-full flex gap-2">
-			<Avatar fallback="F" width="50px" height="50px" />
-			<Flex justify="between" gap="2">
-				<Flex justify="between" direction="column">
+		<Card className="gap-2 flex w-full items-center p-2 rounded-[7px]">
+			<Avatar
+				src={
+					lineItem.variant.thumbnail?.url ??
+					lineItem.product?.baseVariant?.thumbnail?.url
+				}
+				fallback={<ImagePlaceholder />}
+				width="100px"
+				height="100px"
+			/>
+			<Flex justify="between" gap="2" width="100%">
+				<Flex justify="between" direction="column" gap="1">
 					<Heading size="1">{lineItem.title}</Heading>
 					<Box>
 						{lineItem.variant?.optionValues?.map((v) => (
 							<Flex key={v.optionValue.id} gap="1">
-								<Text>{v.optionValue.option.name}:</Text>
-								<Text>{v.optionValue.value}</Text>
+								<Text size="2" weight="medium">
+									{decapitalize(v.optionValue?.option?.name ?? "")}:
+								</Text>
+								<Badge size="1" variant="surface">
+									{v.optionValue.value}
+								</Badge>
 							</Flex>
 						))}
 					</Box>
@@ -59,31 +75,55 @@ export const LineItem = ({
 							<Text color="gray">{`quantity: ${lineItem.quantity}`}</Text>
 						) : (
 							<>
-								<Button variant="ghost" disabled={lineItem.quantity === 0}>
-									<Icons.Minus size={10} />
-								</Button>
-								<Text>{lineItem.quantity}</Text>
-								<Button variant="ghost" type="button">
-									<Icons.Plus size={10} />
-								</Button>
+								<IconButton
+									variant="soft"
+									disabled={lineItem.quantity === 0}
+									onClick={async () => {
+										if (lineItem.quantity === 1)
+											return await deleteItem?.(lineItem.id);
+										await updateItem?.(lineItem.id, lineItem.quantity - 1);
+									}}
+									size="1"
+								>
+									<Icons.Minus className="size-3" />
+								</IconButton>
+								<Text size="2" className="px-2 text-accent-11">
+									{lineItem.quantity}
+								</Text>
+								<IconButton
+									onClick={async () =>
+										await updateItem?.(lineItem.id, lineItem.quantity + 1)
+									}
+									variant="soft"
+									type="button"
+									size="1"
+								>
+									<Icons.Plus className="size-3" />
+								</IconButton>
 							</>
 						)}
 					</Flex>
 				</Flex>
-				<Flex direction="column" align="end" justify="between">
+				<Flex direction="column" align="end" position="relative">
 					<Price
 						amount={amount}
 						currencyCode={currencyCode}
 						className="font-bold"
 					/>
 					{!readonly && (
-						<Button type="button">
-							<Icons.Trash size={12} />
-						</Button>
+						<IconButton
+							type="button"
+							variant="soft"
+							size="1"
+							className="absolute bottom-0 right-0"
+							onClick={async () => await deleteItem?.(lineItem.id)}
+						>
+							<Icons.Trash className="size-3" />
+						</IconButton>
 					)}
 				</Flex>
 			</Flex>
-		</li>
+		</Card>
 	);
 };
 export const LineItemSkeleton = () => {

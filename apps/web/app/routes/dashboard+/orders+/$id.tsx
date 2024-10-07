@@ -16,28 +16,32 @@ import React from "react";
 import { OrderStatus } from "~/components/badge/order-status";
 import { PaymentStatus } from "~/components/badge/payment-status";
 import { ShippingStatus } from "~/components/badge/shipping-status";
+import ImagePlaceholder from "~/components/image-placeholder";
 import { Total } from "~/components/templates/cart/total-info";
 import {
 	LineItem,
 	LineItemSkeleton,
 } from "~/components/templates/line-item/line-item";
-import { order } from "~/temp/mock-entities";
+import { useDashboardStore } from "~/zustand/store";
 
 const OrderRoute = () => {
+	const params = useParams();
+	const orderMap = useDashboardStore((state) => state.orderMap);
+	const order = orderMap.get(params.id!);
 	return (
-		<main className="w-full relative flex p-3 justify-center">
-			<div className="w-full max-w-[1300px] flex flex-col lg:flex-row gap-3">
-				<section className="w-full lg:w-8/12 flex flex-col gap-3 order-1 lg:order-0">
+		<Box className="w-full relative flex p-3 justify-center pb-20 lg:pb-3">
+			<Box className="w-full flex flex-col lg:flex-row gap-3">
+				<Box className="w-full lg:w-8/12 flex flex-col gap-3 order-1 lg:order-0">
 					<OrderInfo order={order} />
 					<PaymentInfo paymentStatus={"paid"} />
-					<ShippingInfo shippingStatus={"pending"} />
-				</section>
-				<section className="w-full lg:w-4/12 flex order-0 flex-col gap-3 lg:order-1">
-					<CustomerInfo order={undefined} />
+					<ShippingInfo shippingStatus={"pending"} order={order} />
+				</Box>
+				<Box className="w-full lg:w-4/12 flex order-0 flex-col gap-3 lg:order-1">
+					<CustomerInfo order={order} />
 					<CustomerNote />
-				</section>
-			</div>
-		</main>
+				</Box>
+			</Box>
+		</Box>
 	);
 };
 export default OrderRoute;
@@ -55,11 +59,25 @@ const CustomerInfo = ({ order }: { order: Order | undefined | null }) => {
 				</Heading>
 			</Flex>
 			<Box p="4">
-				<Flex justify="center">
-					<Avatar fallback="F" className="w-[200px] h-[200px]" />
-					<Text align="center">{order?.user?.username ?? order?.fullName}</Text>
+				<Flex justify="center" align="center" direction="column">
+					<Avatar
+						fallback={<ImagePlaceholder />}
+						className="border border-accent-5 size-[200px]"
+						src={
+							typeof order?.customer?.user?.avatar === "string"
+								? order?.customer?.user.avatar
+								: order?.customer?.user?.avatar?.url
+						}
+					/>
+					<Heading
+						size="4"
+						align="center"
+						className="text-accent-11 py-2 font-freeman"
+					>
+						{order?.customer?.user?.username ?? order?.fullName}
+					</Heading>
 				</Flex>
-				<Grid width="100%" className="border-b border-border" py="4">
+				<Grid width="100%" pt="4">
 					<address className="grid gap-0.5 not-italic ">
 						<Flex justify="between">
 							<Text className="font-semibold" size="2">
@@ -81,28 +99,6 @@ const CustomerInfo = ({ order }: { order: Order | undefined | null }) => {
 							</Link>
 						</Flex>
 					</address>
-				</Grid>
-				<Grid columns="2" gap="4" py="4">
-					<Grid gap="3">
-						<Text className="font-semibold" size="2">
-							Shipping Information
-						</Text>
-						<address className="grid gap-0.5 not-italic">
-							<Text size="2">{order?.fullName}</Text>
-							<Text size="2">{order?.shippingAddress?.line1}</Text>
-							<Text size="2">{`${order?.shippingAddress?.city}, ${order?.shippingAddress?.state}, ${order?.shippingAddress?.postalCode}`}</Text>
-						</address>
-					</Grid>
-					<Grid gap="3">
-						<Text className="font-semibold" size="2">
-							Billing Information
-						</Text>
-						<address className="grid gap-0.5 not-italic">
-							<Text size="2">{order?.fullName}</Text>
-							<Text size="2">{order?.shippingAddress?.line1}</Text>
-							<Text size="2">{`${order?.shippingAddress?.city}, ${order?.shippingAddress?.state}, ${order?.shippingAddress?.postalCode}`}</Text>
-						</address>
-					</Grid>
 				</Grid>
 			</Box>
 		</Card>
@@ -131,18 +127,26 @@ const CustomerNote = () => {
 };
 const OrderInfo = ({ order }: { order: Order | undefined }) => {
 	const [editMode, setEditMode] = React.useState(false);
+	const isInitialized = useDashboardStore((state) => state.isInitialized);
 	const items = order?.items ?? [];
-	const isInitialized = true;
 
 	return (
 		<Card className="p-0">
 			<Flex justify="between" align="center" className="border-b border-border">
 				<Flex justify="between" p="4" wrap="wrap" gap="2" width="100%">
 					<Grid gap="1">
-						<Heading
-							size="3"
-							className="text-accent-11 font-bold text-ellipsis overflow-hidden"
-						>{`${order?.id}`}</Heading>
+						<Flex gap="2" align="center">
+							<Box className="w-[300px] text-ellipsis overflow-hidden text-nowrap">
+								<Text
+									size="3"
+									className="text-accent-11 font-bold "
+								>{`${order?.id}`}</Text>
+							</Box>
+							<IconButton variant="outline">
+								<Icons.Copy className="h-3 w-3" />
+								<span className="sr-only">Copy Order ID</span>
+							</IconButton>
+						</Flex>
 						<Text size="2">{order?.createdAt}</Text>
 					</Grid>
 
@@ -261,18 +265,12 @@ const PaymentInfo = ({
 };
 const ShippingInfo = ({
 	shippingStatus,
-}: { shippingStatus: Order["shippingStatus"] }) => {
+	order,
+}: { shippingStatus: Order["shippingStatus"]; order: Order | undefined }) => {
 	const [editMode, setEditMode] = React.useState(false);
 	return (
 		<Card className="p-0">
-			<Flex
-				justify="between"
-				p="4"
-				wrap="wrap"
-				gap="2"
-				width="100%"
-				className="border-b border-border"
-			>
+			<Flex justify="between" p="4" wrap="wrap" gap="2" width="100%">
 				<Heading size="3" className="text-accent-11">
 					Shipping
 				</Heading>
@@ -306,6 +304,13 @@ const ShippingInfo = ({
 					)}
 				</Flex>
 			</Flex>
+			<Grid gap="3" p="4">
+				<address className="grid gap-0.5 not-italic">
+					<Text>{order?.fullName}</Text>
+					<Text>{order?.shippingAddress?.line1}</Text>
+					<Text>{`${order?.shippingAddress?.city}, ${order?.shippingAddress?.state}, ${order?.shippingAddress?.postalCode}`}</Text>
+				</address>
+			</Grid>
 		</Card>
 	);
 };

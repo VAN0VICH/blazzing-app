@@ -101,10 +101,10 @@ export default function Appearance() {
 							</Grid>
 
 							<Grid gap="2">
-								<Theme appearance="dark" className=" ">
+								<Theme appearance="dark">
 									<RadioCards.Item
 										value="dark"
-										className="w-[200px] h-[150px] bg-transparent     cursor-pointer"
+										className="w-[200px]  h-[150px] bg-transparent cursor-pointer"
 									>
 										<Display />
 									</RadioCards.Item>
@@ -125,12 +125,12 @@ export default function Appearance() {
 												position="absolute"
 												bottom="0"
 												left="2"
-												className="border-l border-t border- gray-5 dark:border- gray-8 rounded-tl-[7px]"
+												className="border-l border-t border-gray-5 dark:border-gray-8 rounded-tl-[7px]"
 											>
 												<Box
 													width="60%"
 													minHeight="129px"
-													className="border-r border-border dark:border- gray-8"
+													className="border-r border-border dark:border-gray-8"
 													p="2"
 												>
 													<Flex gap="1">
@@ -161,41 +161,41 @@ export default function Appearance() {
 															<Box
 																width="20px"
 																height="20px"
-																className="bg- gray-7  "
+																className="bg-gray-7 rounded-[4px] "
 															/>
 															<Box
 																width="30px"
 																height="4px"
-																className="bg- gray-6  "
+																className="bg-gray-6  "
 															/>
 														</Flex>
 														<Grid gap="1">
 															<Box
 																width="40px"
 																height="4px"
-																className="bg- gray-6  "
+																className="bg-gray-6  "
 															/>
 															<Box
 																width="30px"
 																height="4px"
-																className="bg- gray-6  "
+																className="bg-gray-6  "
 															/>
 														</Grid>
 														<Grid gap="1">
 															<Box
 																width="30px"
 																height="4px"
-																className="bg- gray-6  "
+																className="bg-gray-6  "
 															/>
 															<Box
 																width="40px"
 																height="4px"
-																className="bg- gray-6  "
+																className="bg-gray-6  "
 															/>
 															<Box
 																width="20px"
 																height="4px"
-																className="bg- gray-6  "
+																className="bg-gray-6  "
 															/>
 														</Grid>
 													</Grid>
@@ -371,11 +371,11 @@ const Display = () => {
 				position="absolute"
 				bottom="0"
 				left="2"
-				className="border-x border-t dark:border- gray-8 rounded-t-[6px]"
+				className="border-x border-t dark:border-gray-8 rounded-t-[6px]"
 			>
 				<Box
 					width="30%"
-					className="border-r border-border dark:border- gray-8"
+					className="border-r border-border dark:border-gray-8"
 					p="2"
 				>
 					<Flex gap="1">
@@ -398,41 +398,41 @@ const Display = () => {
 							<Box
 								width="20px"
 								height="20px"
-								className="bg- gray-7  dark:bg- gray-8  "
+								className="bg-gray-7 rounded-[4px]  dark:bg-gray-8  "
 							/>
 							<Box
 								width="30px"
 								height="4px"
-								className="bg- gray-6 dark:bg- gray-8  "
+								className="bg-gray-6 dark:bg-gray-8  "
 							/>
 						</Flex>
 						<Grid gap="1">
 							<Box
 								width="40px"
 								height="4px"
-								className="bg- gray-6 dark:bg- gray-8  "
+								className="bg-gray-6 dark:bg-gray-8  "
 							/>
 							<Box
 								width="30px"
 								height="4px"
-								className="bg- gray-6 dark:bg- gray-8  "
+								className="bg-gray-6 dark:bg-gray-8  "
 							/>
 						</Grid>
 						<Grid gap="1">
 							<Box
 								width="30px"
 								height="4px"
-								className="bg- gray-6 dark:bg- gray-8  "
+								className="bg-gray-6 dark:bg-gray-8  "
 							/>
 							<Box
 								width="40px"
 								height="4px"
-								className="bg- gray-6 dark:bg- gray-8  "
+								className="bg-gray-6 dark:bg-gray-8  "
 							/>
 							<Box
 								width="20px"
 								height="4px"
-								className="bg- gray-6 dark:bg- gray-8  "
+								className="bg-gray-6 dark:bg-gray-8  "
 							/>
 						</Grid>
 					</Grid>

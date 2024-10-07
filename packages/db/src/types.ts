@@ -14,15 +14,14 @@ const ImageSchema = z.object({
 	alt: z.string(),
 	order: z.number(),
 	url: z.string().optional(),
-	trimmed: z
+	cropped: z
 		.object({
-			left: z.number(),
-			right: z.number(),
-			top: z.number(),
-			bottom: z.number(),
+			url: z.string(),
+			base64: z.string().optional(),
+			fileType: z.string().optional(),
 		})
 		.optional(),
-	fileType: z.string(),
+	fileType: z.string().optional(),
 	base64: z.string().optional(),
 });
 

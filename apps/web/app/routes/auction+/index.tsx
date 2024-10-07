@@ -1,7 +1,6 @@
 import { Icons } from "@blazzing-app/ui/icons";
 import { Box, Button, Flex, Tabs } from "@radix-ui/themes";
 import React from "react";
-import { Products } from "~/components/templates/product/products";
 import { tags } from "~/constants";
 import type { AccentColor } from "~/validators/state";
 
@@ -9,10 +8,7 @@ export default function Auction() {
 	const [activeTags, setActiveTags] = React.useState<Set<string>>(new Set());
 	return (
 		<Flex direction="column" pt="4">
-			<Tabs.Root
-				defaultValue="live"
-				className="pt-3 flex items-center flex-col"
-			>
+			<Tabs.Root defaultValue="live" className="flex items-center flex-col">
 				<Tabs.List className="gap-10">
 					<Tabs.Trigger value="live" className="text-lg">
 						Live
@@ -22,9 +18,9 @@ export default function Auction() {
 					</Tabs.Trigger>
 				</Tabs.List>
 
-				<Box pt="4">
+				<Box width="100%" maxWidth="1700px">
 					<Tabs.Content value="live">
-						<Flex justify="between" align="center">
+						<Flex justify="between" align="center" gap="2">
 							<Flex gap="3" wrap="wrap" py="6">
 								{tags.map((tag) => (
 									<Button
@@ -37,7 +33,7 @@ export default function Auction() {
 												if (newSet.has(tag.name)) {
 													newSet.delete(tag.name);
 												} else {
-													newSet.add(tag.name);
+													// newSet.add(tag.name);
 												}
 												return newSet;
 											})
@@ -52,7 +48,7 @@ export default function Auction() {
 								Filters
 							</Button>
 						</Flex>
-						<Products isAuction={true} />
+						{/* <Products isAuction={true} /> */}
 					</Tabs.Content>
 
 					<Tabs.Content value="offline">
@@ -84,7 +80,7 @@ export default function Auction() {
 								Filters
 							</Button>
 						</Flex>
-						<Products isAuction={true} />
+						{/* <Products isAuction={true} /> */}
 					</Tabs.Content>
 				</Box>
 			</Tabs.Root>

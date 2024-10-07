@@ -26,6 +26,7 @@ interface OrdersTableProps {
 	orderID?: string | undefined;
 	toolbar?: boolean;
 	withNavigation?: boolean;
+	onSearch?: DebouncedFunc<(value: string) => void>;
 }
 
 function OrdersTable({
@@ -34,6 +35,7 @@ function OrdersTable({
 	orderID,
 	toolbar = true,
 	withNavigation = false,
+	onSearch,
 }: Readonly<OrdersTableProps>) {
 	const columns = useMemo<ColumnDef<Order>[]>(() => getOrdersColumns(), []);
 	const table = useDataTable({
@@ -61,6 +63,7 @@ function OrdersTable({
 					viewOptions={false}
 					table={table}
 					filterableColumns={filterableColumns}
+					{...(onSearch && { onSearch })}
 				/>
 			)}
 			{/* {dashboardRep?.online && ( */}

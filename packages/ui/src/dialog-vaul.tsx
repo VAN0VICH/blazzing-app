@@ -12,7 +12,7 @@ function DialogContent({
 			{overlay && <Drawer.Overlay className="fixed inset-0 z-50 bg-black/50" />}
 			<Drawer.Content
 				className={cn(
-					"border-border fixed bottom-0 top-0 z-50 flex w-5/6 flex-col rounded-lg border bg-white dark:bg-component backdrop-blur-md after:hidden focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
+					"border-border fixed bottom-0 top-0 z-50 flex w-5/6 flex-col rounded-lg border bg-white dark:bg-component backdrop-blur-md after:hidden focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7 right-0",
 					className,
 				)}
 			>

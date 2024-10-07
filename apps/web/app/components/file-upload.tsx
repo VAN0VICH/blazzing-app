@@ -1,8 +1,8 @@
 import { cn } from "@blazzing-app/ui";
+import { Icons } from "@blazzing-app/ui/icons";
 import { toast } from "@blazzing-app/ui/toast";
 import { formatBytes, generateID } from "@blazzing-app/utils";
 import type { Image } from "@blazzing-app/validators";
-import { UploadIcon } from "@radix-ui/react-icons";
 import { Box, Flex, Grid, Text } from "@radix-ui/themes";
 import * as base64 from "base64-arraybuffer";
 import { Console, Effect } from "effect";
@@ -178,9 +178,9 @@ export function FileUpload(props: FileUploaderProps) {
 							<Box
 								{...getRootProps()}
 								className={cn(
-									"group relative grid h-[10rem] w-full cursor-pointer place-items-center border-t border-border  px-5 py-2.5 text-center transition hover:bg- gray-2",
-									"ring-offset-background focus-visible:outline outline-none focus:border-ring focus:border focus:rounded-lg  focus-visible:ring-1 outline-2 focus-visible:ring-ring  ",
-									isDragActive && "border- gray-3",
+									"group relative grid h-[10rem] w-full cursor-pointer place-items-center px-5 py-2.5 text-center transition hover:bg-slate-2 dark:hover:bg-slate-3",
+									"ring-offset-accent-11 focus-visible:outline-none outline-none focus:border-ring focus:border focus:rounded-b-[7px] focus-visible:ring-2 outline-2 focus-visible:ring-accent-11",
+									isDragActive && "border-gray-3",
 									isDisabled && "pointer-events-none opacity-60",
 									{ "border-b": files ? files.length > 0 : false },
 									className,
@@ -195,9 +195,12 @@ export function FileUpload(props: FileUploaderProps) {
 										justify="center"
 										gap="4"
 									>
-										<Box p="3" className="rounded-full border border-dashed">
-											<UploadIcon
-												className="size-5 text-muted-foreground"
+										<Box
+											p="3"
+											className="rounded-full border border-gray-9 border-dashed"
+										>
+											<Icons.Upload
+												className="size-5 text-gray-9"
 												aria-hidden="true"
 											/>
 										</Box>
@@ -210,17 +213,17 @@ export function FileUpload(props: FileUploaderProps) {
 										justify="center"
 										gap="4"
 									>
-										<Box className="rounded-full border border-dashed p-3">
-											<UploadIcon
-												className="size-5 text-muted-foreground"
+										<Box
+											className="rounded-full border border-gray-9 border-dashed"
+											p="3"
+										>
+											<Icons.Upload
+												className="size-5 text-gray-9"
 												aria-hidden="true"
 											/>
 										</Box>
 										<Box className="space-y-px">
-											<Text className="font-medium text-sm text-muted-foreground">
-												Drag {`'n'`} drop files here, or click to select files
-											</Text>
-											<Text className="text-sm text-muted-foreground/70">
+											<Text className="text-sm" color="gray">
 												You can upload
 												{maxFiles > 1
 													? ` ${

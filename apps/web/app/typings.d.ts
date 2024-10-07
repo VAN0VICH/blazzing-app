@@ -4,7 +4,7 @@ declare global {
 		ENV: {
 			REPLICACHE_KEY: string;
 			PARTYKIT_HOST: string;
-			SERVER_URL: string;
+			WORKER_URL: string;
 			LIVEKIT_SERVER_URL: string;
 		};
 	}

@@ -1,5 +1,5 @@
-import { Controller, getSessionFromReq } from "@blazzing-app/core";
-import type { WorkerBindings } from "@blazzing-app/validators";
+import { Livekit } from "@blazzing-app/core";
+import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 const ConnectionDetailsSchema = z.object({
 	token: z.string(),
@@ -11,7 +11,9 @@ const RoomMetadataSchema = z.object({
 	allowParticipation: z.boolean(),
 });
 export namespace AuctionApi {
-	export const route = new OpenAPIHono<{ Bindings: WorkerBindings }>()
+	export const route = new OpenAPIHono<{
+		Bindings: WorkerBindings & WorkerEnv;
+	}>()
 		.openapi(
 			createRoute({
 				security: [{ Bearer: [] }],
@@ -44,7 +46,7 @@ export namespace AuctionApi {
 				},
 			}),
 			async (c) => {
-				const controller = new Controller(
+				const controller = new Livekit.Controller(
 					c.env.LIVEKIT_SERVER_URL,
 					c.env.LIVEKIT_API_KEY,
 					c.env.LIVEKIT_SECRET_KEY,
@@ -74,7 +76,7 @@ export namespace AuctionApi {
 					200: {
 						content: {
 							"application/json": {
-								schema: z.object({}),
+								schema: z.object({ result: z.boolean() }),
 							},
 						},
 						description: "Removes identity from stage.",
@@ -82,15 +84,59 @@ export namespace AuctionApi {
 				},
 			}),
 			async (c) => {
-				const controller = new Controller(
+				const controller = new Livekit.Controller(
 					c.env.LIVEKIT_SERVER_URL,
 					c.env.LIVEKIT_API_KEY,
 					c.env.LIVEKIT_SECRET_KEY,
 				);
-				const session = getSessionFromReq(c.req.raw, c.env.LIVEKIT_SECRET_KEY);
+				const session = Livekit.getSessionFromReq(
+					c.req.raw,
+					c.env.LIVEKIT_SECRET_KEY,
+				);
 				const body = c.req.valid("json");
-				await controller.removeFromStage(session, body);
-				return c.json({});
+				try {
+					await controller.removeFromStage(session, body);
+					return c.json({ result: true });
+				} catch (error) {
+					console.error(error);
+					return c.json({ result: false });
+				}
+			},
+		)
+		.openapi(
+			createRoute({
+				security: [{ Bearer: [] }],
+				method: "post",
+				path: "/end-stream",
+				responses: {
+					200: {
+						content: {
+							"application/json": {
+								schema: z.object({
+									result: z.boolean(),
+								}),
+							},
+						},
+						description: "Removes identity from stage.",
+					},
+				},
+			}),
+			async (c) => {
+				const controller = new Livekit.Controller(
+					c.env.LIVEKIT_SERVER_URL,
+					c.env.LIVEKIT_API_KEY,
+					c.env.LIVEKIT_SECRET_KEY,
+				);
+				const session = Livekit.getSessionFromReq(
+					c.req.raw,
+					c.env.LIVEKIT_SECRET_KEY,
+				);
+				try {
+					await controller.stopStream(session);
+					return c.json({ result: true });
+				} catch (error) {
+					return c.json({ result: false });
+				}
 			},
 		);
 }

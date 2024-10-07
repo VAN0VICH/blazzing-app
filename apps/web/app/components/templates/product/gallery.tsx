@@ -9,6 +9,8 @@ import {
 } from "@blazzing-app/ui/carousel";
 import type { Image as ImageType } from "@blazzing-app/validators";
 import { Avatar, Box, Flex } from "@radix-ui/themes";
+import { useNavigate } from "@remix-run/react";
+import Image from "~/components/image";
 import { toImageURL } from "~/utils/helpers";
 
 interface GalleryProps {
@@ -37,17 +39,11 @@ function MobileGallery({ images, isScrolled }: GalleryProps) {
 								className={cn("shadow-none w-full flex justify-center")}
 								onClick={(e) => e.stopPropagation()}
 							>
-								{!url ? (
-									<img
-										alt={alt}
-										className={cn(
-											"md:rounded-lg w-max max-w-full select-none object-contain object-center",
-										)}
-										src={toImageURL(base64, fileType)}
-									/>
-								) : (
-									<Avatar fallback="2" />
-								)}
+								<Image
+									onClick={(e) => e.stopPropagation()}
+									src={url ?? toImageURL(base64, fileType)}
+									alt={alt}
+								/>
 							</CarouselItem>
 						))}
 						{images.length === 0 && (
@@ -59,8 +55,8 @@ function MobileGallery({ images, isScrolled }: GalleryProps) {
 
 					{images.length > 0 && (
 						<>
-							<CarouselPrevious onClick={(e) => e.stopPropagation()} />
-							<CarouselNext onClick={(e) => e.stopPropagation()} />
+							<CarouselPrevious color="gray" variant="solid" />
+							<CarouselNext color="gray" variant="solid" />
 						</>
 					)}
 				</Carousel>
@@ -70,25 +66,48 @@ function MobileGallery({ images, isScrolled }: GalleryProps) {
 }
 
 const DesktopGallery = ({ images }: GalleryProps) => {
+	const navigate = useNavigate();
 	return (
 		<Box className="hidden py-4 lg:flex flex-col w-full gap-4 items-center justify-center h-full overflow-y-scroll">
-			{images.map(({ base64, url, alt, id, fileType }) => {
-				if (!url)
-					return (
-						// biome-ignore lint/a11y/useKeyWithClickEvents: <explanation>
-						<img
-							key={id}
-							alt={alt}
-							className={cn(
-								"w-max max-w-full select-none object-contain object-center",
-							)}
-							src={toImageURL(base64, fileType)}
-							onClick={(e) => e.stopPropagation()}
-						/>
-					);
-				return <Avatar fallback="F" key={id} />;
-			})}
 			{images.length === 0 && <Avatar fallback="F" />}
+			<Carousel>
+				<CarouselContent className="shadow-none w-screen lg:w-[calc(100vw-400px)]">
+					{images.map(({ base64, url, alt, id, fileType }) => (
+						<CarouselItem
+							key={id}
+							className={cn("shadow-none flex justify-center")}
+							onClick={(e) => {
+								console.log("clicked 2");
+								e.stopPropagation();
+
+								navigate("/marketplace", {
+									preventScrollReset: true,
+									unstable_viewTransition: true,
+									replace: true,
+								});
+							}}
+						>
+							<Image
+								onClick={(e) => e.stopPropagation()}
+								src={url ?? toImageURL(base64, fileType)}
+								alt={alt}
+							/>
+						</CarouselItem>
+					))}
+					{images.length === 0 && (
+						<CarouselItem className="aspect-square">
+							<Avatar fallback="2" />
+						</CarouselItem>
+					)}
+				</CarouselContent>
+
+				{images.length > 0 && (
+					<>
+						<CarouselPrevious color="gray" variant="solid" />
+						<CarouselNext color="gray" variant="solid" />
+					</>
+				)}
+			</Carousel>
 		</Box>
 	);
 };

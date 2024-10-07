@@ -24,6 +24,7 @@ export function toImageURL(
 	base64: string | undefined,
 	fileType: string | undefined,
 ) {
+	if (base64 === undefined || fileType === undefined) return undefined;
 	return `data:${fileType};base64,${base64}`;
 }
 
@@ -38,3 +39,6 @@ export const isTouchDevice = () => {
 
 export const capitalize = (str: string | undefined) =>
 	str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
+
+export const decapitalize = (str: string | undefined) =>
+	str ? str.charAt(0).toLowerCase() + str.slice(1) : "";

@@ -18,7 +18,7 @@ export function DataTableViewOptions<TData>({
 				</IconButton>
 			</DropdownMenuTrigger>
 			<DropdownMenu.Content align="end" className="w-[150px] backdrop-blur-sm">
-				<DropdownMenu.Label>Toggle columns</DropdownMenu.Label>
+				<DropdownMenu.Label className="h-5">Columns</DropdownMenu.Label>
 				<DropdownMenu.Separator />
 				{table
 					.getAllColumns()
@@ -30,7 +30,7 @@ export function DataTableViewOptions<TData>({
 						return (
 							<DropdownMenu.CheckboxItem
 								key={column.id}
-								className="capitalize"
+								className="capitalize hover:bg-accent-3  hover:text-accent-11"
 								checked={column.getIsVisible()}
 								onCheckedChange={(value) => column.toggleVisibility(!!value)}
 							>

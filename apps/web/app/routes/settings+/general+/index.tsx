@@ -26,7 +26,7 @@ export default function General() {
 						Details
 					</Heading>
 				</Box>
-				<Box width="100%">
+				<Box width="100%" p="3">
 					<Card className="p-0">
 						<Flex p="4" gap="2" className="border-b border-border">
 							<Avatar size="2" fallback="A" src={undefined} />
@@ -38,11 +38,11 @@ export default function General() {
 							<Flex gap="4" pb="2">
 								<Grid gap="2">
 									<Text>First name</Text>
-									<TextField.Root variant="classic" />
+									<TextField.Root variant="soft" />
 								</Grid>
 								<Grid gap="2">
 									<Text>First name</Text>
-									<TextField.Root variant="classic" />
+									<TextField.Root variant="soft" />
 								</Grid>
 							</Flex>
 							<Text size="2" as="p" color="gray" className="py-2">
@@ -59,12 +59,12 @@ export default function General() {
 								<Grid gap="2">
 									<Text>Verified</Text>
 									<Flex justify="center" align="start">
-										<Icons.CircleCheck className="text-green-9" />
+										<Icons.CircleCheck className="text-accent-11" />
 									</Flex>
 								</Grid>
 								<Grid gap="2">
-									<IconButton size="2" variant={"ghost"} color="gray">
-										<Icons.Edit className="size-5 text- gray-10" />
+									<IconButton size="2" variant={"ghost"}>
+										<Icons.Edit className="size-5 text-accent-11" />
 									</IconButton>
 								</Grid>
 							</Flex>
@@ -76,8 +76,8 @@ export default function General() {
 									<Text>{"No phone number"}</Text>
 								</Grid>
 								<Grid gap="2">
-									<IconButton size="2" variant={"ghost"} color="gray">
-										<Icons.Edit className="size-5 text- gray-10" />
+									<IconButton size="2" variant={"ghost"}>
+										<Icons.Edit className="size-5 text-accent-11" />
 									</IconButton>
 								</Grid>
 							</Flex>
@@ -121,7 +121,7 @@ export default function General() {
 							<Grid gap="2">
 								<Text>Language</Text>
 								<Select.Root defaultValue="apple">
-									<Select.Trigger />
+									<Select.Trigger variant="soft" />
 									<Select.Content className="backdrop-blur-sm">
 										<Select.Group>
 											<Select.Label>Fruits</Select.Label>
@@ -174,7 +174,7 @@ export default function General() {
 								<Text>Timezone</Text>
 
 								<Select.Root defaultValue="apple">
-									<Select.Trigger />
+									<Select.Trigger variant="soft" />
 									<Select.Content className="backdrop-blur-sm">
 										<Select.Group>
 											<Select.Label>Fruits</Select.Label>

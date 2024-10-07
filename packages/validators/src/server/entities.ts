@@ -28,3 +28,9 @@ export type PaymentProfile = InferSelectModel<typeof schema.paymentProfiles>;
 export type StripeAccount = InferSelectModel<typeof schema.stripe>;
 
 export const VariantSchema = createSelectSchema(schema.variants);
+export const AuthUserSchema = createSelectSchema(schema.authUsers);
+export const SessionSchema = createSelectSchema(schema.sessions);
+export const UserSchema = createSelectSchema(schema.users);
+export const StoreSchema = createSelectSchema(schema.stores);
+export const OrderSchema = createSelectSchema(schema.orders);
+export const PaymentProfile = createSelectSchema(schema.paymentProfiles);

@@ -25,9 +25,15 @@ import {
 import { useLocation, useNavigate } from "@remix-run/react";
 import { HighlightedText } from "~/highlighted-text";
 import { useDebounce } from "~/hooks/use-debounce";
+import { useGlobalSearch } from "~/zustand/store";
+import type {
+	SearchWorkerRequest,
+	SearchWorkerResponse,
+} from "~/worker/search";
 
 export function GlobalSearchCombobox() {
 	const navigate = useNavigate();
+	const searchWorker = useGlobalSearch((state) => state.globalSearchWorker);
 
 	const [query, setQuery] = React.useState("");
 	const debouncedQuery = useDebounce(query, 300);
@@ -55,35 +61,73 @@ export function GlobalSearchCombobox() {
 		window.addEventListener("keydown", handleKeyDown);
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, [mainPath]);
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	const onSelect = React.useCallback((callback: () => unknown) => {
+		close();
+		callback();
+	}, []);
+
+	React.useEffect(() => {
+		if (debouncedQuery.length <= 0) {
+			setSearchResults(undefined);
+			return;
+		}
+
+		searchWorker?.postMessage({
+			type: "GLOBAL_SEARCH",
+			payload: {
+				query: debouncedQuery,
+			},
+		} satisfies SearchWorkerRequest);
+	}, [debouncedQuery, searchWorker]);
+	React.useEffect(() => {
+		if (!searchWorker) return;
+
+		const handleMessage = (event: MessageEvent) => {
+			const { type, payload } = event.data as SearchWorkerResponse;
+			if (typeof type === "string" && type === "GLOBAL_SEARCH") {
+				startTransition(() => {
+					const variants: Variant[] = [];
+					const variantIDs = new Set<string>();
+					for (const p of payload) {
+						if (p.id.startsWith("variant")) {
+							if (!variantIDs.has(p.id)) {
+								variants.push(p as Variant);
+								variantIDs.add(p.id);
+							}
+						}
+					}
+					setSearchResults({
+						variants,
+					});
+				});
+			}
+		};
+
+		searchWorker.addEventListener("message", handleMessage);
+
+		return () => {
+			searchWorker.removeEventListener("message", handleMessage);
+		};
+	}, [searchWorker]);
 
 	return (
 		<Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
 			<Dialog.Trigger>
 				<Flex>
-					<Button
-						size="3"
-						variant={"surface"}
+					<button
+						type="button"
 						className={cn(
-							"hidden group relative lg:flex gap-3 items-center px-2",
+							"hidden dark:bg-gray-3 items-center font-freeman dark:shadow-accent-2 group relative h-[45px] lg:flex gap-3 bg-component shadow-sm text-accent-11 hover:bg-accent-2 hover:border-accent-6 border border-border p-3 rounded-[7px] focus-visible:ring-accent-8 focus-visible:outline-none focus-visible:ring-2",
 						)}
 					>
-						<Icons.MagnifyingGlassIcon
-							aria-hidden="true"
-							className="size-5 text-slate-11 "
-						/>
-						<Text size="2">Search</Text>
+						<Icons.MagnifyingGlassIcon aria-hidden="true" className="size-5" />
+						<Text size="3">Search</Text>
 						<span className="sr-only">Search...</span>
-						<Kbd title={"Command"} className=" text-slate-11 border-border ">
+						<Kbd title={"Command"} className="text-accent-11">
 							{"⌘"} K
 						</Kbd>
-					</Button>
-					<IconButton
-						variant="ghost"
-						type="button"
-						className="flex px-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring lg:hidden rounded-lg hover:bg-slate-a-2 p-2"
-					>
-						<Icons.MagnifyingGlassIcon className="text-slate-11 hover:text-brand-9 size-6" />
-					</IconButton>
+					</button>
 				</Flex>
 			</Dialog.Trigger>
 			<Dialog.Content className="p-0 rounded-[7px]" align="start">
@@ -125,14 +169,15 @@ export function GlobalSearchCombobox() {
 													key={variant.id}
 													className="p-2"
 													value={variant.id}
-													onSelect={() =>
-														// onSelect(() =>
-														// 	navigate(
-														// 		`/marketplace/products/${variant.handle}`,
-														// 	),
-														// )
-														{}
-													}
+													onSelect={() => {
+														onSelect(() =>
+															navigate(
+																`/marketplace/products/${variant.handle}`,
+															),
+														);
+														setQuery("");
+														setIsOpen(false);
+													}}
 												>
 													<Flex gap="3">
 														<Icons.Product

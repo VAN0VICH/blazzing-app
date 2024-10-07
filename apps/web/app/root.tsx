@@ -22,12 +22,27 @@ import { MobileSidebar, Sidebar } from "./components/layout/sidebar";
 import { ClientHintCheck, getHints } from "./hooks/use-hints";
 import { useNonce } from "./hooks/use-nonce";
 import { useUserPreferences } from "./hooks/use-user-preferences";
-import { prefs, userContext } from "./sessions.server";
+import { prefs, userContext } from "./server/sessions.server";
 import sonnerStyles from "./sonner.css?url";
 import "./tailwind.css";
 import { getDomainUrl } from "./utils/helpers";
 import type { Preferences, Theme as ThemeType } from "./validators/state";
 import vaulStyles from "./vaul.css?url";
+import { DashboardReplicacheProvider } from "./providers/replicache/dashboard";
+import type { AuthSession, AuthUser } from "@blazzing-app/validators";
+import { ClientOnly } from "remix-utils/client-only";
+import { PartykitProvider } from "./client/partykit.client";
+import { MarketplaceReplicacheProvider } from "./providers/replicache/marketplace";
+import { GlobalReplicacheProvider } from "./providers/replicache/global";
+import {
+	GlobalSearchProvider,
+	GlobalStoreProvider,
+	MarketplaceStoreProvider,
+} from "./zustand/store";
+import {
+	GlobalStoreMutator,
+	MarketplaceStoreMutator,
+} from "./zustand/store-mutator";
 export const links: LinksFunction = () => {
 	return [
 		// Preload svg sprite as a resource to avoid render blocking
@@ -45,14 +60,19 @@ export type RootLoaderData = {
 		userPrefs: Preferences;
 		userContext: {
 			cartID?: string;
+			authUser: AuthUser | null;
+			userSession: AuthSession | null;
 		};
 	};
 };
 
 export const loader: LoaderFunction = async (args) => {
-	const { request, context } = args;
-	const { REPLICACHE_KEY, PARTYKIT_HOST, SERVER_URL, LIVEKIT_SERVER_URL } =
-		context.cloudflare.env;
+	const {
+		request,
+		context: { authUser, cloudflare, userSession },
+	} = args;
+	const { REPLICACHE_KEY, PARTYKIT_HOST, WORKER_URL, LIVEKIT_SERVER_URL } =
+		cloudflare.env;
 
 	const cookieHeader = request.headers.get("Cookie");
 	const prefsCookie = (await prefs.parse(cookieHeader)) || {};
@@ -61,7 +81,7 @@ export const loader: LoaderFunction = async (args) => {
 		ENV: {
 			REPLICACHE_KEY,
 			PARTYKIT_HOST,
-			SERVER_URL,
+			WORKER_URL,
 			LIVEKIT_SERVER_URL,
 		},
 
@@ -78,6 +98,8 @@ export const loader: LoaderFunction = async (args) => {
 			},
 			userContext: {
 				cartID: userContextCookie.cartID,
+				authUser,
+				userSession,
 			},
 		},
 	});
@@ -89,21 +111,39 @@ function App() {
 	const preferences = useUserPreferences();
 	return (
 		<Document nonce={nonce} env={data.ENV} theme={preferences.theme ?? "light"}>
-			<Theme
-				accentColor={preferences.accentColor ?? "ruby"}
-				grayColor={preferences.grayColor ?? "mauve"}
-				radius="medium"
-				panelBackground="solid"
-				appearance={preferences.theme ?? "light"}
-				scaling={preferences.scaling ?? "100%"}
-			>
-				<Toploader />
-				<Sidebar />
-				<MobileSidebar />
-				<Header />
-				<Outlet />
-				<Toaster />
-			</Theme>
+			<MarketplaceReplicacheProvider>
+				<GlobalReplicacheProvider>
+					<DashboardReplicacheProvider>
+						<GlobalStoreProvider>
+							<MarketplaceStoreProvider>
+								<GlobalSearchProvider>
+									<GlobalStoreMutator>
+										<MarketplaceStoreMutator>
+											<Theme
+												accentColor={preferences.accentColor ?? "ruby"}
+												grayColor={preferences.grayColor ?? "mauve"}
+												radius="medium"
+												panelBackground="solid"
+												appearance={preferences.theme ?? "light"}
+												scaling={preferences.scaling ?? "100%"}
+											>
+												<Toploader />
+												<Sidebar />
+												<MobileSidebar />
+												<Header />
+												<Outlet />
+												<Toaster />
+
+												<ClientOnly>{() => <PartykitProvider />}</ClientOnly>
+											</Theme>
+										</MarketplaceStoreMutator>
+									</GlobalStoreMutator>
+								</GlobalSearchProvider>
+							</MarketplaceStoreProvider>
+						</GlobalStoreProvider>
+					</DashboardReplicacheProvider>
+				</GlobalReplicacheProvider>
+			</MarketplaceReplicacheProvider>
 		</Document>
 	);
 }

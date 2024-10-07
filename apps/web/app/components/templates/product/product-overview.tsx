@@ -5,20 +5,14 @@ import type {
 	ProductOption,
 	Variant,
 } from "@blazzing-app/validators/client";
+import { Box, Flex, Grid, Heading, ScrollArea, Text } from "@radix-ui/themes";
 import React, { useCallback, useEffect, useState } from "react";
+import Image from "~/components/image";
 import { toImageURL } from "~/utils/helpers";
 import { Actions } from "./actions";
 import { DesktopGallery, MobileGallery } from "./gallery";
 import { GeneralInfo } from "./product-info";
-import {
-	Avatar,
-	Box,
-	Flex,
-	Grid,
-	Heading,
-	ScrollArea,
-	Text,
-} from "@radix-ui/themes";
+import Price from "~/components/price";
 
 interface ProductOverviewProps {
 	product: Product | undefined;
@@ -46,6 +40,7 @@ const ProductOverview = ({
 	isScrolled,
 }: ProductOverviewProps) => {
 	const [isShaking, setIsShaking] = React.useState(false);
+	console.log("isShaking", isShaking);
 	return (
 		<Flex
 			height="100vh"
@@ -82,6 +77,7 @@ const ProductOverview = ({
 							product={product}
 							{...(setView && { setView })}
 						/>
+						<Pricing variant={selectedVariant ?? baseVariant} />
 						<Actions
 							{...(cartID && { cartID })}
 							product={product}
@@ -91,6 +87,7 @@ const ProductOverview = ({
 							variants={variants}
 							{...(isDashboard && { isDashboard })}
 						/>
+
 						<ProductVariants
 							variants={variants}
 							{...(isDashboard && { isDashboard })}
@@ -114,7 +111,20 @@ const ProductOverview = ({
 };
 export { ProductOverview };
 
-const ProductVariants = ({
+export const Pricing = ({ variant }: { variant: Variant | undefined }) => {
+	return (
+		<Box pt="4">
+			<Heading>
+				<Price
+					amount={variant?.prices?.[0]?.amount ?? 0}
+					currencyCode={variant?.prices?.[0]?.currencyCode ?? "AUD"}
+				/>
+			</Heading>
+		</Box>
+	);
+};
+
+export const ProductVariants = ({
 	isDashboard = false,
 	variants,
 	selectedVariantIDOrHandle,
@@ -127,16 +137,14 @@ const ProductVariants = ({
 }) => {
 	if (variants.length === 0) return null;
 	return (
-		<Box py="4">
+		<Box pb="4">
 			{variants.length > 0 && (
-				<>
-					<Heading className="flex min-w-[4rem] py-2 items-center font-semibold text-base">
-						Variant
-					</Heading>
-				</>
+				<Heading className="flex min-w-[4rem] pb-2 items-center font-semibold text-base">
+					Variant
+				</Heading>
 			)}
 			<ToggleGroup
-				className="grid grid-cols-3 lg:grid-cols-3 gap-2 "
+				className="grid grid-cols-3 gap-2"
 				type="single"
 				value={selectedVariantIDOrHandle ?? ""}
 				variant="outline"
@@ -147,22 +155,20 @@ const ProductVariants = ({
 				{variants?.map((v) => (
 					<ToggleGroupItem
 						key={v.id}
-						value={isDashboard ? v.id : v.handle ?? ""}
-						className="relative  w-[6rem] min-h-[6rem] p-0"
+						value={isDashboard ? v.id : (v.handle ?? "")}
+						className="relative border-r border-border size-[100px] p-0"
 						onClick={(e) => e.stopPropagation()}
 					>
 						<Box position="relative">
-							{!v.images?.[0] ? (
-								<Avatar fallback="4" />
-							) : v.images?.[0].url ? (
-								<Avatar fallback="4" />
-							) : (
-								<img
-									src={toImageURL(v.images?.[0].base64, v.images?.[0].fileType)}
-									alt={v.images?.[0].alt ?? "Product image"}
-									className="rounded-md object-cover"
-								/>
-							)}
+							<Image
+								width={{ initial: 100 }}
+								fit="cover"
+								height={{ initial: 100 }}
+								src={
+									v.images?.[0]?.url ??
+									toImageURL(v.images?.[0]?.base64, v.images?.[0]?.fileType)
+								}
+							/>
 						</Box>
 					</ToggleGroupItem>
 				))}
@@ -171,7 +177,7 @@ const ProductVariants = ({
 	);
 };
 
-const ProductOptions = ({
+export const ProductOptions = ({
 	options,
 	selectedVariant,
 	variants,
@@ -189,6 +195,7 @@ const ProductOptions = ({
 	const [variantOptions, setVariantOptions] = useState<Record<string, string>>(
 		{},
 	);
+	console.log("selected variant", selectedVariant);
 
 	useEffect(() => {
 		if (selectedVariant) {
@@ -221,8 +228,9 @@ const ProductOptions = ({
 					}
 					if (optionValuesEqual) {
 						variantFound = true;
+						console.log("variant handle", variant);
 						setVariantIDOrHandle(
-							isDashboard ? variant.id : variant.handle ?? undefined,
+							isDashboard ? variant.id : (variant.handle ?? undefined),
 						);
 						break;
 					}
@@ -247,7 +255,7 @@ const ProductOptions = ({
 						<ToggleGroup
 							className={cn(
 								"flex justify-start",
-								isShaking && "animate-shake duration-300",
+								isShaking && "animate-bounce duration-300",
 							)}
 							type="single"
 							value={variantOptions[option.id] ?? ""}

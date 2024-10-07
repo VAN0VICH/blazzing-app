@@ -3,7 +3,6 @@ import type { Table } from "@tanstack/react-table";
 import { cn } from "@blazzing-app/ui";
 import { Icons, strokeWidth } from "@blazzing-app/ui/icons";
 import { Box, Flex, IconButton, Select, Text } from "@radix-ui/themes";
-import { useUserPreferences } from "~/hooks/use-user-preferences";
 
 interface DataTablePaginationProps<TData> {
 	table: Table<TData>;
@@ -16,7 +15,6 @@ export function DataTablePagination<TData>({
 	className,
 	pageSizes = [100, 200, 300],
 }: DataTablePaginationProps<TData>) {
-	const { accentColor } = useUserPreferences();
 	return (
 		<Flex align="center" justify="center" px="2" className={cn(className)}>
 			<Box className="hidden md:block text-sm text-muted-foreground">
@@ -36,7 +34,10 @@ export function DataTablePagination<TData>({
 							table.setPageSize(Number(value));
 						}}
 					>
-						<Select.Trigger className="h-8 w-[70px] text-accent-11">
+						<Select.Trigger
+							className="h-8 w-[70px] text-accent-11"
+							variant="soft"
+						>
 							{table.getState().pagination.pageSize}
 						</Select.Trigger>
 						<Select.Content side="top" className="backdrop-blur-sm">
@@ -58,8 +59,7 @@ export function DataTablePagination<TData>({
 					<Flex align="center" className="space-x-2">
 						<IconButton
 							type="button"
-							variant="outline"
-							color={accentColor ?? "ruby"}
+							variant="soft"
 							className="hidden lg:flex"
 							onClick={() => table.setPageIndex(0)}
 							disabled={!table.getCanPreviousPage()}
@@ -72,9 +72,8 @@ export function DataTablePagination<TData>({
 							/>
 						</IconButton>
 						<IconButton
-							color={accentColor ?? "ruby"}
 							type="button"
-							variant="outline"
+							variant="soft"
 							onClick={() => table.previousPage()}
 							disabled={!table.getCanPreviousPage()}
 						>
@@ -86,9 +85,8 @@ export function DataTablePagination<TData>({
 							/>
 						</IconButton>
 						<IconButton
-							color={accentColor ?? "ruby"}
 							type="button"
-							variant="outline"
+							variant="soft"
 							onClick={() => table.nextPage()}
 							disabled={!table.getCanNextPage()}
 						>
@@ -101,8 +99,7 @@ export function DataTablePagination<TData>({
 						</IconButton>
 						<IconButton
 							type="button"
-							color={accentColor ?? "ruby"}
-							variant="outline"
+							variant="soft"
 							className="hidden lg:flex"
 							onClick={() => table.setPageIndex(table.getPageCount() - 1)}
 							disabled={!table.getCanNextPage()}

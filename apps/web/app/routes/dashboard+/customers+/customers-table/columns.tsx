@@ -3,6 +3,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { Customer } from "@blazzing-app/validators/client";
 import { Avatar, Flex, Grid, Text } from "@radix-ui/themes";
 import { DataTableColumnHeader } from "~/components/templates/table/data-table-column-header";
+import ImagePlaceholder from "~/components/image-placeholder";
 
 export function getCustomersColumns(): ColumnDef<Customer, unknown>[] {
 	return [
@@ -13,7 +14,14 @@ export function getCustomersColumns(): ColumnDef<Customer, unknown>[] {
 			),
 			cell: ({ row }) => (
 				<Flex gap="2" width="200px">
-					<Avatar fallback="F" />
+					<Avatar
+						fallback={<ImagePlaceholder />}
+						src={
+							typeof row.original?.user?.avatar === "string"
+								? row.original?.user.avatar
+								: row.original?.user?.avatar?.url
+						}
+					/>
 					<Grid gap="1">
 						<Text size="1">
 							{row.original.user?.username ?? row.original.user?.fullName}

@@ -71,6 +71,10 @@ import {
 	PiggyBank,
 	Gavel,
 	SlidersHorizontal,
+	PlusSquare,
+	UploadIcon,
+	ChevronDown,
+	ChevronUp,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -91,21 +95,24 @@ export const Icons = {
 	Sun: Sun,
 	Moon: Moon,
 	Left: ChevronLeft,
+	Down: ChevronDown,
+	Up: ChevronUp,
 	DoubleLeft: ChevronsLeft,
 	Right: ChevronRight,
 	DoubleRight: ChevronsRight,
 	CreditCard: CreditCard,
 	Close: X,
 	Edit: SquarePen,
-	Copy: Copy,
-	CopyCheck: CopyCheck,
-	Minus: Minus,
-	MinusCircle: MinusCircle,
+	Copy,
+	CopyCheck,
+	Minus,
+	MinusCircle,
 	Plus: Plus,
-	PlusCircle: PlusCircle,
-	Menu: Menu,
-	Trash: Trash,
-	Laptop: Laptop,
+	PlusSquare,
+	PlusCircle,
+	Menu,
+	Trash,
+	Laptop,
 	Loader: LoaderCircle,
 	CircleCheck: CircleCheck,
 	CircleError: CircleX,
@@ -150,6 +157,7 @@ export const Icons = {
 	Sparkles,
 	Auction: PiggyBank,
 	Gavel,
+	Upload: UploadIcon,
 	UPC: (props: LucideProps) => (
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" {...props}>
 			<g clipPath="url(#a)">
@@ -291,7 +299,6 @@ export const Icons = {
 	),
 	Google: ({ ...props }: LucideProps) => (
 		<svg
-			aria-hidden="true"
 			focusable="false"
 			data-prefix="fab"
 			data-icon="discord"

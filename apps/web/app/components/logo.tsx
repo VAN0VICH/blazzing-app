@@ -15,7 +15,7 @@ function Logo({ className = "", ...props }: LogoProps) {
 			unstable_viewTransition
 			{...props}
 		>
-			<span className="text-balance     bg-black bg-gradient-to-b from-accent-9 to-accent-11 bg-clip-text text-4xl font-bold text-transparent lg:tracking-tight">
+			<span className="text-balance font-freeman bg-black bg-gradient-to-b from-accent-9 to-accent-11 bg-clip-text text-4xl font-bold text-transparent lg:tracking-tight">
 				Logo
 			</span>
 		</Nav>

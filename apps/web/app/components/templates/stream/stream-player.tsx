@@ -1,3 +1,5 @@
+import type { Livekit } from "@blazzing-app/core";
+import type { Routes } from "@blazzing-app/functions";
 import {
 	AudioTrack,
 	StartAudio,
@@ -11,21 +13,19 @@ import {
 } from "@livekit/components-react";
 import { CopyIcon, EyeClosedIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import { Avatar, Badge, Box, Button, Flex, Grid, Text } from "@radix-ui/themes";
+import { useCopyToClipboard } from "@uidotdev/usehooks";
+import { hc } from "hono/client";
+import Confetti from "js-confetti";
 import {
 	ConnectionState,
 	type LocalVideoTrack,
 	Track,
 	createLocalTracks,
 } from "livekit-client";
-import Confetti from "js-confetti";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useAuthToken } from "~/providers/token-context";
 import { MediaDeviceSettings } from "./media-device-settings";
 import { PresenceDialog } from "./presence-dialog";
-import { useCopyToClipboard } from "@uidotdev/usehooks";
-import type { ParticipantMetadata, RoomMetadata } from "@blazzing-app/core";
-import { useAuthToken } from "~/providers/token-context";
-import { hc } from "hono/client";
-import type { Routes } from "@blazzing-app/functions";
 
 function ConfettiCanvas() {
 	const [confetti, setConfetti] = useState<Confetti>();
@@ -52,21 +52,25 @@ function ConfettiCanvas() {
 export function StreamPlayer({ isHost = false }) {
 	const [_, copy] = useCopyToClipboard();
 
-	const [localVideoTrack, setLocalVideoTrack] = useState<LocalVideoTrack>();
+	const [honoClient] = React.useState(() => hc<Routes>(window.ENV.WORKER_URL));
+
+	const [localVideoTrack, setLocalVideoTrack] =
+		React.useState<LocalVideoTrack>();
 	const localVideoEl = useRef<HTMLVideoElement>(null);
 
 	const { metadata, name: roomName, state: roomState } = useRoomContext();
-	const roomMetadata = (metadata && JSON.parse(metadata)) as RoomMetadata;
+	const roomMetadata = (metadata &&
+		JSON.parse(metadata)) as Livekit.RoomMetadata;
 	const { localParticipant } = useLocalParticipant();
 	const localMetadata = (localParticipant.metadata &&
-		JSON.parse(localParticipant.metadata)) as ParticipantMetadata;
+		JSON.parse(localParticipant.metadata)) as Livekit.ParticipantMetadata;
 	const canHost =
 		isHost || (localMetadata?.invitedToStage && localMetadata?.handRaised);
 	const participants = useParticipants();
 	const showNotification = isHost
 		? participants.some((p) => {
 				const metadata = (p.metadata &&
-					JSON.parse(p.metadata)) as ParticipantMetadata;
+					JSON.parse(p.metadata)) as Livekit.ParticipantMetadata;
 				return metadata?.handRaised && !metadata?.invitedToStage;
 			})
 		: localMetadata?.invitedToStage && !localMetadata?.handRaised;
@@ -105,7 +109,6 @@ export function StreamPlayer({ isHost = false }) {
 
 	const authToken = useAuthToken();
 	const onLeaveStage = async () => {
-		const honoClient = hc<Routes>(window.ENV.SERVER_URL);
 		await honoClient.auction["remove-from-stage"].$post(
 			{
 				json: {
@@ -122,7 +125,12 @@ export function StreamPlayer({ isHost = false }) {
 	};
 
 	return (
-		<Box position="relative" width="100%" height="100%" className="bg-black">
+		<Box
+			position="relative"
+			width="100%"
+			maxHeight="800px"
+			className="bg-black md:min-h-[700px]"
+		>
 			<Grid className="w-full h-full absolute" gap="2">
 				{canHost && (
 					<div className="relative">

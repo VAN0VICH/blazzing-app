@@ -11,3 +11,5 @@ export * from "./balance";
 export * from "./image";
 export * from "./web";
 export * from "./worker";
+export * from "./replicache";
+export * from "./stripe";

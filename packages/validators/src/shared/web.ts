@@ -1,14 +1,17 @@
 import { z } from "zod";
 
-const EnvSchema = z.object({
-	SERVER_URL: z.string(),
+const WebEnvSchema = z.object({
+	WORKER_URL: z.string(),
 	REPLICACHE_KEY: z.string(),
 	ENVIRONMENT: z.enum(["production", "test", "staging", "development"]),
-	PARTYKIT_HOST: z.string(),
-	LIVEKIT_SERVER_URL: z.string(),
+	PARTYKIT_HOST: z.string().optional(),
+	LIVEKIT_SERVER_URL: z.string().optional(),
+	HONEYPOT_SECRET: z.string().optional(),
+	SESSION_SECRET: z.string().optional(),
+	STRIPE_PUBLISHABLE_KEY: z.string().optional(),
 });
 
-type Env = z.infer<typeof EnvSchema>;
+type WebEnv = z.infer<typeof WebEnvSchema>;
 type WebBindings = { KV: KVNamespace };
-export { EnvSchema };
-export type { Env, WebBindings };
+export { WebEnvSchema };
+export type { WebEnv, WebBindings };

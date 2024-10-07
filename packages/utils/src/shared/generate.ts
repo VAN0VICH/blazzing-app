@@ -26,6 +26,7 @@ const prefixes = [
 	"customer",
 	"payment_profile",
 	"balance",
+	"transfer_group",
 ] as const;
 
 export type Prefix = (typeof prefixes)[number];

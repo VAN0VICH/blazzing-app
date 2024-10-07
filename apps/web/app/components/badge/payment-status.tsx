@@ -5,7 +5,7 @@ export function PaymentStatus({
 	size = "2",
 }: { status: Order["paymentStatus"]; size?: "1" | "2" | "3" }) {
 	return status === "paid" ? (
-		<Badge color="jade" size={size}>
+		<Badge color="green" size={size}>
 			Paid
 		</Badge>
 	) : (

@@ -36,7 +36,7 @@ export function DataTableToolbar<TData>({
 					placeholder="Search"
 					type="search"
 					className="lg:min-w-[300px]"
-					variant="classic"
+					variant="soft"
 					onChange={(e) => onSearch?.(e.target.value)}
 				/>
 				<Flex wrap="wrap">

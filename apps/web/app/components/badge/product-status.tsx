@@ -10,7 +10,7 @@ export function ProductStatus({
 			Draft
 		</Badge>
 	) : status === "published" ? (
-		<Badge color="jade" size={size}>
+		<Badge color="green" size={size}>
 			Published
 		</Badge>
 	) : (

@@ -1,5 +1,13 @@
-import { getFormProps, getInputProps, useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
+import type { Routes } from "@blazzing-app/functions";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+} from "@blazzing-app/ui/form";
+import { toast } from "@blazzing-app/ui/toast";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	Box,
 	Button,
@@ -7,15 +15,19 @@ import {
 	Dialog,
 	Flex,
 	Grid,
+	Heading,
 	RadioCards,
+	Spinner,
 	Switch,
 	Text,
 	TextField,
 } from "@radix-ui/themes";
-import { Form, useNavigate } from "@remix-run/react";
+import { useNavigate } from "@remix-run/react";
+import { hc } from "hono/client";
 import React from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { PageHeader } from "../components/page-header";
+import { useUser } from "~/hooks/use-user";
 
 export default function Auction() {
 	return (
@@ -23,11 +35,16 @@ export default function Auction() {
 			justify="center"
 			p={{ initial: "2", sm: "3" }}
 			pb={{ sm: "100px", md: "3" }}
-			maxWidth="1300px"
 		>
-			<Flex justify="center" width="100%" direction="column">
+			<Flex justify="center" width="100%" direction="column" maxWidth="1700px">
 				<Card className="max-w-[300px] p-0">
-					<PageHeader title="Live auction" className="p-4" />
+					<Heading
+						size="5"
+						className="p-4 justify-center text-accent-11 border-b border-border md:justify-start"
+					>
+						Live auction
+					</Heading>
+
 					<Box p="4">
 						<StartAuctionDialog />
 					</Box>
@@ -57,81 +74,107 @@ const StartAuctionDialog = () => {
 		</Dialog.Root>
 	);
 };
-const BrowserStream = () => {
-	const navigate = useNavigate();
-	const [form, fields] = useForm({
-		defaultValue: {
-			enableChat: false,
-			name: "",
-			title: "",
-		},
-		onValidate: (data) =>
-			parseWithZod(data.formData, {
-				schema: z.object({
-					title: z.string().min(1),
-					name: z.string().min(1),
-					enableChat: z.boolean(),
-				}),
-			}),
 
-		onSubmit: async (_, { submission }) => {
-			if (submission?.status === "success") {
-				console.log("value", submission.value);
-				navigate("/dashboard/auction/livep");
-				// const response = await client.auction["create-stream"].$post({
-				// 	json: {
-				// 		metadata: {
-				// 			allowParticipation: false,
-				// 			creatorIdentity: submission.value.name,
-				// 			enableChat: submission.value.enableChat,
-				// 		},
-				// 		roomName: submission.value.title,
-				// 	},
-				// });
-				// if (response.ok) {
-				// 	const {
-				// 		authToken,
-				// 		connectionDetails: { token },
-				// 	} = await response.json();
-				// 	navigate(`/dashboard/auction/live&at=${authToken}&rt=${token}`);
-				// }
-			}
+const browserInputSchema = z.object({
+	title: z.string(),
+	enableChat: z.boolean(),
+});
+type BrowserStreamInput = z.infer<typeof browserInputSchema>;
+const BrowserStream = () => {
+	const [isLoading, setLoading] = React.useState(false);
+	const methods = useForm<BrowserStreamInput>({
+		resolver: zodResolver(browserInputSchema),
+		defaultValues: {
+			title: "",
+			enableChat: false,
 		},
 	});
+	const [honoClient] = React.useState(() => hc<Routes>(window.ENV.WORKER_URL));
+	const me = useUser();
+	const navigate = useNavigate();
+
+	const onSubmit = async (data: BrowserStreamInput) => {
+		setLoading(true);
+		if (me) {
+			const response = await honoClient.auction["create-stream"].$post({
+				json: {
+					roomName: data.title,
+					metadata: {
+						creatorIdentity: me.username ?? "Anon",
+						enableChat: data.enableChat,
+						allowParticipation: false,
+					},
+				},
+			});
+			if (response.ok) {
+				const { authToken, connectionDetails } = await response.json();
+				return navigate(
+					`/dashboard/auction/live?at=${authToken}&rt=${connectionDetails.token}`,
+				);
+			}
+			toast.error("Failed to create stream");
+			return;
+		}
+		setLoading(false);
+		toast.error("Unauthenticated");
+	};
 	return (
-		<Form {...getFormProps(form)}>
-			<Grid gap="4">
-				<Grid gap="2">
-					<Text as="label">Title</Text>
-					<TextField.Root
-						autoFocus
-						{...getInputProps(fields.title, { type: "text" })}
-					/>
-				</Grid>
-				<Grid gap="2">
-					<Text as="label">Name</Text>
-					<TextField.Root {...getInputProps(fields.name, { type: "text" })} />
-				</Grid>
-				<Grid gap="2">
-					<Text as="label">Enable chat</Text>
-					{/*@ts-ignore*/}
-					<Switch />
-				</Grid>
-			</Grid>
-			<Flex gap="3" mt="4" justify="end">
-				<Dialog.Close>
-					<Button variant="soft" color="gray">
-						Cancel
-					</Button>
-				</Dialog.Close>
-				<Button
-					variant="classic"
-					type="submit"
-					onClick={() => navigate("/dashboard/auction/live")}
-				>
-					Next
-				</Button>
-			</Flex>
+		<Form {...methods}>
+			<form onSubmit={methods.handleSubmit(onSubmit)}>
+				<Box>
+					<Grid gap="4">
+						<Grid gap="2">
+							<FormField
+								control={methods.control}
+								name="title"
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Title</FormLabel>
+										<FormControl>
+											<TextField.Root
+												autoFocus
+												variant="soft"
+												placeholder="Title"
+												{...field}
+												value={field.value ?? ""}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+						</Grid>
+						<Grid gap="2">
+							{/*@ts-ignore*/}
+							<FormField
+								control={methods.control}
+								name="enableChat"
+								render={({ field }) => (
+									<FormItem className="grid">
+										<FormLabel>Enable chat</FormLabel>
+										<FormControl>
+											<Switch
+												checked={field.value ?? false}
+												onCheckedChange={field.onChange}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+						</Grid>
+					</Grid>
+					<Flex gap="3" mt="4" justify="end">
+						<Dialog.Close>
+							<Button variant="soft" color="gray">
+								Cancel
+							</Button>
+						</Dialog.Close>
+						<Button variant="classic" type="submit" disabled={isLoading}>
+							{isLoading && <Spinner />}
+							Next
+						</Button>
+					</Flex>
+				</Box>
+			</form>
 		</Form>
 	);
 };

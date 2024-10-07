@@ -21,11 +21,13 @@ import { DataTableToolbar } from "~/components/templates/table/data-table-toolba
 import { useDataTable } from "~/components/templates/table/use-data-table";
 import { filterableColumns, getProductsColumns } from "./columns";
 import { Box, Button, Flex, Heading, Separator, Text } from "@radix-ui/themes";
+import type { DebouncedFunc } from "~/types/debounce";
 interface ProductsTableProps {
 	products: Product[];
 	createProduct: () => Promise<void>;
 	deleteProduct: (keys: string[]) => void;
 	copyProduct: (keys: string[]) => void;
+	onSearch?: DebouncedFunc<(value: string) => void>;
 }
 
 function ProductsTable({
@@ -33,6 +35,7 @@ function ProductsTable({
 	createProduct,
 	deleteProduct,
 	copyProduct,
+	onSearch,
 }: Readonly<ProductsTableProps>) {
 	const columns = useMemo<ColumnDef<Product>[]>(
 		() => getProductsColumns({ deleteProduct, copyProduct }),
@@ -50,6 +53,7 @@ function ProductsTable({
 		table.toggleAllPageRowsSelected(false);
 	});
 	const navigate = useNavigate();
+	console.log("products", products);
 	const table = useDataTable({
 		columns,
 		data: products,
@@ -97,14 +101,15 @@ function ProductsTable({
 						Add
 					</Button>
 				}
+				{...(onSearch && { onSearch })}
 			/>
 			<Box
 				ref={parentRef}
-				className="h-[calc(63vh)] lg:h-[calc(66vh)] relative overflow-x-scroll"
+				className="h-[63vh] lg:h-[66vh] relative overflow-x-scroll"
 			>
 				<Box style={{ height: `${virtualizer.getTotalSize()}px` }}>
 					<Table>
-						<TableHeader className="w-full z-20 sticky top-0 bg-component">
+						<TableHeader className="w-full z-20 sticky top-0">
 							{" "}
 							{table.getHeaderGroups().map((headerGroup) => (
 								<TableRow key={headerGroup.id}>

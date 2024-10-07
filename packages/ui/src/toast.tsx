@@ -5,7 +5,7 @@ import { LoadingSpinner } from "./loading";
 const toast = {
 	success(message: string) {
 		return sonnerToast.success(message, {
-			icon: <Icons.CircleCheck className="text-jade-9" />,
+			icon: <Icons.CircleCheck className="text-green-11" />,
 			className:
 				"bg-component text-black dark:text-white border-border border flex gap-3",
 			closeButton: false,
@@ -13,14 +13,14 @@ const toast = {
 	},
 	error(message: string) {
 		return sonnerToast.error(message, {
-			icon: <Icons.CircleError className="text-red-9" />,
+			icon: <Icons.CircleError className="text-red-11" />,
 			duration: 2000,
 			className: "bg-component text-black dark:text-white border-border border",
 		});
 	},
 	info(message: string) {
 		return sonnerToast.info(message, {
-			icon: <Icons.CircleInfo className="text-sapphire-9" />,
+			icon: <Icons.CircleInfo className="text-sapphire-11" />,
 			className: "bg-component text-black dark:text-white border-border border",
 		});
 	},
@@ -31,7 +31,7 @@ const toast = {
 			success: () => {
 				return (
 					<span className="flex items-center gap-3">
-						<Icons.CircleCheck className="text-jade-9" />
+						<Icons.CircleCheck className="text-green-11" />
 						{message}
 					</span>
 				);
@@ -41,15 +41,15 @@ const toast = {
 
 				return (
 					<span className="flex items-center gap-2">
-						<Icons.CircleError className="text-red-9" />
+						<Icons.CircleError className="text-red-11" />
 						{errorMessage}
 					</span>
 				);
 			},
 			cancelButtonStyle: {
-				backgroundColor: "var(-- gray-a-7)",
+				backgroundColor: "var(--gray-a-7)",
 
-				color: "var(-- gray-11)",
+				color: "var(--gray-11)",
 			},
 			dismissible: true,
 		});

@@ -15,7 +15,7 @@
 	"dependencies": {
 		"@blazzing-app/validators": "workspace:*",
 		"dayjs": "^1.11.13",
-		"effect": "^3.7.0",
+		"effect": "^3.8.4",
 		"ulidx": "^2.3.0"
 	},
 	"devDependencies": {

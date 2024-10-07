@@ -1,4 +1,4 @@
-import type { RoomMetadata } from "@blazzing-app/core";
+import type { Livekit } from "@blazzing-app/core";
 import {
 	type ReceivedChatMessage,
 	useChat,
@@ -51,7 +51,7 @@ export function Chat() {
 
 	const { enableChat: chatEnabled } = (
 		metadata ? JSON.parse(metadata) : {}
-	) as RoomMetadata;
+	) as Livekit.RoomMetadata;
 
 	// HACK: why do we get duplicate messages?
 	const messages = useMemo(() => {

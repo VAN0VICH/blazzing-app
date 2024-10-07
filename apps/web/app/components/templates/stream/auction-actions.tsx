@@ -1,4 +1,6 @@
+import type { Routes } from "@blazzing-app/functions";
 import { Icons } from "@blazzing-app/ui/icons";
+import { toast } from "@blazzing-app/ui/toast";
 import { useChat, useDataChannel } from "@livekit/components-react";
 import {
 	Avatar,
@@ -9,15 +11,22 @@ import {
 	Grid,
 	Heading,
 	Skeleton,
-	Strong,
+	Spinner,
 	Text,
 } from "@radix-ui/themes";
-import { useState } from "react";
+import { useNavigate } from "@remix-run/react";
+import { hc } from "hono/client";
+import React from "react";
+import { useAuthToken } from "~/providers/token-context";
 
 export function AuctionActions() {
-	const [encoder] = useState(() => new TextEncoder());
+	const [encoder] = React.useState(() => new TextEncoder());
+	const [isLoading, setLoading] = React.useState(false);
 	const { send } = useDataChannel("reactions");
+	const [honoClient] = React.useState(() => hc<Routes>(window.ENV.WORKER_URL));
 	const { send: sendChat } = useChat();
+	const navigate = useNavigate();
+	const authToken = useAuthToken();
 
 	const onSend = (emoji: string) => {
 		send(encoder.encode(emoji), { reliable: false });
@@ -25,6 +34,24 @@ export function AuctionActions() {
 			sendChat(emoji);
 		}
 	};
+
+	const endStream = React.useCallback(async () => {
+		setLoading(true);
+
+		const response = await honoClient.auction["end-stream"].$post({
+			headers: {
+				Authorization: `Bearer ${authToken}`,
+			},
+		});
+		if (response.ok) {
+			const { result } = await response.json();
+			if (result) {
+				return navigate("/dashboard/auction");
+			}
+		}
+		toast.error("Failed to end stream");
+		setLoading(false);
+	}, [honoClient, navigate, authToken]);
 
 	return (
 		<Flex
@@ -39,7 +66,9 @@ export function AuctionActions() {
 
 			<Bidders />
 
-			<Button variant="solid">End Stream</Button>
+			<Button disabled={isLoading} variant="solid" onClick={endStream}>
+				{isLoading && <Spinner />}End Stream
+			</Button>
 		</Flex>
 	);
 }

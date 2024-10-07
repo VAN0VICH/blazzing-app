@@ -51,7 +51,7 @@ const SettingsSidebar = ({ children }: { children: React.ReactNode }) => {
 								prefetch="viewport"
 								key={item.title}
 								className={cn(
-									"group relative flex h-10 w-full items-center gap-3 px-2 cursor-pointer rounded-[5px] hover:bg-gray-3",
+									"group relative flex h-10 w-full items-center gap-3 px-2 cursor-pointer rounded-[5px] hover:bg-accent-3",
 								)}
 							>
 								{item.title === "Orders" && (
@@ -73,7 +73,7 @@ const SettingsSidebar = ({ children }: { children: React.ReactNode }) => {
 								<Heading
 									size="3"
 									className={cn(
-										"relative font-light font-roboto",
+										"relative font-freeman font-light",
 
 										pathname === item.href
 											? "text-accent-11"

@@ -1,13 +1,13 @@
 import { Avatar, Card, Flex, Grid, Heading, Skeleton } from "@radix-ui/themes";
 import { OrderComponent } from "~/components/templates/order/order";
-import { order } from "~/temp/mock-entities";
+import { useGlobalStore } from "~/zustand/store";
 export default function Page() {
-	const orders = [order, { ...order, id: "12313" }, { ...order, id: "112" }];
+	const orders = useGlobalStore((state) => state.orders);
 	return (
 		<Flex align="center" direction="column" p="2">
 			<Heading className="py-4">My orders</Heading>
 			<Flex
-				maxWidth="1300px"
+				maxWidth="1700px"
 				width="100%"
 				gap="4"
 				justify="center"

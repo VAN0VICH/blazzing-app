@@ -1,4 +1,10 @@
-import type { Env, WebBindings } from "@blazzing-app/validators";
+import type {
+	WebEnv,
+	WebBindings,
+	AuthUser,
+	AuthSession,
+} from "@blazzing-app/validators";
+import type { Session, SessionData } from "@remix-run/cloudflare";
 // When using `wrangler.toml` to configure bindings,
 // `wrangler types` will generate types for those bindings
 // into the global `Env` interface.
@@ -8,6 +14,12 @@ import type { Env, WebBindings } from "@blazzing-app/validators";
 
 declare module "@remix-run/cloudflare" {
 	interface AppLoadContext {
-		cloudflare: { env: Env; bindings: WebBindings };
+		cloudflare: {
+			env: WebEnv;
+			bindings: WebBindings;
+		};
+		authUser: AuthUser | null;
+		session: Session<SessionData, SessionData>;
+		userSession: AuthSession;
 	}
 }

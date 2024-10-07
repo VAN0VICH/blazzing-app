@@ -1,171 +1,337 @@
 import React from "react";
 
-import {
-	DialogContent,
-	DialogRoot,
-	DialogTitle,
-} from "@blazzing-app/ui/dialog-vaul";
 import { Icons } from "@blazzing-app/ui/icons";
 import { TagInput } from "@blazzing-app/ui/tag-input";
+import { generateID } from "@blazzing-app/utils";
+import type {
+	DeleteProductOption,
+	InsertProductOption,
+	InsertProductOptionValue,
+} from "@blazzing-app/validators";
 import type { ProductOption } from "@blazzing-app/validators/client";
 import {
 	Badge,
-	Button,
 	Card,
-	DropdownMenu,
 	Flex,
 	Grid,
 	Heading,
 	IconButton,
-	ScrollArea,
 	Text,
 	TextField,
 } from "@radix-ui/themes";
-import { useUserPreferences } from "~/hooks/use-user-preferences";
+import { useReplicache } from "~/zustand/replicache";
 
 interface CreateOptionProps {
 	productID: string;
 	options: ProductOption[];
 }
 export function ProductOptions({ productID, options }: CreateOptionProps) {
-	const [opened, setOpened] = React.useState(false);
-	const [editOpened, setEditOpened] = React.useState(false);
-	const [optionName, setOptionName] = React.useState<string>();
-	const [values, setValues] = React.useState<string[]>([]);
-	const [selectedOption, setSelectedOption] = React.useState<ProductOption>();
-	const [selectedOptionName, setSelectedOptionName] = React.useState<string>();
-	const [selectedValues, setSelectedValues] = React.useState<string[]>([]);
-	const [dropdownOpened, setDropdownOpened] = React.useState(false);
-	const { accentColor } = useUserPreferences();
+	const [tempOptions, setTempOptions] = React.useState<InsertProductOption[]>(
+		[],
+	);
+	const createTempOption = React.useCallback(() => {
+		const id = generateID({ prefix: "p_option" });
+		const option: InsertProductOption = { id, productID };
+		setTempOptions((prev) => [...prev, option]);
+	}, [productID]);
+	const dashboardRep = useReplicache((state) => state.dashboardRep);
+	const createOption = React.useCallback(
+		async ({
+			option,
+			values,
+		}: { option: InsertProductOption; values?: string[] }) => {
+			if (option.name)
+				await dashboardRep?.mutate.createProductOption({
+					option,
+					...(values &&
+						values.length > 0 && {
+							optionValues: values.map((value) => ({
+								id: generateID({ prefix: "p_op_val" }),
+								optionID: option.id,
+								value,
+								option,
+							})),
+						}),
+				});
+		},
+		[dashboardRep],
+	);
+	const deleteOption = React.useCallback(
+		async ({ optionID }: Omit<DeleteProductOption, "productID">) => {
+			await dashboardRep?.mutate.deleteProductOption({
+				optionID,
+				productID,
+			});
+		},
+		[dashboardRep, productID],
+	);
+	const updateOption = React.useCallback(
+		async ({ optionID, name }: { optionID: string; name: string }) => {
+			await dashboardRep?.mutate.updateProductOption({
+				optionID,
+				productID,
+				updates: { name },
+			});
+		},
+		[dashboardRep, productID],
+	);
+	const updateValues = React.useCallback(
+		async (optionID: string, values: string[]) => {
+			const newOptionValues: InsertProductOptionValue[] = options
+				? values.map((value) => ({
+						id: generateID({ prefix: "p_op_val" }),
+						optionID,
+						value,
+						option: options.find((o) => o.id === optionID),
+					}))
+				: [];
+			await dashboardRep?.mutate.updateProductOptionValues({
+				optionID,
+				productID,
+				newOptionValues,
+			});
+		},
+		[dashboardRep, options, productID],
+	);
 	return (
-		<>
-			<Card className="p-0">
-				<Flex
-					justify="between"
-					align="center"
-					className="border-b border-border"
-					p="4"
-				>
-					<Heading size="3" className="text-accent-11">
-						Options{" "}
-						<span className="text-accent-8 text-xs">{"(Optional)"}</span>
-					</Heading>
-					<Flex gap="2" align="start">
-						<IconButton size="3" variant="ghost">
-							<Icons.Edit className="size-4" />
-						</IconButton>
-					</Flex>
+		<Card className="p-0">
+			<Flex
+				justify="between"
+				align="center"
+				className="border-b border-border"
+				p="4"
+			>
+				<Heading size="3" className="text-accent-11">
+					Options <span className="text-accent-8 text-xs">{"(Optional)"}</span>
+				</Heading>
+				<Flex gap="2" align="start">
+					<IconButton size="3" variant="ghost" onClick={createTempOption}>
+						<Icons.PlusSquare className="size-4" />
+					</IconButton>
 				</Flex>
-				<Grid className="border-border">
-					{options.length === 0 && (
-						<Flex width="100%" height="100px" justify="center" align="center">
-							<Text color="gray" size="2">
-								Create options to add variants for this product.
-							</Text>
-						</Flex>
-					)}
-					{options.map((option) => {
-						return (
-							<Flex
-								key={option.id}
-								p="4"
-								className="border-b last:border-b-0 border-border"
-							>
-								<Text>1,</Text>
-								<Flex align="center" justify="center">
-									<Flex wrap="wrap" gap="1">
-										{(option.optionValues ?? []).map((value) => (
-											<Badge key={value.id} color={accentColor ?? "ruby"}>
-												{value.value}
-											</Badge>
-										))}
-									</Flex>
-									<DropdownMenu.Root>
-										<DropdownMenu.Trigger>
-											<Icons.Dots className="size-4" />
-											<span className="sr-only">Open menu</span>
-										</DropdownMenu.Trigger>
-										<DropdownMenu.Content
-											align="center"
-											className="w-[160px] backdrop-blur-sm"
-										>
-											<DropdownMenu.Item
-												className="flex gap-2"
-												onClick={() => {
-													setEditOpened(true);
-													setSelectedOption(option);
-													setSelectedOptionName(option?.name ?? undefined);
-													setSelectedValues(
-														option?.optionValues?.map((v) => v.value) ?? [],
-													);
-												}}
-											>
-												<Icons.Edit size={14} /> Edit
-											</DropdownMenu.Item>
-											<DropdownMenu.Item className="flex gap-2">
-												<Icons.Trash size={14} /> Delete
-											</DropdownMenu.Item>
-										</DropdownMenu.Content>
-									</DropdownMenu.Root>
-								</Flex>
-							</Flex>
-						);
-					})}
+			</Flex>
+			<Grid>
+				{options.length === 0 && tempOptions.length === 0 && (
+					<Flex width="100%" height="100px" justify="center" align="center">
+						<Text color="gray" size="2">
+							Create options to add variants for this product.
+						</Text>
+					</Flex>
+				)}
+				<Grid gap="2">
+					{options.map((op) => (
+						<OptionInput
+							option={op}
+							fresh={false}
+							key={op.id}
+							createOption={createOption}
+							deleteOption={deleteOption}
+							updateOption={updateOption}
+							updateOptionValues={updateValues}
+							setTempOptions={setTempOptions}
+						/>
+					))}
 				</Grid>
-			</Card>
-			<DialogRoot direction="right" open={opened} onOpenChange={setOpened}>
-				<DialogContent className="sm:w-[500px]">
-					<DialogTitle className="p-4 border-b border-border font-bold text-xl">
-						Create option
-					</DialogTitle>
-					<ScrollArea className="p-4 h-[78vh] pt-0">
-						<Grid gap="4">
-							<Grid gap="2">
-								<label className="pl-[1px]">Name</label>
-								<TextField.Root
-									className="bg- gray-1"
-									placeholder="Color"
-									onChange={(e) => setOptionName(e.target.value)}
-								/>
-							</Grid>
-
-							<Grid className="gap-2">
-								<label className="pl-[1px]">Values</label>
-								<TagInput value={values} onChange={setValues} />
-							</Grid>
-						</Grid>
-					</ScrollArea>
-					<div className="p-4 flex justify-end w-full border-t border-border absolute bottom-0">
-						<div className="flex gap-2">
-							<Button
-								variant="outline"
-								onClick={() => {
-									setOpened(false);
-								}}
-								onKeyDown={(e) => {
-									if (e.key === "Enter" || e.key === " ") {
-										e.preventDefault();
-										e.stopPropagation();
-										setOpened(false);
-									}
-								}}
-							>
-								Cancel
-							</Button>
-							<Button
-								onKeyDown={async (e) => {
-									if (e.key === "Enter" || e.key === " ") {
-										e.preventDefault();
-										e.stopPropagation();
-									}
-								}}
-							>
-								Save
-							</Button>
-						</div>
-					</div>
-				</DialogContent>
-			</DialogRoot>
-		</>
+				<Grid gap="2" pt="2">
+					{tempOptions.map((op) => (
+						<OptionInput
+							option={op}
+							fresh={true}
+							key={op.id}
+							createOption={createOption}
+							deleteOption={deleteOption}
+							updateOption={updateOption}
+							updateOptionValues={updateValues}
+							setTempOptions={setTempOptions}
+						/>
+					))}
+				</Grid>
+			</Grid>
+		</Card>
 	);
 }
+
+const OptionInput = ({
+	createOption,
+	deleteOption,
+	updateOption,
+	updateOptionValues,
+	setTempOptions,
+	option,
+	fresh,
+}: {
+	option: Omit<ProductOption, "name" | "version"> & {
+		name?: string | null;
+		version?: number;
+	};
+	createOption: (props: {
+		option: InsertProductOption;
+		values?: string[];
+	}) => Promise<void>;
+	deleteOption: ({
+		optionID,
+	}: Omit<DeleteProductOption, "productID">) => Promise<void>;
+	updateOption: ({
+		optionID,
+		name,
+	}: {
+		optionID: string;
+		name: string;
+	}) => Promise<void>;
+	setTempOptions: React.Dispatch<
+		React.SetStateAction<
+			{
+				id: string;
+				productID: string;
+				name?: string | null;
+				version?: number;
+			}[]
+		>
+	>;
+	updateOptionValues: (optionID: string, values: string[]) => Promise<void>;
+	fresh?: boolean;
+}) => {
+	const [editMode, setEditMode] = React.useState(fresh ?? false);
+	const [optionName, setOptionName] = React.useState(option.name ?? "");
+	const [optionValues, setOptionValues] = React.useState<string[]>([]);
+	console.log("option", option);
+
+	const onSave = React.useCallback(
+		async ({
+			optionName,
+			values,
+		}: { optionName: string | undefined; values: string[] }) => {
+			const valuesChanged =
+				(option.optionValues ?? []).length !== values.length ||
+				(option.optionValues ?? []).some((v) =>
+					values.some((value) => value !== v.value),
+				);
+
+			optionName &&
+				optionName !== option.name &&
+				(await updateOption({
+					optionID: option.id,
+					name: optionName,
+				}));
+
+			valuesChanged && (await updateOptionValues(option.id, values));
+			setEditMode(false);
+		},
+		[updateOption, updateOptionValues, option],
+	);
+	React.useEffect(() => {
+		if (option.optionValues) {
+			setOptionValues(option.optionValues.map((ov) => ov.value));
+		}
+	}, [option.optionValues]);
+	return (
+		<Flex gap="3" align="center" className="border-b border-border" p="4">
+			<Grid width={{ initial: "100%", sm: "40%" }}>
+				{editMode ? (
+					<TextField.Root
+						className="w-full"
+						variant="soft"
+						autoFocus={!optionName}
+						value={optionName}
+						onChange={(e) => setOptionName(e.target.value)}
+					/>
+				) : (
+					<Text size="3">{optionName}</Text>
+				)}
+			</Grid>
+			<Grid width={{ initial: "100%", sm: "60%" }}>
+				{editMode ? (
+					<TagInput
+						value={optionValues}
+						onChange={setOptionValues}
+						className="max-w-[500px]"
+					/>
+				) : (
+					<Flex gap="1">
+						{optionValues.map((ov) => (
+							<Badge key={ov} size="1" className="h-6" variant="surface">
+								{ov}
+							</Badge>
+						))}
+					</Flex>
+				)}
+			</Grid>
+			<Flex>
+				{editMode ? (
+					<Flex gap="4">
+						<IconButton
+							size="3"
+							variant="ghost"
+							onClick={async () => {
+								if (fresh) {
+									await createOption({
+										option: { ...option, name: optionName },
+									});
+									setTempOptions((prev) =>
+										prev.filter((op) => op.id !== option.id),
+									);
+								}
+								return onSave({
+									optionName,
+									values: optionValues,
+								});
+							}}
+						>
+							<Icons.Check className="size-4" />
+						</IconButton>
+						<IconButton
+							size="3"
+							variant="ghost"
+							onClick={() => {
+								if (fresh)
+									return setTempOptions((prev) =>
+										prev.filter((o) => o.id !== option.id),
+									);
+								setEditMode(false);
+							}}
+						>
+							{fresh ? (
+								<Icons.Trash className="size-4" />
+							) : (
+								<Icons.Close
+									className="size-4"
+									onClick={() => {
+										setOptionValues(
+											option.optionValues?.map((v) => v.value) ?? [],
+										);
+										setOptionName(option.name ?? "");
+									}}
+								/>
+							)}
+						</IconButton>
+					</Flex>
+				) : (
+					<Flex gap="4">
+						<IconButton
+							size="3"
+							variant="ghost"
+							onClick={() => setEditMode(true)}
+						>
+							<Icons.Edit className="size-4" />
+						</IconButton>
+						<IconButton
+							size="3"
+							variant="ghost"
+							onClick={() => {
+								if (fresh)
+									return setTempOptions((prev) =>
+										prev.filter((o) => o.id !== option.id),
+									);
+								deleteOption({
+									optionID: option.id,
+								});
+							}}
+						>
+							<Icons.Trash className="size-4" />
+						</IconButton>
+					</Flex>
+				)}
+			</Flex>
+		</Flex>
+	);
+};

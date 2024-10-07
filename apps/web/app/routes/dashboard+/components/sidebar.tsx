@@ -54,7 +54,7 @@ const items: DashboardSidebarItem[] = [
 	},
 	{
 		title: "Settings",
-		href: "/dashboard/settings",
+		href: "/dashboard/settings/store",
 		icon: "Settings",
 	},
 ];
@@ -70,7 +70,7 @@ const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 		<Flex width="100%" height="100%" position="relative" inset="0">
 			<nav
 				className={cn(
-					"hidden md:flex flex-col px-2 w-44 opacity-0 shadow-sm md:opacity-100 m-1 md:m-0 fixed top-0 rounded-none h-full border-r border-border md:w-40  overflow-hidden md:border-border transition-all duration-200 ease-in-out z-20 ",
+					"hidden md:flex flex-col px-2 w-44 opacity-0 shadow-sm md:opacity-100 m-1 md:m-0 fixed top-0  rounded-none h-full border-r border-border md:w-40  overflow-hidden md:border-border transition-all duration-200 ease-in-out z-20 ",
 				)}
 			>
 				<StoreInfo />
@@ -85,9 +85,9 @@ const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 								prefetch="viewport"
 								key={item.title}
 								className={cn(
-									"group relative flex h-8 w-full rounded-[5px] items-center gap-3 px-2 cursor-pointer hover:bg-gray-4 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
+									"group relative flex h-8 w-full rounded-[5px] items-center gap-3 px-2 cursor-pointer hover:bg-accent-3 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
 									{
-										"bg-component border-b border-gray-7 hover:bg-component dark:hover:bg-border hover:border-t-gray-7 border border-border":
+										"bg-component border-b hover:bg-component dark:hover:bg-border hover:border-t-gray-7 border border-border":
 											mainPath === item.title.toLowerCase(),
 									},
 								)}
@@ -110,7 +110,7 @@ const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 								</Flex>
 								<Text
 									className={cn(
-										"relative text-sm",
+										"relative font-freeman text-sm",
 
 										mainPath === item.title.toLowerCase()
 											? "text-accent-11"
@@ -126,10 +126,7 @@ const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 				<Box />
 				<Box />
 			</nav>
-			<Box
-				className="relative md:pl-40 bg-gray-3 pt-[55px] w-full "
-				minHeight="100vh"
-			>
+			<Box className="relative md:pl-40 bg-gray-2 w-full " minHeight="100vh">
 				{children}
 			</Box>
 		</Flex>
@@ -151,14 +148,14 @@ export const DashboardSidebarMobile = () => {
 			<DialogTrigger asChild>
 				<IconButton
 					variant="ghost"
-					className={cn("bottom-4 z-50 absolute md:hidden", {
+					className={cn("bottom-5 left-4 z-50 absolute md:hidden", {
 						hidden: mainPath !== "dashboard",
 					})}
 				>
 					<Icons.Menu size={20} strokeWidth={strokeWidth} />
 				</IconButton>
 			</DialogTrigger>
-			<DialogContent className="w-72 md:hidden bg-component m-0 rounded-none">
+			<DialogContent className="w-72 md:hidden left-0 bg-component m-0 rounded-none">
 				<nav className={cn("flex flex-col px-1 w-full py-2")}>
 					<StoreInfo />
 					<ul className="justify-center items-center flex w-full flex-col gap-2 py-2">
@@ -189,7 +186,7 @@ export const DashboardSidebarMobile = () => {
 											className={cn(
 												pathname === item.href
 													? "text-accent-11"
-													: "text- gray-11 group-hover:text-accent-11",
+													: "text-gray-11 group-hover:text-accent-11",
 											)}
 											size={20}
 											strokeWidth={strokeWidth}
@@ -201,7 +198,7 @@ export const DashboardSidebarMobile = () => {
 
 											pathname === item.href
 												? "text-accent-11"
-												: "text- gray-11 group-hover:text-accent-11",
+												: "text-gray-11 group-hover:text-accent-11",
 										)}
 									>
 										{item.title}

@@ -24,9 +24,15 @@ import {
 import { useNavigate } from "@remix-run/react";
 import { HighlightedText } from "~/highlighted-text";
 import { useDebounce } from "~/hooks/use-debounce";
+import type {
+	SearchWorkerRequest,
+	SearchWorkerResponse,
+} from "~/worker/search";
+import { useDashboardStore } from "~/zustand/store";
 
 export function DashboardSearchCombobox() {
 	const navigate = useNavigate();
+	const searchWorker = useDashboardStore((state) => state.searchWorker);
 	const [query, setQuery] = React.useState("");
 	const debouncedQuery = useDebounce(query, 300);
 	const [searchResults, setSearchResults] = React.useState<
@@ -52,35 +58,97 @@ export function DashboardSearchCombobox() {
 		close();
 		callback();
 	}, []);
+	React.useEffect(() => {
+		if (debouncedQuery.length <= 0) {
+			setSearchResults(undefined);
+			return;
+		}
+
+		searchWorker?.postMessage({
+			type: "DASHBOARD_SEARCH",
+			payload: {
+				query: debouncedQuery,
+			},
+		} satisfies SearchWorkerRequest);
+	}, [debouncedQuery, searchWorker]);
+	React.useEffect(() => {
+		if (!searchWorker) return;
+
+		const handleMessage = (event: MessageEvent) => {
+			console.log("Message received in React component");
+			const { type, payload } = event.data as SearchWorkerResponse;
+			console.log("type", type);
+			if (typeof type === "string" && type === "DASHBOARD_SEARCH") {
+				startTransition(() => {
+					const variants: Variant[] = [];
+					const customers: Customer[] = [];
+					const orders: Order[] = [];
+					const variantIDs = new Set<string>();
+					const customerIDs = new Set<string>();
+					const orderIDs = new Set<string>();
+					for (const p of payload) {
+						if (p.id.startsWith("variant")) {
+							if (!variantIDs.has(p.id)) {
+								variants.push(p as Variant);
+								variantIDs.add(p.id);
+							}
+						} else if (p.id.startsWith("user")) {
+							if (!customerIDs.has(p.id)) {
+								customers.push(p as Customer);
+								customerIDs.add(p.id);
+							}
+						} else if (p.id.startsWith("order")) {
+							if (!orderIDs.has(p.id)) {
+								orders.push(p as Order);
+								orderIDs.add(p.id);
+							}
+						}
+					}
+					setSearchResults({
+						variants,
+						orders,
+						customers,
+					});
+				});
+			}
+		};
+
+		searchWorker.addEventListener("message", handleMessage);
+
+		// Test the worker
+		searchWorker.postMessage({
+			type: "DASHBOARD_SEARCH",
+			payload: { query: "test" },
+		});
+
+		return () => {
+			searchWorker.removeEventListener("message", handleMessage);
+		};
+	}, [searchWorker]);
 
 	return (
 		<Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
 			<Dialog.Trigger>
 				<Flex>
-					<Button
-						size="3"
-						variant={"surface"}
+					<button
+						type="button"
 						className={cn(
-							"hidden group relative lg:flex gap-3 items-center px-2",
+							"hidden group relative lg:flex gap-3 h-[45px] items-center px-2 bg-component shadow-sm text-accent-11 hover:bg-accent-2 hover:border-accent-6 border border-border p-3 rounded-[7px] focus-visible:ring-accent-8 focus-visible:outline-none focus-visible:ring-2",
 						)}
 					>
-						<Icons.MagnifyingGlassIcon
-							aria-hidden="true"
-							className="size-5 text-slate-11 "
-						/>
+						<Icons.MagnifyingGlassIcon aria-hidden="true" className="size-5 " />
 						<Text size="2">Dashboard search</Text>
 						<span className="sr-only">Search...</span>
-						<Kbd title={"Command"} className=" text-slate-11 border-border ">
+						<Kbd title={"Command"} className="text-accent-11">
 							{"⌘"} K
 						</Kbd>
-					</Button>
-					<IconButton
-						variant="ghost"
+					</button>
+					<button
 						type="button"
-						className="flex px-2 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring lg:hidden rounded-lg hover:bg-slate-a-2 p-2"
+						className="flex size-[45px] justify-center items-center bg-component shadow-sm text-accent-11 hover:bg-accent-2 hover:border-accent-6 border border-border p-3 rounded-[7px] focus-visible:ring-accent-8 focus-visible:outline-none focus-visible:ring-2 px-2 lg:hidden  hover:bg-slate-a-2"
 					>
-						<Icons.MagnifyingGlassIcon className="text-slate-11 hover:text-brand-9 size-6" />
-					</IconButton>
+						<Icons.MagnifyingGlassIcon className="text-accent-11 hover:text-brand-9 size-6" />
+					</button>
 				</Flex>
 			</Dialog.Trigger>
 			<Dialog.Content className="p-0 rounded-[7px]" align="start">
@@ -122,13 +190,15 @@ export function DashboardSearchCombobox() {
 													key={variant.id}
 													className="p-2"
 													value={variant.id}
-													onSelect={() =>
+													onSelect={() => {
 														onSelect(() =>
 															navigate(
 																`/dashboard/products/${variant.productID}`,
 															),
-														)
-													}
+														);
+														setQuery("");
+														setIsOpen(false);
+													}}
 												>
 													<div className="flex gap-3">
 														<Icons.Product

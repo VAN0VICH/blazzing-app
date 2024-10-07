@@ -1,0 +1,35 @@
+{
+	"name": "@blazzing-app/replicache",
+	"version": "0.1.0",
+	"private": true,
+	"main": "./src/index.ts",
+	"types": "./src/index.ts",
+	"license": "MIT",
+	"scripts": {
+		"beautify": "biome format ./src --write",
+		"clean": "rm -rf .turbo node_modules",
+		"lint": "biome lint src",
+		"format": "biome format .",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@blazzing-app/db": "workspace:*",
+		"@blazzing-app/shared": "workspace:*",
+		"@blazzing-app/utils": "workspace:*",
+		"@blazzing-app/validators": "workspace:*",
+		"@effect/platform": "^0.66.2",
+		"base64-arraybuffer": "^1.0.2",
+		"drizzle-orm": "^0.33.0",
+		"effect": "^3.8.4",
+		"remeda": "^2.12.1",
+		"replicache": "15.0.1",
+		"stripe": "^17.1.0",
+		"ulidx": "^2.3.0",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"@blazzing-app/tsconfig": "workspace:*",
+		"typescript": "^5.5.4"
+	}
+}

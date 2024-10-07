@@ -1,14 +1,24 @@
 import type { AccentColor } from "./validators/state";
 
+export const SESSION_KEY = "blazzing-session";
+
 export const noSidebarPaths = new Set([
 	"/",
 	"/sign-in",
 	"/sign-up",
 	"/onboarding",
+	"/error",
 ]);
 
 export const noHeaderPaths = (pathname: string) => {
-	const paths = ["/dashboard", "/onboarding", "/login", "/verify", "/settings"];
+	const paths = [
+		"/dashboard",
+		"/onboarding",
+		"/login",
+		"/verify",
+		"/settings",
+		"/error",
+	];
 	return paths.some((path) => pathname.startsWith(path));
 };
 

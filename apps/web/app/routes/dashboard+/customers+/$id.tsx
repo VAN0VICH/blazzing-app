@@ -1,22 +1,32 @@
 import type { Customer } from "@blazzing-app/validators/client";
+import { Avatar, Card, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import { OrdersTable } from "../orders+/orders-table/table";
-import { Avatar, Box, Card, Flex, Grid, Heading, Text } from "@radix-ui/themes";
-import { customer } from "~/temp/mock-entities";
-import { PageHeader } from "../components/page-header";
+import { useParams } from "@remix-run/react";
+import { useDashboardStore } from "~/zustand/store";
+import ImagePlaceholder from "~/components/image-placeholder";
 
 export default function CustomerRoute() {
+	const params = useParams();
+	const orders = useDashboardStore((state) => state.orders).filter(
+		(order) => order.customerID === params.id!,
+	);
+	const customerMap = useDashboardStore((state) => state.customerMap);
+	const customer = customerMap.get(params.id!);
+	console.log("customer", customer);
 	return (
-		<Flex position="relative" p="3" justify="center">
-			<div className="w-full max-w-[1300px] flex flex-col lg:flex-row gap-3">
+		<Flex position="relative" p="3" justify="center" className="pb-20 lg:pb-3">
+			<div className="w-full max-w-[1700px] flex flex-col lg:flex-row gap-3">
 				<section className="w-full lg:w-8/12 flex flex-col gap-3 order-1 lg:order-0">
 					<div className="w-full bg-component border border-border rounded-[7px] ">
-						<PageHeader
-							title={`Orders made by 
-							${customer?.user?.username ?? customer?.user?.fullName}`}
-							className="text-accent-11 p-4 border-b border-border"
-						/>
+						<Heading
+							size="5"
+							className="p-4 justify-center text-accent-11 border-b border-border md:justify-start"
+						>
+							{`Orders made by 
+									${customer?.user?.username ?? customer?.user?.fullName ?? "Unknown"}`}
+						</Heading>
 
-						<OrdersTable orders={[]} toolbar={true} withNavigation={true} />
+						<OrdersTable orders={orders} toolbar={true} withNavigation={true} />
 					</div>
 				</section>
 				<section className="w-full lg:w-4/12 flex order-0 flex-col gap-3 lg:order-1">
@@ -51,12 +61,22 @@ const CustomerInfo = ({
 					className="border-b border-border"
 					p="4"
 				>
-					<Avatar fallback="F" className="size-10" />
-					<Flex justify="center" pt="4" className="font-semibold">
-						<Text className="text-accent-11">
-							{customer?.user?.username ?? customer?.user?.fullName}
-						</Text>
-					</Flex>
+					<Avatar
+						fallback={<ImagePlaceholder />}
+						className="border border-accent-5 size-[200px]"
+						src={
+							typeof customer?.user?.avatar === "string"
+								? customer?.user.avatar
+								: customer?.user?.avatar?.url
+						}
+					/>
+					<Heading
+						size="4"
+						align="center"
+						className="text-accent-11 py-2 font-freeman"
+					>
+						{customer?.user?.username ?? customer?.user?.fullName}
+					</Heading>
 				</Flex>
 				<Grid p="4">
 					<address className="grid gap-0.5 not-italic ">

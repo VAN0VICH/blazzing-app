@@ -6,6 +6,7 @@ import type { DataTableFilterableColumn } from "~/types/table";
 import { orderStatuses } from "@blazzing-app/validators";
 import { Avatar, Box, Flex, Text } from "@radix-ui/themes";
 import { OrderStatus } from "~/components/badge/order-status";
+import ImagePlaceholder from "~/components/image-placeholder";
 
 export function getOrdersColumns(): ColumnDef<Order, unknown>[] {
 	return [
@@ -16,7 +17,15 @@ export function getOrdersColumns(): ColumnDef<Order, unknown>[] {
 			),
 			cell: ({ row }) => (
 				<Flex gap="2" width="200px">
-					<Avatar fallback="F" />
+					<Avatar
+						fallback={<ImagePlaceholder />}
+						className="border border-accent-5"
+						src={
+							typeof row.original?.customer?.user?.avatar === "string"
+								? row.original?.customer?.user.avatar
+								: row.original?.customer?.user?.avatar?.url
+						}
+					/>
 					<Box>
 						<Text size="2">{row.original.fullName}</Text>
 						<Text size="2">{row.original.email}</Text>

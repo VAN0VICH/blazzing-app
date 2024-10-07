@@ -20,6 +20,9 @@ export function useUserPreferences(): Preferences {
 		...(optimisticUpdates?.grayColor && {
 			grayColor: optimisticUpdates.grayColor,
 		}),
+		...(optimisticUpdates?.sidebarState && {
+			sidebarState: optimisticUpdates.sidebarState,
+		}),
 	};
 }
 

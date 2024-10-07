@@ -14,28 +14,24 @@ import { Outlet } from "@remix-run/react";
 import { AnimatePresence, motion, type PanInfo } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { SidebarLayoutWrapper } from "~/components/layout/sidebar-wrapper";
-import { StoreComponent } from "~/components/templates/store";
 import { store } from "~/temp/mock-entities";
 import type { AccentColor } from "~/validators/state";
 import { Products } from "../../components/templates/product/products";
 import { tags } from "~/constants";
+import { useMarketplaceStore } from "~/zustand/store";
 
 export default function MarketplaceLayout() {
 	const [activeTags, setActiveTags] = React.useState<Set<string>>(new Set());
+
+	const products = useMarketplaceStore((state) => state.products);
+	const isInitialized = useMarketplaceStore((state) => state.isInitialized);
 	return (
 		<SidebarLayoutWrapper>
 			<div className="absolute -z-10 left-0 right-0 h-[550px] opacity-60 bg-gradient-to-b from-brand-2 to-transparent " />
-			<main className="p-2 lg:p-4 mt-16 flex flex-col justify-center bg-gray-1">
-				<Flex justify="center" align="center">
-					<Icons.Flame className="text-accent-11" />
-					<Heading className="text-accent-11 text-center py-4 ">
-						Trending
-					</Heading>
-				</Flex>
-				<Featured />
+			<main className="p-2 lg:p-4 mt-16 w-full flex flex-col items-center min-h-screen bg-gray-1">
 				<Tabs.Root
 					defaultValue="forYou"
-					className="pt-3 flex items-center flex-col"
+					className="flex items-center flex-col w-full"
 				>
 					<Tabs.List className="gap-10">
 						<Tabs.Trigger value="forYou" className="text-lg">
@@ -46,14 +42,15 @@ export default function MarketplaceLayout() {
 						</Tabs.Trigger>
 					</Tabs.List>
 
-					<Box pt="4">
+					<Box width="100%" maxWidth="1700px">
 						<Tabs.Content value="forYou">
 							<Flex
 								justify="between"
 								align="center"
 								direction={{ initial: "column", sm: "row" }}
+								gap="2"
 							>
-								<Flex gap="3" wrap="wrap" py="4" width="100%">
+								<Flex gap="3" wrap="wrap" py="6" width="100%">
 									{tags.map((tag) => (
 										<Button
 											key={tag.color}
@@ -75,19 +72,23 @@ export default function MarketplaceLayout() {
 										</Button>
 									))}
 								</Flex>
-								<Flex justify="end" width="100%" pb="4">
+								<Flex justify="end" width="100%">
 									<Button variant="outline">
 										<Icons.Filters className="size-4" />
 										Filters
 									</Button>
 								</Flex>
 							</Flex>
-							<Products />
+							<Products
+								products={products}
+								isInitialized={isInitialized}
+								isMarketplace={true}
+							/>
 						</Tabs.Content>
 
 						<Tabs.Content value="following">
-							<Box className="h-screen flex justify-center items-center">
-								Nothing bro
+							<Box className="h-[200px] flex justify-center items-center">
+								Nothing here...
 							</Box>
 						</Tabs.Content>
 					</Box>
@@ -215,9 +216,7 @@ const Featured3 = ({ stores }: { stores: Store[] }) => {
 								}}
 							>
 								<Theme scaling="95%">
-									<Card className="shadow-lg shadow-accent-3 border border-accent-5">
-										<StoreComponent storeURL={`/${store.name}`} />
-									</Card>
+									<Card className="shadow-lg shadow-accent-3 border border-accent-5" />
 								</Theme>
 							</motion.div>
 						);
@@ -355,9 +354,7 @@ const Featured5 = ({ stores }: { stores: Store[] }) => {
 								}}
 							>
 								<Theme scaling="95%">
-									<Card className="shadow-lg shadow-accent-3 border border-accent-5">
-										<StoreComponent storeURL={`/stores/${store.name}`} />
-									</Card>
+									<Card className="shadow-lg shadow-accent-3 border border-accent-5" />
 								</Theme>
 							</motion.div>
 						);

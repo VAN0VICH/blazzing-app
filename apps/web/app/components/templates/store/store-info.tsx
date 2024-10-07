@@ -1,7 +1,6 @@
-import { Icons, strokeWidth } from "@blazzing-app/ui/icons";
 import { cn } from "@blazzing-app/ui";
-import { Link } from "@remix-run/react";
-import React from "react";
+import { Icons, strokeWidth } from "@blazzing-app/ui/icons";
+import type { Store } from "@blazzing-app/validators/client";
 import {
 	AspectRatio,
 	Avatar,
@@ -15,22 +14,23 @@ import {
 	Strong,
 	Text,
 } from "@radix-ui/themes";
-import type { Store } from "@blazzing-app/validators/client";
-import { ClientOnly } from "remix-utils/client-only";
-import { EditStore } from "./edit-store";
+import { Link } from "@remix-run/react";
+import React from "react";
+import { toImageURL } from "~/utils/helpers";
 
 export function StoreInfo({
 	store,
 	storeURL,
 	isDashboard = false,
+	isInitialized,
 }: {
-	store: Store;
+	store: Store | undefined;
 	storeURL?: string;
 	isDashboard?: boolean;
+	isInitialized: boolean;
 }) {
 	const [aboutOpen, setAboutOpen] = React.useState(false);
 	const Slot = storeURL ? Link : Box;
-	const isInitialized = true;
 	return (
 		<Grid
 			columns={{ initial: "2", xs: "3", sm: "4", md: "5" }}
@@ -40,10 +40,23 @@ export function StoreInfo({
 		>
 			<Slot
 				to={storeURL!}
-				className={cn("flex h-full items-center 	col-span-1")}
+				className={cn("flex h-full items-center col-span-1")}
 			>
-				<AspectRatio ratio={1 / 1} className=" max-w-[220px] max-h-[220px] ">
-					<Avatar fallback="F" className="w-full h-full  " />
+				<AspectRatio
+					ratio={1 / 1}
+					className="w-full max-w-[220px] max-h-[220px]"
+				>
+					<Avatar
+						fallback="F"
+						className="w-full h-full"
+						src={
+							store?.image?.cropped?.url ??
+							toImageURL(
+								store?.image?.cropped?.base64,
+								store?.image?.cropped?.fileType,
+							)
+						}
+					/>
 				</AspectRatio>
 			</Slot>
 			<Flex
@@ -62,10 +75,10 @@ export function StoreInfo({
 					) : (
 						<Slot to={storeURL!} className="flex flex-col">
 							<Heading
-								size={{ initial: "3", md: "5" }}
+								size={{ initial: "3", md: "6" }}
 								as="h2"
 								className={cn(
-									"line-clamp-2    flex-grow leading-none tracking-tight",
+									"line-clamp-2 font-freeman flex-grow leading-none tracking-tight",
 								)}
 							>
 								{store?.name ?? ""}
@@ -95,25 +108,18 @@ export function StoreInfo({
 						) : (
 							<>
 								<Text size={{ initial: "1", xs: "2", md: "3" }}>
-									<Strong className="text-accent-11">0</Strong> following
+									<Strong>0</Strong> following
 								</Text>
 								<Text size={{ initial: "1", xs: "2", md: "3" }}>
-									<Strong className="text-accent-11">{0}</Strong> products
+									<Strong>{0}</Strong> products
 								</Text>
 							</>
 						)}
 					</Flex>
 					{/* <Button className="mt-2">Follow</Button> */}
-					{store && isDashboard ? (
-						<ClientOnly>{() => <EditStore store={store} />}</ClientOnly>
-					) : (
+					{store && !isDashboard && (
 						<Button variant="surface" className="mt-2">
 							Follow
-						</Button>
-					)}
-					{!store && isDashboard && (
-						<Button variant="ghost" className="mt-2">
-							Edit store
 						</Button>
 					)}
 				</Box>

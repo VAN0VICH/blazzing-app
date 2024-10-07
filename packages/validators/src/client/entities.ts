@@ -36,6 +36,7 @@ export type ProductOption = Server.ProductOption & {
 export type Store = Server.Store & {
 	products?: (Product | PublishedProduct)[];
 	owner?: Server.User;
+	paymentProfiles?: PaymentProfile[];
 };
 export type Price = Server.Price;
 export type ProductOptionValue = Server.ProductOptionValue & {
@@ -57,7 +58,7 @@ export type Cart = Server.Cart & {
 };
 
 export type Order = Server.Order & {
-	user?: User;
+	customer?: Customer;
 	shippingAddress?: Address;
 	billingAddress?: Address;
 	store?: Store;

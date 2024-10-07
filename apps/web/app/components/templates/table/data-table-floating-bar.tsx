@@ -30,14 +30,14 @@ export function DataTableFloatingBar<TData extends { id: string }>({
 	}, [table]);
 
 	return (
-		<Flex className="fixed left-1/2 -translate-x-1/2 bottom-20 lg:bottom-10 rounded-lg z-30 w-fit px-4">
+		<Flex className="fixed left-1/2 -translate-x-1/2 bottom-20 lg:bottom-10 rounded-lg z-30 w-fit">
 			<Box className="w-full overflow-x-auto">
-				<Card className="mx-auto flex w-fit items-center gap-2 p-2 shadow-2xl">
+				<Card className="flex items-center gap-6 shadow-2xl px-4">
 					{onDuplicate && (
 						<Tooltip content="Copy" delayDuration={250}>
 							<Button
 								variant="ghost"
-								className="flex gap-3"
+								size="3"
 								onClick={() => {
 									const rows = table.getFilteredSelectedRowModel().rows;
 									if (rows.length > 20)
@@ -54,7 +54,7 @@ export function DataTableFloatingBar<TData extends { id: string }>({
 						</Tooltip>
 					)}
 					<Tooltip content="Export" delayDuration={250}>
-						<Button variant="ghost" className="flex gap-3">
+						<Button variant="ghost" size="3">
 							<DownloadIcon aria-hidden="true" fontSize={15} />
 							<Kbd>E</Kbd>
 						</Button>
@@ -63,7 +63,7 @@ export function DataTableFloatingBar<TData extends { id: string }>({
 						<Tooltip content="Delete" delayDuration={250}>
 							<Button
 								variant="ghost"
-								className="flex gap-3"
+								size="3"
 								onClick={() => {
 									const rows = table.getFilteredSelectedRowModel().rows;
 									onDelete(rows.map((row) => row.original.id));

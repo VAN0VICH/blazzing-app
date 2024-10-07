@@ -10,7 +10,7 @@ export function OrderStatus({
 			Pending
 		</Badge>
 	) : status === "completed" ? (
-		<Badge variant={"outline"} color="jade" size={size}>
+		<Badge variant={"outline"} color="green" size={size}>
 			Delivered
 		</Badge>
 	) : (

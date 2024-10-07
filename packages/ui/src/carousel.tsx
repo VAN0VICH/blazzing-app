@@ -136,7 +136,6 @@ const Carousel = React.forwardRef<
 					ref={ref}
 					onKeyDownCapture={handleKeyDown}
 					className={cn("relative", className)}
-					role="region"
 					aria-roledescription="carousel"
 					{...props}
 				>
@@ -212,7 +211,10 @@ const CarouselPrevious = React.forwardRef<
 				className,
 			)}
 			disabled={!canScrollPrev}
-			onClick={scrollPrev}
+			onClick={(e) => {
+				e.stopPropagation();
+				scrollPrev();
+			}}
 			{...props}
 		>
 			<Icons.Left className="h-4 w-4" />
@@ -241,7 +243,10 @@ const CarouselNext = React.forwardRef<
 				className,
 			)}
 			disabled={!canScrollNext}
-			onClick={scrollNext}
+			onClick={(e) => {
+				e.stopPropagation();
+				scrollNext();
+			}}
 			{...props}
 		>
 			<Icons.Right className="h-4 w-4" />

@@ -1,7 +1,28 @@
 import type { Config } from "tailwindcss";
-import animate from "tailwindcss-animate";
+import tailwindAnimate from "tailwindcss-animate";
+import plugin from "tailwindcss/plugin";
 
 import base from "./base";
+
+/** @type {import('tailwindcss').Config} */
+const plugins = [
+	tailwindAnimate,
+
+	plugin(({ matchUtilities, theme }) => {
+		matchUtilities(
+			{
+				"animation-delay": (value) => {
+					return {
+						"animation-delay": value,
+					};
+				},
+			},
+			{
+				values: theme("transitionDelay")!,
+			},
+		);
+	}),
+];
 
 export default {
 	content: base.content,
@@ -33,11 +54,19 @@ export default {
 					"0%,70%,100%": { opacity: "1" },
 					"20%,50%": { opacity: "0" },
 				},
+				shake: {
+					"0%": { transform: "translateX(0)" },
+					"25%": { transform: "translateX(5px)" },
+					"50%": { transform: "translateX(-5px)" },
+					"75%": { transform: "translateX(5px)" },
+					"100%": { transform: "translateX(0)" },
+				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 				"caret-blink": "caret-blink 1.25s ease-out infinite",
+				shake: "shake 0.5s linear infinite",
 			},
 			colors: {
 				border: "var(--border)",
@@ -287,8 +316,22 @@ export default {
 					11: "var(--red-11)",
 					12: "var(--red-12)",
 				},
+				slate: {
+					1: "var(--slate-1)",
+					2: "var(--slate-2)",
+					3: "var(--slate-3)",
+					4: "var(--slate-4)",
+					5: "var(--slate-5)",
+					6: "var(--slate-6)",
+					7: "var(--slate-7)",
+					8: "var(--slate-8)",
+					9: "var(--slate-9)",
+					10: "var(--slate-10)",
+					11: "var(--slate-11)",
+					12: "var(--slate-12)",
+				},
 			},
 		},
 	},
-	plugins: [animate],
+	plugins,
 } satisfies Config;

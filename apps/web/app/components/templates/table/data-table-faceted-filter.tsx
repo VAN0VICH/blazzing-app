@@ -99,6 +99,7 @@ export function DataTableFacetedFilter<TData, TValue>({
 								return (
 									<CommandItem
 										key={option.value}
+										className="hover:bg-accent-3 hover:text-accent-11 focus:bg-accent-3 group"
 										onSelect={() => {
 											if (isSelected) {
 												selectedValues.delete(option.value);
@@ -113,17 +114,15 @@ export function DataTableFacetedFilter<TData, TValue>({
 									>
 										<div
 											className={cn(
-												"mr-2 flex h-4 w-4 items-center justify-center border border- gray-11",
+												"mr-2 flex h-4 w-4 items-center justify-center border group-hover:border-accent-9 border-gray-11 rounded-[3px]",
 												isSelected
 													? "bg-accent-9 text-accent-11 border-accent-10"
 													: "opacity-50 [&_svg]:invisible",
 											)}
 										>
-											<CheckIcon className={cn("h-4 w-4 text-white")} />
+											<CheckIcon className={cn("h-4 w-4  text-white")} />
 										</div>
-										{option.icon && (
-											<option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-										)}
+										{option.icon && <option.icon className="mr-2 h-4 w-4" />}
 										<span>{option.label}</span>
 										{facets?.get(option.value) && (
 											<span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">

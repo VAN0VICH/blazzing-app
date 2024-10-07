@@ -33,19 +33,21 @@ const ProfileDropdown = () => {
 	return (
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
-				<IconButton variant="soft">
+				<button
+					type="button"
+					className="bg-component dark:bg-gray-3 dark:shadow-accent-2  flex justify-center items-center size-[45px] shadow-sm text-accent-11 hover:bg-accent-2 hover:border-accent-6 border-accent-4 border rounded-[7px] focus-visible:ring-accent-8 focus-visible:outline-none focus-visible:ring-2"
+				>
 					{isLoggingOut ? (
 						<Spinner />
 					) : (
 						<Avatar
 							src={undefined}
-							width="36px"
-							height="36px"
-							fallback="K"
+							fallback={<Icons.User className="size-5" strokeWidth="1.5px" />}
 							alt="Avatar"
+							className="size-[43px] bg-transparent"
 						/>
 					)}
-				</IconButton>
+				</button>
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content align="center" className="backdrop-blur-sm ">
 				{dropdownItems.map((item) => {
@@ -53,7 +55,7 @@ const ProfileDropdown = () => {
 					return (
 						<Link key={item.href} to={item.href} prefetch="intent">
 							<DropdownMenu.Item
-								className="h-10 px-2  hover:bg-gray-3 hover:text-accent-11"
+								className="h-10 px-2 rounded-[5px] hover:bg-accent-3  hover:text-accent-11"
 								shortcut={item.shortcut}
 							>
 								<Icon size={16} /> {item.name}
@@ -63,7 +65,7 @@ const ProfileDropdown = () => {
 				})}
 				<DropdownMenu.Separator className="m-1" />
 				<DropdownMenu.Item
-					className="h-10 hover:bg-red-3 hover:text-red-9"
+					className="h-10 rounded-[5px] hover:bg-red-3 hover:text-red-9"
 					color="red"
 				>
 					<Icons.Logout size={16} />

@@ -31,7 +31,7 @@ export const accentColors = [
 	"blue",
 	"cyan",
 	"teal",
-	"jade",
+	"green",
 	"green",
 	"grass",
 	"lime",
@@ -68,7 +68,7 @@ export function getMatchingGrayColor(accentColor: AccentColor) {
 		case "cyan":
 			return "slate";
 		case "teal":
-		case "jade":
+		case "green":
 		case "mint":
 		case "green":
 			return "sage";

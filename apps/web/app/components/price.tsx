@@ -9,7 +9,7 @@ const Price = ({
 }: {
 	amount: number;
 	className?: string;
-	currencyCode: string;
+	currencyCode?: string;
 	currencyCodeClassName?: string;
 } & React.ComponentProps<"p">) => {
 	const formatter = useMemo(

@@ -42,7 +42,7 @@ const items: SidebarItem[] = [
 
 	{
 		title: "Settings",
-		href: "/settings",
+		href: "/settings/general",
 		icon: "Settings",
 		items: [],
 	},
@@ -53,7 +53,7 @@ const noSidebarPaths = new Set(["/", "/onboarding", "/login", "/verify"]);
 const Sidebar = () => {
 	const fetcher = useFetcher<typeof action>();
 	const { sidebarState } = useUserPreferences();
-	const mode = sidebarState ?? "closed";
+	const mode = sidebarState ?? "open";
 	const nextMode = mode === "open" ? "closed" : "open";
 	const location = useLocation();
 	useHotkeys(["s"], () => {
@@ -95,8 +95,8 @@ const Sidebar = () => {
 								fetcher.submit(
 									{ sidebarState: nextMode },
 									{
-										method: "post",
-										action: "/action/set-sidebar",
+										method: "POST",
+										action: "/action/set-preferences",
 									},
 								)
 							}
@@ -123,25 +123,25 @@ const Sidebar = () => {
 									to={item.href}
 									key={item.title}
 									className={cn(
-										"group/link flex size-10 w-full items-center gap-3 pl-3 hover:bg-gray-3 rounded-[5px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
+										"group/link flex size-10 w-full items-center gap-3 pl-3 hover:bg-accent-3 rounded-[5px] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-accent-7",
 									)}
 									prefetch="viewport"
 								>
 									<Flex justify="center" align="center">
 										<Icon
 											className={cn(
+												"size-5",
 												`/${mainPath}` === item.href
 													? "text-accent-11"
 													: "group-hover/link:text-accent-11",
 											)}
-											size={20}
 											strokeWidth={strokeWidth}
 										/>
 									</Flex>
 									<Heading
-										size="2"
+										size="3"
 										className={cn(
-											"w-[350px] font-normal opacity-0 group-hover/link:text-accent-11 transition-opacity duration-300 ease-in-out lg:group-hover:opacity-100",
+											"w-[350px] font-freeman font-normal opacity-0 group-hover/link:text-accent-11 transition-opacity duration-300 ease-in-out lg:group-hover:opacity-100",
 
 											`/${mainPath}` === item.href && "text-accent-11",
 											mode === "open" ? "opacity-100" : "opacity-0",

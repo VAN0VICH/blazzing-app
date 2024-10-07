@@ -21,10 +21,13 @@ const NotificationDropdown = () => {
 	return (
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>
-				<IconButton variant="surface" size="3">
-					<Icons.Notification className="w-5 h-5 text-accent-11" />
+				<button
+					type="button"
+					className="bg-component dark:shadow-accent-2 dark:bg-gray-3 size-[45px] shadow-sm text-accent-11 hover:bg-accent-2 hover:border-accent-6 border border-border flex justify-center items-center rounded-[7px] focus-visible:ring-accent-8 focus-visible:outline-none focus-visible:ring-2"
+				>
+					<Icons.Notification className="size-5" strokeWidth="1.5px" />
 					<span className="sr-only">Notifications</span>
-				</IconButton>
+				</button>
 			</DropdownMenu.Trigger>
 			<DropdownMenu.Content
 				align="center"

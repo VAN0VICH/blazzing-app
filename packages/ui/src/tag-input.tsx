@@ -5,9 +5,9 @@ import { composeRefs } from "./lib/compose-refs";
 import { Badge } from "@radix-ui/themes";
 
 const inputBaseStyles = cn(
-	"bg- gray-1 hover:bg- gray-2 border-border border-b- gray-7 placeholder- gray-9 text-ui-fg-base shadow-sm transition-fg relative w-full appearance-none     border outline-none",
-	"focus-visible:border-accent-8 focus-visible:dark:border-accent-9 focus-visible:shadow-accent-5 focus-visible:shadow",
-	"disabled:text- gray-8 disabled:!bg- gray-1 disabled:placeholder- gray-8 disabled:cursor-not-allowed disabled:!shadow-none",
+	"rounded-[4px] bg-accent-3 placeholder-gray-9 text-ui-fg-base shadow-sm transition-fg relative w-full appearance-none outline-none",
+	"focus-visible:border-accent-8  focus-visible:dark:border-accent-9 focus-visible:shadow-accent-5 focus-visible:shadow",
+	"disabled:text-gray-8 disabled:!bg- gray-1 disabled:placeholder-gray-8 disabled:cursor-not-allowed disabled:!shadow-none",
 	"aria-[invalid=true]:!border-ui-border-error aria-[invalid=true]:focus:!border-red-9 aria-[invalid=true]:focus:!border-2 aria-[invalid=true]:focus:!shadow-none invalid:!border-red-10",
 );
 type TagInputProps = {
@@ -81,22 +81,24 @@ const TagInput = React.forwardRef<HTMLInputElement, TagInputProps>(
 			<div
 				className={cn(
 					inputBaseStyles,
-					"h-10 px-2 gap-1 flex items-center overflow-x-auto hide-scrollbar ",
+					"h-8 px-1 gap-1 flex items-center overflow-x-auto hide-scrollbar ",
 					// caveat: :has() variant requires tailwind v3.4 or above: https://tailwindcss.com/blog/tailwindcss-v3-4#new-has-variant
 					className,
-					{ "border-accent-9": isFocused },
+					{ "border-accent-9 border-2": isFocused },
 				)}
 			>
 				{value.map((item) => (
 					<Badge
 						key={item}
 						//@ts-ignore
-						color={color}
+						size="1"
+						className="h-6"
+						variant="surface"
 					>
 						{item}
 						<button
 							type="button"
-							className="w-6 h-8 flex justify-center items-center focus-visible:outline-none focus-visible:ring-1"
+							className="w-4 h-6 flex justify-center items-center focus-visible:outline-none focus-visible:ring-1"
 							onClick={() => {
 								onChange(value.filter((i) => i !== item));
 							}}

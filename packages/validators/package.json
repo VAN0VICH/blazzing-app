@@ -6,8 +6,7 @@
 	"exports": {
 		".": "./src/index.ts",
 		"./client": "./src/client/entities.ts",
-		"./server": "./src/server/entities.ts",
-		"./api/": "./src/api/"
+		"./server": "./src/server/entities.ts"
 	},
 	"license": "MIT",
 	"scripts": {

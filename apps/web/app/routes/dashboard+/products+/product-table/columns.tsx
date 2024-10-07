@@ -7,6 +7,8 @@ import { ProductStatus } from "~/components/badge/product-status";
 import { DataTableColumnHeader } from "~/components/templates/table/data-table-column-header";
 import type { DataTableFilterableColumn } from "~/types/table";
 import { RowActions } from "./row-actions";
+import { useDashboardStore } from "~/zustand/store";
+import { toImageURL } from "~/utils/helpers";
 
 export function getProductsColumns({
 	deleteProduct,
@@ -46,7 +48,9 @@ export function getProductsColumns({
 			header: ({ column }) => (
 				<DataTableColumnHeader column={column} title="Thumbnail" />
 			),
-			cell: () => {
+			cell: ({ row }) => {
+				const variantMap = useDashboardStore((state) => state.variantMap);
+				const baseVariant = variantMap.get(row.original.baseVariantID);
 				return (
 					<Flex
 						justify="center"
@@ -55,7 +59,16 @@ export function getProductsColumns({
 						height="50px"
 						className="  "
 					>
-						<Avatar fallback="3" />
+						<Avatar
+							fallback="3"
+							src={
+								baseVariant?.thumbnail?.url ??
+								toImageURL(
+									baseVariant?.thumbnail?.base64,
+									baseVariant?.thumbnail?.fileType,
+								)
+							}
+						/>
 					</Flex>
 				);
 			},
@@ -68,10 +81,12 @@ export function getProductsColumns({
 			header: ({ column }) => (
 				<DataTableColumnHeader column={column} title="Title" />
 			),
-			cell: () => {
+			cell: ({ row }) => {
+				const variantMap = useDashboardStore((state) => state.variantMap);
+				const baseVariant = variantMap.get(row.original.baseVariantID);
 				return (
 					<Box>
-						<Heading className="  ">{"Untitled"}</Heading>
+						<Heading size="2">{baseVariant?.title ?? "Untitled"}</Heading>
 					</Box>
 				);
 			},
@@ -103,7 +118,7 @@ export function getProductsColumns({
 
 				return (
 					<Flex align="center" width="100px">
-						<ProductStatus status={status} />
+						<ProductStatus status={status} size="3" />
 					</Flex>
 				);
 			},
@@ -119,11 +134,11 @@ export function getProductsColumns({
 				<DataTableColumnHeader column={column} title="Quantity" />
 			),
 			cell: ({ row }) => {
+				const variantMap = useDashboardStore((state) => state.variantMap);
+				const baseVariant = variantMap.get(row.original.baseVariantID);
 				return (
 					<Box className="w-[80px]">
-						<Heading className="lg:text-md">
-							{row.original.baseVariant.quantity}
-						</Heading>
+						<Heading size="2">{baseVariant?.quantity ?? 0}</Heading>
 					</Box>
 				);
 			},
