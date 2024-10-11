@@ -15,7 +15,6 @@ import {
 import { Icons } from "@blazzing-app/ui/icons";
 import {
 	Badge,
-	Box,
 	Button,
 	Flex,
 	IconButton,

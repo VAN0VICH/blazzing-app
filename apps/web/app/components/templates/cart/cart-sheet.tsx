@@ -11,19 +11,18 @@ import {
 	Button,
 	Flex,
 	Grid,
-	IconButton,
 	ScrollArea,
 	Text,
 	Theme,
 } from "@radix-ui/themes";
 import { Link } from "@remix-run/react";
 import React from "react";
+import { useUserPreferences } from "~/hooks/use-user-preferences";
 import { useReplicache } from "~/zustand/replicache";
 import { useCartState } from "~/zustand/state";
 import { useGlobalStore } from "~/zustand/store";
 import { LineItem, LineItemSkeleton } from "../line-item/line-item";
 import { Total } from "./total-info";
-import { useUserPreferences } from "~/hooks/use-user-preferences";
 
 export const CartSheet = ({ cartID }: { cartID: string | null }) => {
 	const rep = useReplicache((state) => state.globalRep);
@@ -36,7 +35,6 @@ export const CartSheet = ({ cartID }: { cartID: string | null }) => {
 	const [parent] = useAutoAnimate({ duration: 200 });
 
 	const { opened, setOpened } = useCartState();
-	console.log("items", items);
 
 	const deleteItem = React.useCallback(
 		async (id: string) => {

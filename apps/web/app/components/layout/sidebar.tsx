@@ -1,14 +1,6 @@
 import { cn } from "@blazzing-app/ui";
 import { Icons, strokeWidth } from "@blazzing-app/ui/icons";
-import {
-	Box,
-	Card,
-	Dialog,
-	Flex,
-	Heading,
-	IconButton,
-	Kbd,
-} from "@radix-ui/themes";
+import { Box, Dialog, Flex, Heading, IconButton, Kbd } from "@radix-ui/themes";
 import { Link, useFetcher, useLocation } from "@remix-run/react";
 import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -23,7 +15,7 @@ export type SidebarItem = {
 const items: SidebarItem[] = [
 	{
 		title: "Dashboard",
-		href: "/dashboard",
+		href: "/dashboard/store",
 		icon: "Dashboard",
 		items: [],
 	},
@@ -65,8 +57,19 @@ const Sidebar = () => {
 			},
 		);
 	});
-	const splitPath = location.pathname.split("/");
-	const mainPath = splitPath[1];
+	const mainPath = React.useMemo(
+		() => location.pathname.split("/")[1],
+		[location.pathname],
+	);
+	const handleSPress = React.useCallback(() => {
+		fetcher.submit(
+			{ sidebarState: nextMode },
+			{
+				method: "POST",
+				action: "/action/set-preferences",
+			},
+		);
+	}, [fetcher, nextMode]);
 	return (
 		<Flex>
 			<nav
@@ -88,19 +91,7 @@ const Sidebar = () => {
 							},
 						)}
 					>
-						<Kbd
-							size="4"
-							className="cursor-pointer"
-							onClick={() =>
-								fetcher.submit(
-									{ sidebarState: nextMode },
-									{
-										method: "POST",
-										action: "/action/set-preferences",
-									},
-								)
-							}
-						>
+						<Kbd size="4" className="cursor-pointer" onClick={handleSPress}>
 							S
 						</Kbd>
 					</Flex>

@@ -65,7 +65,7 @@ const InputOTPSeparator = React.forwardRef<
 	React.ComponentPropsWithoutRef<"div">
 >(({ ...props }, ref) => (
 	// biome-ignore lint/a11y/useAriaPropsForRole: <explanation>
-	<div ref={ref} role="separator" {...props}>
+	<div ref={ref} {...props}>
 		<Dot />
 	</div>
 ));

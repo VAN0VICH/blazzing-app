@@ -11,19 +11,21 @@ import {
 import { Icons } from "@blazzing-app/ui/icons";
 import type { Customer, Order, Variant } from "@blazzing-app/validators/client";
 import {
-	Button,
+	Avatar,
+	Badge,
 	Dialog,
 	Flex,
 	Grid,
-	IconButton,
 	Kbd,
 	Skeleton,
 	Text,
 	TextField,
 } from "@radix-ui/themes";
 import { useNavigate } from "@remix-run/react";
+import ImagePlaceholder from "~/components/image-placeholder";
 import { HighlightedText } from "~/highlighted-text";
 import { useDebounce } from "~/hooks/use-debounce";
+import { toImageURL } from "~/utils/helpers";
 import type {
 	SearchWorkerRequest,
 	SearchWorkerResponse,
@@ -137,7 +139,9 @@ export function DashboardSearchCombobox() {
 						)}
 					>
 						<Icons.MagnifyingGlassIcon aria-hidden="true" className="size-5 " />
-						<Text size="2">Dashboard search</Text>
+						<Text size="3" className="font-freeman">
+							Dashboard search
+						</Text>
 						<span className="sr-only">Search...</span>
 						<Kbd title={"Command"} className="text-accent-11">
 							{"⌘"} K
@@ -188,7 +192,7 @@ export function DashboardSearchCombobox() {
 											return (
 												<CommandItem
 													key={variant.id}
-													className="p-2"
+													className="p-2 h-18"
 													value={variant.id}
 													onSelect={() => {
 														onSelect(() =>
@@ -201,16 +205,26 @@ export function DashboardSearchCombobox() {
 													}}
 												>
 													<div className="flex gap-3">
-														<Icons.Product
-															className="size-6 mt-2"
-															aria-hidden="true"
+														<Avatar
+															className="size-12"
+															fallback={<ImagePlaceholder />}
+															src={
+																variant.thumbnail?.url ??
+																toImageURL(
+																	variant.thumbnail?.base64,
+																	variant.thumbnail?.fileType,
+																)
+															}
 														/>
 														<div className="flex flex-col">
-															<HighlightedText
-																searchTerm={query}
-																text={variant.title ?? ""}
-																className="font-bold text-base"
-															/>
+															<Flex justify="between" gap="2">
+																<HighlightedText
+																	searchTerm={query}
+																	text={variant.title ?? ""}
+																	className="font-bold text-base"
+																/>
+																<Badge color="purple">Product</Badge>
+															</Flex>
 															<HighlightedText
 																searchTerm={query}
 																text={variant.description ?? ""}
@@ -233,6 +247,7 @@ export function DashboardSearchCombobox() {
 											return (
 												<CommandItem
 													key={order.id}
+													className="p-2 h-18"
 													value={order.id}
 													onSelect={() =>
 														onSelect(() =>
@@ -241,7 +256,7 @@ export function DashboardSearchCombobox() {
 													}
 												>
 													<div className="flex gap-3">
-														<Icons.Product
+														<Icons.Order
 															className="size-6 mt-2"
 															aria-hidden="true"
 														/>
@@ -279,7 +294,7 @@ export function DashboardSearchCombobox() {
 											return (
 												<CommandItem
 													key={customer.id}
-													className="h-9"
+													className="p-2 h-18"
 													value={customer.id}
 													onSelect={() =>
 														onSelect(() =>

@@ -1,14 +1,11 @@
 import React, { useEffect } from "react";
 
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-} from "@blazzing-app/ui/form";
+import { cn } from "@blazzing-app/ui";
+import { Form, FormControl, FormField, FormItem } from "@blazzing-app/ui/form";
+import { Icons } from "@blazzing-app/ui/icons";
 import { VariantSchema, type UpdateVariant } from "@blazzing-app/validators";
 import type { Variant } from "@blazzing-app/validators/client";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	Card,
@@ -22,14 +19,10 @@ import {
 } from "@radix-ui/themes";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { Icons } from "@blazzing-app/ui/icons";
-import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { cn } from "@blazzing-app/ui";
 
 interface StockProps {
 	variant: Variant | undefined | null;
 	updateVariant: (props: UpdateVariant) => Promise<void>;
-	className?: string;
 }
 
 const schema = VariantSchema.pick({
@@ -41,7 +34,7 @@ const schema = VariantSchema.pick({
 
 type ProductInfo = z.infer<typeof schema>;
 
-const Stock = ({ variant, className, updateVariant }: StockProps) => {
+const Stock = ({ variant, updateVariant }: StockProps) => {
 	const [parent] = useAutoAnimate(/* optional config */);
 	const [editMode, setEditMode] = React.useState(false);
 	const [hasBarcode, setHasBarcode] = React.useState(false);

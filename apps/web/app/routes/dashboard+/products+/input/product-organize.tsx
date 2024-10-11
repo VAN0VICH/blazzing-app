@@ -4,18 +4,9 @@ import { TagInput } from "@blazzing-app/ui/tag-input";
 import type { Product } from "@blazzing-app/validators/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import {
-	Button,
-	Card,
-	Flex,
-	Heading,
-	IconButton,
-	Select,
-	Text,
-	TextField,
-} from "@radix-ui/themes";
-import React, { type KeyboardEvent } from "react";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { Card, Flex, Heading, IconButton, Text } from "@radix-ui/themes";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 const schema = z.object({
 	tags: z.array(z.string()),

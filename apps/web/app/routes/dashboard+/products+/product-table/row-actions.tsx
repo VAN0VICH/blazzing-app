@@ -66,7 +66,7 @@ export function RowActions({
 				</DropdownMenu.Item>
 				<DropdownMenu.Separator />
 				<DropdownMenu.Item
-					className="flex gap-2 hover:bg-accent-3 px-2 hover:text-accent-11 text-red-11"
+					className="flex gap-2 hover:bg-red-3 px-2 hover:text-red-11 text-red-11"
 					onClick={async (e) => {
 						e.stopPropagation();
 						deleteProduct([row.original.id]);

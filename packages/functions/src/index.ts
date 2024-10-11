@@ -13,6 +13,7 @@ import { ReplicacheApi } from "./api/replicache";
 import { StoreApi } from "./api/store";
 import { UserApi } from "./api/user";
 import { PaymentApi } from "./api/payment";
+import { VariantApi } from "./api/variant";
 
 const app = new OpenAPIHono<{ Bindings: WorkerBindings & WorkerEnv }>();
 
@@ -58,6 +59,7 @@ const routes = app
 	.route("/replicache", ReplicacheApi.route)
 	.route("/store", StoreApi.route)
 	.route("/product", ProductApi.route)
+	.route("/variant", VariantApi.route)
 	.route("/cart", CartApi.route)
 	.route("/order", OrderApi.route)
 	.route("/payment", PaymentApi.route);

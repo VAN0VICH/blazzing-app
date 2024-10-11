@@ -12,6 +12,7 @@ import {
 	Text,
 } from "@radix-ui/themes";
 import { useParams } from "@remix-run/react";
+import { useCopyToClipboard } from "@uidotdev/usehooks";
 import React from "react";
 import { OrderStatus } from "~/components/badge/order-status";
 import { PaymentStatus } from "~/components/badge/payment-status";
@@ -22,6 +23,7 @@ import {
 	LineItem,
 	LineItemSkeleton,
 } from "~/components/templates/line-item/line-item";
+import { formatISODate } from "~/utils/format";
 import { useDashboardStore } from "~/zustand/store";
 
 const OrderRoute = () => {
@@ -80,22 +82,22 @@ const CustomerInfo = ({ order }: { order: Order | undefined | null }) => {
 				<Grid width="100%" pt="4">
 					<address className="grid gap-0.5 not-italic ">
 						<Flex justify="between">
-							<Text className="font-semibold" size="2">
+							<Text className="font-semibold" size="3">
 								email:
 							</Text>
 							<Link
 								href="mailto:"
 								className="text-sm text-ellipsis overflow-hidden"
 							>
-								<Text size="2">{order?.email}</Text>
+								<Text size="3">{order?.email}</Text>
 							</Link>
 						</Flex>
 						<Flex justify="between">
-							<Text className="font-semibold" size="2">
+							<Text className="font-semibold" size="3">
 								phone:
 							</Text>
 							<Link href="tel:" className="text-sm">
-								<Text size="2">{order?.phone}</Text>
+								<Text size="3">{order?.phone}</Text>
 							</Link>
 						</Flex>
 					</address>
@@ -129,6 +131,8 @@ const OrderInfo = ({ order }: { order: Order | undefined }) => {
 	const [editMode, setEditMode] = React.useState(false);
 	const isInitialized = useDashboardStore((state) => state.isInitialized);
 	const items = order?.items ?? [];
+	const [_, copyToClipboard] = useCopyToClipboard();
+	const [hasCopiedText, setHasCopiedText] = React.useState(false);
 
 	return (
 		<Card className="p-0">
@@ -142,12 +146,25 @@ const OrderInfo = ({ order }: { order: Order | undefined }) => {
 									className="text-accent-11 font-bold "
 								>{`${order?.id}`}</Text>
 							</Box>
-							<IconButton variant="outline">
-								<Icons.Copy className="h-3 w-3" />
+
+							<IconButton
+								variant="surface"
+								className="link"
+								onClick={() => {
+									copyToClipboard(order?.id ?? "");
+									setHasCopiedText(true);
+									setTimeout(setHasCopiedText, 2000);
+								}}
+							>
+								{hasCopiedText ? (
+									<Icons.Check className="size-4" />
+								) : (
+									<Icons.Copy className="size-4" />
+								)}
 								<span className="sr-only">Copy Order ID</span>
 							</IconButton>
 						</Flex>
-						<Text size="2">{order?.createdAt}</Text>
+						<Text size="2">{formatISODate(order?.createdAt)}</Text>
 					</Grid>
 
 					<Flex gap="4" align="center">

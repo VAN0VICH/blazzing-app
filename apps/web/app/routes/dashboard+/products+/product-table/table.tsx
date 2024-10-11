@@ -109,7 +109,7 @@ function ProductsTable({
 			>
 				<Box style={{ height: `${virtualizer.getTotalSize()}px` }}>
 					<Table>
-						<TableHeader className="w-full z-20 sticky top-0">
+						<TableHeader className="w-full z-20 backdrop-blur-3xl border-b sticky top-0">
 							{" "}
 							{table.getHeaderGroups().map((headerGroup) => (
 								<TableRow key={headerGroup.id}>

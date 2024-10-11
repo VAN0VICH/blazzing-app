@@ -6,7 +6,7 @@
 		"beautify": "biome format ./src --write",
 		"dev": "partykit dev",
 		"deploy": "pnpm dlx partykit deploy",
-		"format": "biome format .",
+		"format": "biome format ./src",
 		"lint": "biome lint src",
 		"tail": "pnpm partykit tail"
 	},

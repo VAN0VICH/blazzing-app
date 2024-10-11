@@ -32,18 +32,14 @@ async function updateStore(tx: WriteTransaction, input: UpdateStore) {
 			? {
 					image: {
 						...updates.image,
-						cropped: {
-							base64: updates.croppedImage.base64,
-						},
+						cropped: updates.croppedImage,
 					},
 				}
 			: updates.croppedImage
 				? {
 						image: {
 							...store.image,
-							cropped: {
-								base64: updates.croppedImage.base64,
-							},
+							cropped: updates.croppedImage,
 						},
 					}
 				: {}),
@@ -51,14 +47,14 @@ async function updateStore(tx: WriteTransaction, input: UpdateStore) {
 			? {
 					headerImage: {
 						...updates.headerImage,
-						cropped: { base64: updates.croppedHeaderImage.base64 },
+						cropped: updates.croppedHeaderImage,
 					},
 				}
 			: updates.croppedHeaderImage
 				? {
 						headerImage: {
 							...store.headerImage,
-							cropped: { base64: updates.croppedHeaderImage.base64 },
+							cropped: updates.croppedHeaderImage,
 						},
 					}
 				: {}),

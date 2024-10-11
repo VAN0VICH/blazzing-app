@@ -12,7 +12,6 @@ import {
 	Grid,
 	Heading,
 	Kbd,
-	Spinner,
 	Tooltip,
 } from "@radix-ui/themes";
 import React from "react";
@@ -208,17 +207,9 @@ export function Media({
 															height={{ initial: 200 }}
 															quality={90}
 															className={cn(
-																"border aspect-square border-border w-full h-full object-contain rounded-[5px]",
-																{
-																	"brightness-75": !image.url,
-																},
+																"border aspect-square object-cover border-border w-full h-full rounded-[5px]",
 															)}
 														/>
-														{!image.url && (
-															<div className="absolute inset-0 flex items-center justify-center">
-																<Spinner />
-															</div>
-														)}
 													</Box>
 													<Checkbox
 														checked={selectedImages.some(
@@ -238,7 +229,7 @@ export function Media({
 														size="3"
 														tabIndex={-1}
 														className={cn(
-															"hidden group-hover:block absolute right-2 top-2 checkbox-class bg-gray-2",
+															"hidden group-hover:block absolute rounded-[5px] right-2 top-2 checkbox-class bg-gray-2",
 															{
 																block: selected,
 															},

@@ -1,11 +1,10 @@
+import * as React from "react";
 import useEmblaCarousel, {
 	type UseEmblaCarouselType,
 } from "embla-carousel-react";
-import * as React from "react";
-
-import { cn } from "./";
+import { cn } from ".";
+import { type Button, IconButton } from "@radix-ui/themes";
 import { Icons } from "./icons";
-import { Button } from "@radix-ui/themes";
 
 type CarouselApi = UseEmblaCarouselType[1];
 type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
@@ -30,7 +29,7 @@ type CarouselContextProps = {
 
 const CarouselContext = React.createContext<CarouselContextProps | null>(null);
 
-function useCarousel() {
+export function useCarousel() {
 	const context = React.useContext(CarouselContext);
 
 	if (!context) {
@@ -85,7 +84,7 @@ const Carousel = React.forwardRef<
 
 		const handleKeyDown = React.useCallback(
 			(event: React.KeyboardEvent<HTMLDivElement>) => {
-				if (event.key === "Icons.left") {
+				if (event.key === "ArrowLeft") {
 					event.preventDefault();
 					scrollPrev();
 				} else if (event.key === "ArrowRight") {
@@ -159,7 +158,7 @@ const CarouselContent = React.forwardRef<
 				ref={ref}
 				className={cn(
 					"flex",
-					orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+					orientation === "horizontal" ? "" : "flex-col",
 					className,
 				)}
 				{...props}
@@ -173,18 +172,12 @@ const CarouselItem = React.forwardRef<
 	HTMLDivElement,
 	React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
-	const { orientation } = useCarousel();
-
 	return (
 		<div
 			ref={ref}
 			role="group"
 			aria-roledescription="slide"
-			className={cn(
-				"min-w-0 shrink-0 grow-0 basis-full",
-				orientation === "horizontal" ? "pl-4" : "pt-4",
-				className,
-			)}
+			className={cn("min-w-0 shrink-0 grow-0 basis-full", className)}
 			{...props}
 		/>
 	);
@@ -198,13 +191,13 @@ const CarouselPrevious = React.forwardRef<
 	const { orientation, scrollPrev, canScrollPrev } = useCarousel();
 
 	return (
-		<Button
+		<IconButton
 			ref={ref}
 			variant={variant}
 			type="button"
 			size={size}
 			className={cn(
-				"absolute  h-8 w-8 rounded-full",
+				"absolute rounded-full",
 				orientation === "horizontal"
 					? "left-4 top-1/2 -translate-y-1/2"
 					: "-top-12 left-1/2 -translate-x-1/2 rotate-90",
@@ -217,9 +210,14 @@ const CarouselPrevious = React.forwardRef<
 			}}
 			{...props}
 		>
-			<Icons.Left className="h-4 w-4" />
+			<Icons.Left
+				className={cn("size-4", {
+					"size-6": size === "4",
+					"size-5": size === "3",
+				})}
+			/>
 			<span className="sr-only">Previous slide</span>
-		</Button>
+		</IconButton>
 	);
 });
 CarouselPrevious.displayName = "CarouselPrevious";
@@ -231,12 +229,12 @@ const CarouselNext = React.forwardRef<
 	const { orientation, scrollNext, canScrollNext } = useCarousel();
 
 	return (
-		<Button
+		<IconButton
 			ref={ref}
 			variant={variant}
 			size={size}
 			className={cn(
-				"absolute h-8 w-8 rounded-full",
+				"absolute rounded-full",
 				orientation === "horizontal"
 					? "right-4 top-1/2 -translate-y-1/2"
 					: "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
@@ -249,18 +247,23 @@ const CarouselNext = React.forwardRef<
 			}}
 			{...props}
 		>
-			<Icons.Right className="h-4 w-4" />
+			<Icons.Right
+				className={cn("size-4", {
+					"size-6": size === "4",
+					"size-5": size === "3",
+				})}
+			/>
 			<span className="sr-only">Next slide</span>
-		</Button>
+		</IconButton>
 	);
 });
 CarouselNext.displayName = "CarouselNext";
 
 export {
+	type CarouselApi,
 	Carousel,
 	CarouselContent,
 	CarouselItem,
-	CarouselNext,
 	CarouselPrevious,
-	type CarouselApi,
+	CarouselNext,
 };

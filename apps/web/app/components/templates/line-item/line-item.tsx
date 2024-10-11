@@ -16,6 +16,7 @@ import {
 	Text,
 } from "@radix-ui/themes";
 import { Effect } from "effect";
+import React from "react";
 import ImagePlaceholder from "~/components/image-placeholder";
 import Price from "~/components/price";
 import { decapitalize } from "~/utils/helpers";
@@ -33,17 +34,30 @@ export const LineItem = ({
 	currencyCode: string;
 	readonly?: boolean;
 }) => {
-	const amount =
-		Effect.runSync(
-			getLineItemPriceAmount(lineItem, currencyCode).pipe(
-				Effect.catchTags({
-					PriceNotFound: (e) =>
-						Effect.try(() => {
-							deleteItem?.(lineItem.id).then(() => toast.error(e.message));
-						}),
-				}),
-			),
-		) ?? 0;
+	const amount = React.useMemo(
+		() =>
+			Effect.runSync(
+				getLineItemPriceAmount(lineItem, currencyCode).pipe(
+					Effect.catchTags({
+						PriceNotFound: (e) =>
+							Effect.try(() => {
+								deleteItem?.(lineItem.id).then(() => toast.error(e.message));
+							}),
+					}),
+				),
+			) ?? 0,
+		[currencyCode, deleteItem, lineItem],
+	);
+
+	const reduceQuantity = async () => {
+		if (lineItem.quantity === 1) return await deleteItem?.(lineItem.id);
+		await updateItem?.(lineItem.id, lineItem.quantity - 1);
+	};
+
+	const increaseQuantity = async () => {
+		await updateItem?.(lineItem.id, lineItem.quantity + 1);
+	};
+
 	return (
 		<Card className="gap-2 flex w-full items-center p-2 rounded-[7px]">
 			<Avatar
@@ -78,11 +92,7 @@ export const LineItem = ({
 								<IconButton
 									variant="soft"
 									disabled={lineItem.quantity === 0}
-									onClick={async () => {
-										if (lineItem.quantity === 1)
-											return await deleteItem?.(lineItem.id);
-										await updateItem?.(lineItem.id, lineItem.quantity - 1);
-									}}
+									onClick={reduceQuantity}
 									size="1"
 								>
 									<Icons.Minus className="size-3" />
@@ -91,9 +101,7 @@ export const LineItem = ({
 									{lineItem.quantity}
 								</Text>
 								<IconButton
-									onClick={async () =>
-										await updateItem?.(lineItem.id, lineItem.quantity + 1)
-									}
+									onClick={increaseQuantity}
 									variant="soft"
 									type="button"
 									size="1"
@@ -128,7 +136,7 @@ export const LineItem = ({
 };
 export const LineItemSkeleton = () => {
 	return (
-		<li className="w-full flex gap-2">
+		<Flex className="w-full flex gap-2">
 			<Card className="aspect-square border-none flex items-center justify-center p-0 rounded-lg relative w-[100px]">
 				<Skeleton className="w-[100px] h-[100px] rounded-lg" />
 			</Card>
@@ -156,6 +164,6 @@ export const LineItemSkeleton = () => {
 					</Button>
 				</Flex>
 			</Flex>
-		</li>
+		</Flex>
 	);
 };

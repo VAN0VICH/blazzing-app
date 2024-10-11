@@ -5,7 +5,7 @@ import { LoadingSpinner } from "./loading";
 const toast = {
 	success(message: string) {
 		return sonnerToast.success(message, {
-			icon: <Icons.CircleCheck className="text-green-11" />,
+			icon: <Icons.CircleCheck className="text-accent-11" />,
 			className:
 				"bg-component text-black dark:text-white border-border border flex gap-3",
 			closeButton: false,
@@ -20,7 +20,7 @@ const toast = {
 	},
 	info(message: string) {
 		return sonnerToast.info(message, {
-			icon: <Icons.CircleInfo className="text-sapphire-11" />,
+			icon: <Icons.CircleInfo className="text-accent-11" />,
 			className: "bg-component text-black dark:text-white border-border border",
 		});
 	},
@@ -31,7 +31,7 @@ const toast = {
 			success: () => {
 				return (
 					<span className="flex items-center gap-3">
-						<Icons.CircleCheck className="text-green-11" />
+						<Icons.CircleCheck className="text-accent-11" />
 						{message}
 					</span>
 				);

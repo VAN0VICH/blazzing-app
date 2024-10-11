@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useDashboardStore } from "~/zustand/store";
 import { ProductInput } from "./product-input";
 import { ProductPreview } from "./product-preview";
-import { productNotFound } from "@blazzing-app/replicache/src/mutators/client/product";
 
 function ProductRoute() {
 	const params = useParams();
@@ -34,7 +33,9 @@ function ProductRoute() {
 						baseVariant={baseVariant}
 					/>
 				) : (
-					<ProductPreview product={product} setView={setView} />
+					baseVariant && (
+						<ProductPreview baseVariant={baseVariant} setView={setView} />
+					)
 				)}
 			</Flex>
 		</Box>

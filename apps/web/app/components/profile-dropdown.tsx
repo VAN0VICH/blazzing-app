@@ -1,5 +1,5 @@
 import { Icons } from "@blazzing-app/ui/icons";
-import { Avatar, DropdownMenu, IconButton, Spinner } from "@radix-ui/themes";
+import { Avatar, DropdownMenu, Spinner } from "@radix-ui/themes";
 import { Link } from "@remix-run/react";
 
 type DropdownItem = {

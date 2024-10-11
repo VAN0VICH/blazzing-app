@@ -121,15 +121,22 @@ const publishProduct = fn(z.object({ id: z.string() }), (input) =>
 		}
 		const effects =
 			product.variants?.map((variant) => {
-				console.log("updating variant <-------", variant);
+				const handle = toUrlFriendly(
+					variant.handle
+						? variant.handle
+						: `${product.baseVariant.title ?? ""}${variant.optionValues.length > 0 ? "-" : ""}${
+								variant.optionValues.length > 0
+									? variant.optionValues
+											.map((val) => val.optionValue.value)
+											.join("-")
+									: ""
+							}`,
+				);
+				console.log("HANDLE <____", handle);
 				return tableMutator.update(
 					variant.id,
 					{
-						handle: `${toUrlFriendly(
-							product.baseVariant.title ?? "",
-						)}${variant.optionValues.length > 0 && "-"}${variant.optionValues
-							.map((val) => val.optionValue.value)
-							.join("-")}`,
+						handle,
 					},
 					"variants",
 				);

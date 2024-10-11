@@ -51,7 +51,6 @@ export function Variants({
 			}),
 		});
 	}, [dashboardRep, productID, product, baseVariant]);
-	console.log("variants", variants);
 
 	const deleteVariant = React.useCallback(
 		async (keys: string[]) => {

@@ -1,24 +1,23 @@
 import { cn } from "@blazzing-app/ui";
-import { truncateString } from "@blazzing-app/utils";
-import type { Product, Variant } from "@blazzing-app/validators/client";
-import { Avatar, Button, Flex, Grid, Heading, Text } from "@radix-ui/themes";
-import { Link } from "@remix-run/react";
-import { useState } from "react";
-import ImagePlaceholder from "~/components/image-placeholder";
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
 } from "@blazzing-app/ui/accordion";
+import { truncateString } from "@blazzing-app/utils";
+import type { Variant } from "@blazzing-app/validators/client";
+import { Avatar, Flex, Grid, Heading, Text } from "@radix-ui/themes";
+import { Link } from "@remix-run/react";
+import { useState } from "react";
+import ImagePlaceholder from "~/components/image-placeholder";
 
 interface GeneralInfoProps {
-	product: Product | undefined;
-	baseVariant: Variant | undefined | null;
+	variant: Variant | undefined | null;
 	isDashboard?: boolean;
 }
 
-function GeneralInfo({ baseVariant, product, isDashboard }: GeneralInfoProps) {
+function GeneralInfo({ variant, isDashboard }: GeneralInfoProps) {
 	const [isTruncated, setIsTruncated] = useState(true);
 
 	const handleToggle = () => {
@@ -26,30 +25,32 @@ function GeneralInfo({ baseVariant, product, isDashboard }: GeneralInfoProps) {
 	};
 
 	const displayText = isTruncated
-		? truncateString(baseVariant?.description ?? "", 200)
-		: (baseVariant?.description ?? "");
+		? truncateString(variant?.description ?? "", 200)
+		: (variant?.description ?? "");
 	return (
 		<Grid>
 			<Link
-				to={isDashboard ? "/store" : `/stores/${product?.store.name}`}
-				className="flex flex-col "
+				to={isDashboard ? "/store" : `/stores/${variant?.product?.store.name}`}
+				className="flex flex-col w-fit"
 			>
-				<Flex gap="2" width="100%">
+				<Flex gap="2">
 					<Avatar
-						src={product?.store.image?.url}
+						src={variant?.product?.store.image?.url}
 						fallback={<ImagePlaceholder />}
 					/>
 
 					<Flex justify="between" gap="2">
-						<Text className="font-medium text-lg">{product?.store.name}</Text>
+						<Text className="font-medium text-lg">
+							{variant?.product?.store.name}
+						</Text>
 					</Flex>
 				</Flex>
 			</Link>
 			<Flex direction="column" gap="3" py="3">
 				<Heading className="font-bold" size="7">{`${
-					baseVariant?.title ?? "Untitled"
+					variant?.title ?? "Untitled"
 				}`}</Heading>
-				<Text size="2">
+				<Text size="3">
 					{displayText}
 					<Text
 						onClick={handleToggle}
@@ -66,7 +67,9 @@ function GeneralInfo({ baseVariant, product, isDashboard }: GeneralInfoProps) {
 
 			<Accordion type="multiple" className="w-full border-t border-border">
 				<AccordionItem value="item-1">
-					<AccordionTrigger>Product information</AccordionTrigger>
+					<AccordionTrigger>
+						<Text>Product information</Text>
+					</AccordionTrigger>
 					<AccordionContent>
 						Yes. It adheres to the WAI-ARIA design pattern.
 					</AccordionContent>

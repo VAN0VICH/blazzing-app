@@ -75,6 +75,7 @@ import {
 	UploadIcon,
 	ChevronDown,
 	ChevronUp,
+	ListCollapseIcon,
 } from "lucide-react";
 
 export type Icon = LucideIcon;
@@ -158,6 +159,7 @@ export const Icons = {
 	Auction: PiggyBank,
 	Gavel,
 	Upload: UploadIcon,
+	Info: ListCollapseIcon,
 	UPC: (props: LucideProps) => (
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 18 18" {...props}>
 			<g clipPath="url(#a)">

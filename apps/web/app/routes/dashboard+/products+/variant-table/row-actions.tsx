@@ -29,7 +29,7 @@ export function RowActions({
 				className="w-[160px] backdrop-blur-sm"
 			>
 				<DropdownMenu.Item
-					className="flex gap-2 px-2 hover:text-accent-11 text-red-11"
+					className="flex gap-2 px-2 hover:bg-accent-3 hover:text-accent-11 text-red-11"
 					onKeyDown={async (e) => {
 						if (e.key === "Enter" || e.key === " ") {
 							e.preventDefault();
@@ -46,7 +46,7 @@ export function RowActions({
 					<Icons.Edit size={14} /> Edit
 				</DropdownMenu.Item>
 				<DropdownMenu.Item
-					className="flex gap-2 px-2 hover:text-accent-11 text-red-11"
+					className="flex gap-2 px-2 hover:bg-red-3 hover:text-red-11 text-red-11"
 					onClick={async (e) => {
 						e.stopPropagation();
 						await deleteVariant([row.original.id]);

@@ -2,9 +2,7 @@
 import { Icons } from "@blazzing-app/ui/icons";
 import { Badge, Box, Flex } from "@radix-ui/themes";
 import type { MetaFunction } from "@remix-run/cloudflare";
-import { json, redirect, type LoaderFunction } from "@remix-run/cloudflare";
 import { Hero } from "~/components/landing/hero";
-import Footer from "~/components/layout/footer";
 
 // export const loader: LoaderFunction = async ({ context }) => {
 // 	const { authUser } = context;

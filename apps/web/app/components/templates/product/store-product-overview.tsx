@@ -8,8 +8,6 @@ import {
 } from "@blazzing-app/ui/carousel";
 import type { Image as ImageType } from "@blazzing-app/validators";
 import type {
-	Product,
-	PublishedProduct,
 	PublishedVariant,
 	Variant,
 } from "@blazzing-app/validators/client";
@@ -22,26 +20,24 @@ import { GeneralInfo } from "./product-info";
 import { Pricing, ProductOptions, ProductVariants } from "./product-overview";
 
 interface StoreProductOverviewProps {
-	product: Product | PublishedProduct | undefined;
+	baseVariantIDOrHandle: string | undefined;
 	isDashboard?: boolean;
 	variants: (Variant | PublishedVariant)[];
-	selectedVariantIDOrHandle: string | undefined;
+	selectedVariantIDOrHandle: string;
 	selectedVariant: Variant | PublishedVariant | undefined;
-	setVariantIDOrHandle: (prop: string | undefined) => void;
+	setVariantIDOrHandle: (prop: string) => void;
 	cartID?: string | undefined;
-	baseVariant: Variant | PublishedVariant | undefined;
 	setView?: (value: "preview" | "input") => void;
 }
 
 const StoreProductOverview = ({
-	product,
+	baseVariantIDOrHandle,
 	isDashboard = false,
 	variants,
 	setVariantIDOrHandle,
 	selectedVariantIDOrHandle,
 	selectedVariant,
 	cartID,
-	baseVariant,
 	setView,
 }: StoreProductOverviewProps) => {
 	const [isShaking, setIsShaking] = useState(false);
@@ -49,7 +45,6 @@ const StoreProductOverview = ({
 	return (
 		<Box width="100%">
 			<Flex direction={{ initial: "column", md: "row" }} width="100%" gap="3">
-				{/*left*/}
 				<Box
 					width={{ initial: "100%", md: "20%" }}
 					position="relative"
@@ -57,18 +52,13 @@ const StoreProductOverview = ({
 				>
 					<Box width="100%" position="sticky" top="0">
 						<GeneralInfo
-							baseVariant={baseVariant}
-							product={product}
+							variant={selectedVariant}
 							{...(setView && { setView })}
 						/>
 					</Box>
 				</Box>
-				{/*center*/}
-				<Gallery
-					images={selectedVariant?.images ?? baseVariant?.images ?? []}
-				/>
+				<Gallery images={selectedVariant?.images ?? []} />
 
-				{/*right*/}
 				<Flex
 					width={{ initial: "100%", md: "30%" }}
 					position="relative"
@@ -101,22 +91,32 @@ const StoreProductOverview = ({
 							setVariantIDOrHandle={setVariantIDOrHandle}
 							selectedVariantIDOrHandle={selectedVariantIDOrHandle}
 							isDashboard={isDashboard}
+							baseVariantIDOrHandle={baseVariantIDOrHandle}
 						/>
-						<Separator className="w-full" />
+						<Separator
+							className={cn("w-full mt-4", {
+								hidden: variants.length === 0,
+							})}
+						/>
 						<ProductOptions
-							options={product?.options ?? []}
+							options={selectedVariant?.product?.options ?? []}
 							selectedVariant={selectedVariant}
 							variants={variants}
 							setVariantIDOrHandle={setVariantIDOrHandle}
 							isDashboard={isDashboard}
 							isShaking={isShaking}
+							baseVariantIDOrHandle={baseVariantIDOrHandle}
 						/>
-						<Separator className="w-full" />
-						<Pricing variant={selectedVariant ?? baseVariant} />
+						<Separator
+							className={cn("w-full my-4", {
+								hidden: variants.length === 0,
+							})}
+						/>
+
+						<Pricing variant={selectedVariant} />
 						<Actions
+							baseVariantID={selectedVariant?.product?.baseVariantID}
 							{...(cartID && { cartID })}
-							product={product}
-							baseVariant={baseVariant}
 							selectedVariant={selectedVariant}
 							setIsShaking={setIsShaking}
 							variants={variants}

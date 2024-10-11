@@ -55,6 +55,18 @@ export const storeCVD: GetRowsWTableName = ({ fullRows }) => {
 															},
 														},
 													},
+
+													product: {
+														with: {
+															baseVariant: true,
+															options: {
+																with: {
+																	optionValues: true,
+																},
+															},
+															store: true,
+														},
+													},
 													prices: true,
 												},
 											},
@@ -63,7 +75,30 @@ export const storeCVD: GetRowsWTableName = ({ fullRows }) => {
 													optionValues: true,
 												},
 											},
-											baseVariant: true,
+											baseVariant: {
+												with: {
+													optionValues: {
+														with: {
+															optionValue: {
+																with: {
+																	option: true,
+																},
+															},
+														},
+													},
+
+													product: {
+														with: {
+															options: {
+																with: {
+																	optionValues: true,
+																},
+															},
+														},
+													},
+													prices: true,
+												},
+											},
 											store: true,
 										},
 									},

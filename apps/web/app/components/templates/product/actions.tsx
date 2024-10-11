@@ -2,8 +2,6 @@ import { Icons } from "@blazzing-app/ui/icons";
 import { ToggleGroup, ToggleGroupItem } from "@blazzing-app/ui/toggle-group";
 import { generateID } from "@blazzing-app/utils";
 import type {
-	Product,
-	PublishedProduct,
 	PublishedVariant,
 	Variant,
 } from "@blazzing-app/validators/client";
@@ -16,18 +14,16 @@ import { useGlobalStore } from "~/zustand/store";
 
 const Actions = ({
 	cartID,
-	baseVariant,
 	variants,
+	baseVariantID,
 	selectedVariant,
-	product,
 	isDashboard,
 	setIsShaking,
 }: {
 	cartID?: string;
+	baseVariantID: string | undefined;
 	selectedVariant: PublishedVariant | Variant | undefined;
-	baseVariant: PublishedVariant | Variant | undefined;
 	variants: (PublishedVariant | Variant)[];
-	product: PublishedProduct | Product | undefined;
 	isDashboard?: boolean;
 	setIsShaking: (value: boolean) => void;
 }) => {
@@ -41,17 +37,20 @@ const Actions = ({
 	const addToCart = React.useCallback(
 		async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			e.stopPropagation();
-			if (!product || !baseVariant || isDashboard) return;
+			if (isDashboard) return;
 
-			if (variants.length > 0 && !selectedVariant) {
+			if (
+				!selectedVariant ||
+				(variants.length > 1 && !selectedVariant) ||
+				(variants.length > 1 && selectedVariant.id === baseVariantID)
+			) {
 				setIsShaking(true);
 				setTimeout(setIsShaking, 250);
 
 				return;
 			}
 
-			const variant = selectedVariant ?? baseVariant;
-			const item = itemsIDs.get(variant.id);
+			const item = itemsIDs.get(selectedVariant.id);
 			if (item) {
 				await rep?.mutate.updateLineItem({
 					id: item.id,
@@ -69,32 +68,32 @@ const Actions = ({
 				);
 			}
 
-			await rep?.mutate.createLineItem({
-				lineItem: {
-					id: newID,
-					cartID: cartID ?? newCartID,
-					title: variant.title ?? "",
-					quantity: 1,
-					createdAt: new Date().toISOString(),
-					//@ts-ignore
-					variant,
-					variantID: variant.id,
-					productID: product.id,
-					product,
-					storeID: product.storeID ?? "",
-				},
-				...(!cartID && {
-					newCartID,
-				}),
-			});
+			selectedVariant.product &&
+				(await rep?.mutate.createLineItem({
+					lineItem: {
+						id: newID,
+						cartID: cartID ?? newCartID,
+						title: selectedVariant.title ?? "",
+						quantity: 1,
+						createdAt: new Date().toISOString(),
+						variant: selectedVariant,
+						variantID: selectedVariant.id,
+						productID: selectedVariant.productID,
+						product: selectedVariant.product,
+						storeID: selectedVariant.product.storeID ?? "",
+					},
+					...(!cartID && {
+						newCartID,
+					}),
+				}));
 
 			return setOpened(true);
 		},
-		[cartID, product, baseVariant, rep, isDashboard, itemsIDs, setOpened],
+		[cartID, selectedVariant, rep, isDashboard, itemsIDs, setOpened],
 	);
 	return (
 		<Grid py="4" gap="4">
-			<Flex gap="4" align="center" className="w-full">
+			<Flex gap="4" align="center" className="w-full" pb="4">
 				<SaveToBookmarks />
 				<Box width="100%">
 					<Button size="3" variant="classic" className="w-full">

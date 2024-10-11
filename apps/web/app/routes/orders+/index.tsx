@@ -29,12 +29,14 @@ export default function Page() {
 					className="order-0 sm:order-1"
 				>
 					<Card>
-						<Heading size="3">Top shops</Heading>
+						<Heading size="3" className="pb-2">
+							Top shops
+						</Heading>
 						<Flex gap="2">
 							<Avatar fallback="f" />
-							<Grid gap="2" width="100%">
-								<Skeleton width="100%" />
-								<Skeleton width="100%" />
+							<Grid gap="2" width="100%" className="h-4">
+								<Skeleton width="100%" className="h-4" />
+								<Skeleton width="100%" className="h-4" />
 							</Grid>
 						</Flex>
 					</Card>

@@ -179,8 +179,8 @@ export function FileUpload(props: FileUploaderProps) {
 								{...getRootProps()}
 								className={cn(
 									"group relative grid h-[10rem] w-full cursor-pointer place-items-center px-5 py-2.5 text-center transition hover:bg-slate-2 dark:hover:bg-slate-3",
-									"ring-offset-accent-11 focus-visible:outline-none outline-none focus:border-ring focus:border focus:rounded-b-[7px] focus-visible:ring-2 outline-2 focus-visible:ring-accent-11",
-									isDragActive && "border-gray-3",
+									"ring-offset-accent-11 focus-visible:outline-none outline-none focus:border-ring focus:border focus:rounded-b-[7px] focus-visible:ring-2 focus-visible:ring-accent-11",
+									isDragActive && "border-accent-11",
 									isDisabled && "pointer-events-none opacity-60",
 									{ "border-b": files ? files.length > 0 : false },
 									className,

@@ -122,7 +122,7 @@ const PriceComponent = ({
 	isPublished: boolean;
 }) => {
 	const [editMode, setEditMode] = React.useState(false);
-	const [amount, setAmount] = React.useState(price.amount / 100 ?? 0);
+	const [amount, setAmount] = React.useState(price.amount / 100);
 
 	const onSave = React.useCallback(
 		async ({ amount }: { amount: number }) => {
@@ -188,14 +188,14 @@ const PriceComponent = ({
 						type="button"
 						variant="ghost"
 						onClick={() => {
-							setAmount(price.amount / 100 ?? 0);
+							setAmount(price.amount / 100);
 							setEditMode(false);
 						}}
 						onKeyDown={(e) => {
 							if (e.key === "Enter" || e.key === " ") {
 								e.preventDefault();
 								e.stopPropagation();
-								setAmount(price.amount / 100 ?? 0);
+								setAmount(price.amount / 100);
 								setEditMode(false);
 							}
 						}}

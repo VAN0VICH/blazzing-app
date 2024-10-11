@@ -12,7 +12,7 @@ import {
 	setActiveStoreID,
 	updateStore,
 } from "./store";
-import { updateUser } from "./user";
+import { deleteAvatar, updateUser } from "./user";
 import { createLineItem, deleteLineItem, updateLineItem } from "./line-item";
 import { updateAddress } from "./address";
 import { updateCart } from "./cart";
@@ -79,6 +79,7 @@ export const UserMutators = {
 	updateAddress,
 	updateCart,
 	createCart,
+	deleteAvatar,
 };
 export const UserMutatorsMap = new Map(Object.entries(UserMutators));
 export type UserMutatorsType = typeof UserMutators;
@@ -221,5 +222,9 @@ export const affectedSpaces: AffectedSpaces = {
 	},
 	createPaymentProfile: {
 		dashboard: ["store"],
+	},
+	deleteAvatar: {
+		global: ["user"],
+		marketplace: ["stores"],
 	},
 };

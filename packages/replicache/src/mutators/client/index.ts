@@ -29,7 +29,7 @@ import {
 	setActiveStoreID,
 	updateStore,
 } from "./store";
-import { updateUser } from "./user";
+import { deleteAvatar, updateUser } from "./user";
 import {
 	deleteVariant,
 	duplicateVariant,
@@ -88,4 +88,5 @@ export const GlobalMutators: GlobalMutatorsType = {
 	updateAddress,
 	updateCart,
 	createCart,
+	deleteAvatar,
 };

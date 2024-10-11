@@ -27,6 +27,7 @@ const tableName = [
 	"customers",
 	"paymentProfiles",
 	"stripe",
+	"auth",
 ] as const;
 
 /*TEMP*/

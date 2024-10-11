@@ -1,6 +1,5 @@
 import { cn } from "@blazzing-app/ui";
 import React from "react";
-import { toImageURL } from "~/utils/helpers";
 import ImagePlaceholder from "./image-placeholder";
 
 type Fit = "cover" | "contain" | "scale-down" | "crop" | "pad";

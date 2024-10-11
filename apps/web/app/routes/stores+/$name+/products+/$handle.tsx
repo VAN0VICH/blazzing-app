@@ -1,8 +1,9 @@
 import type { Routes } from "@blazzing-app/functions";
-import type { Product, Variant } from "@blazzing-app/validators/client";
+import type { Variant } from "@blazzing-app/validators/client";
+import { Flex, Heading } from "@radix-ui/themes";
 import type { LoaderFunction } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
-import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
+import { useLoaderData, useParams } from "@remix-run/react";
 import { hc } from "hono/client";
 import React from "react";
 import { useSubscribe } from "replicache-react";
@@ -12,7 +13,7 @@ import { useReplicache } from "~/zustand/replicache";
 import { useMarketplaceStore } from "~/zustand/store";
 
 type LoaderData = {
-	product: Product;
+	variant: Variant;
 };
 
 export const loader: LoaderFunction = async ({ context, params }) => {
@@ -24,15 +25,15 @@ export const loader: LoaderFunction = async ({ context, params }) => {
 		});
 	}
 	const client = hc<Routes>(context.cloudflare.env.WORKER_URL);
-	const productResponse = await client.product.handle.$get({
+	const variantResponse = await client.variant.handle.$get({
 		query: {
 			handle,
 		},
 	});
-	if (productResponse.ok) {
-		const { result: product } = await productResponse.json();
+	if (variantResponse.ok) {
+		const { result: variant } = await variantResponse.json();
 
-		if (!product) {
+		if (!variant) {
 			throw new Response(null, {
 				status: 404,
 				statusText: "Not Found",
@@ -40,7 +41,7 @@ export const loader: LoaderFunction = async ({ context, params }) => {
 		}
 		return json(
 			{
-				product,
+				variant,
 			},
 			{ headers: { "Cache-Control": "public, max-age=31536000" } },
 		);
@@ -54,13 +55,12 @@ export const loader: LoaderFunction = async ({ context, params }) => {
 export default function Page() {
 	const { userContext } = useRequestInfo();
 	const params = useParams();
-	const { product: serverProduct } = useLoaderData<LoaderData>();
+	const { variant: serverVariant } = useLoaderData<LoaderData>();
 	const cartID = userContext.cartID;
-	const navigate = useNavigate();
 	const isInitialized = useMarketplaceStore((state) => state.isInitialized);
 	const rep = useReplicache((state) => state.marketplaceRep);
 
-	const baseVariant = useSubscribe(
+	const variant = useSubscribe(
 		rep,
 		async (tx) => {
 			if (!params.handle) return undefined;
@@ -80,37 +80,48 @@ export default function Page() {
 		},
 		{ dependencies: [], default: undefined },
 	);
-	const productMap = useMarketplaceStore((state) => state.productMap);
-	const product = productMap.get(baseVariant?.productID ?? serverProduct.id);
 
 	const variants = useMarketplaceStore((state) =>
-		state.variants.filter(
-			(v) => v.productID === product?.id && v.id !== product?.baseVariantID,
-		),
+		state.variants.filter((v) => v.productID === variant?.product?.id),
 	);
-	const [selectedVariantHandle, setSelectedVariantHandle] =
-		React.useState<string>();
+	const [selectedVariantHandle, _setSelectedVariantHandle] =
+		React.useState<string>(params.handle!);
+	const setSelectedVariantHandle = React.useCallback(
+		(handle: string) => {
+			_setSelectedVariantHandle(handle);
+			if (variant?.product?.store.name)
+				window.history.replaceState(
+					{},
+					"",
+					`/stores/${variant.product.store.name}/products/${handle}`,
+				);
+		},
+		[variant],
+	);
 
-	const selectedVariant = selectedVariantHandle
-		? variants.find((v) => v.handle === selectedVariantHandle)
-		: undefined;
+	const selectedVariant = React.useMemo(
+		() => variants.find((v) => v.handle === selectedVariantHandle) ?? variant,
+		[selectedVariantHandle, variants, variant],
+	);
 	return (
-		<main className="flex w-full justify-center relative">
-			{isInitialized && !product ? (
-				<h1 className="font-freeman text-3xl mt-80 text-white dark:text-black">
+		<Flex justify="center" position="relative" width="100%">
+			{isInitialized && !variant ? (
+				<Heading
+					size="7"
+					className="font-freeman mt-80 text-white dark:text-black"
+				>
 					Product does not exist or has been deleted.
-				</h1>
+				</Heading>
 			) : (
 				<StoreProductOverview
-					product={product}
+					baseVariantIDOrHandle={variant?.product?.baseVariant.handle!}
 					variants={variants}
-					selectedVariant={selectedVariant}
+					selectedVariant={selectedVariant ?? serverVariant}
 					setVariantIDOrHandle={setSelectedVariantHandle}
 					selectedVariantIDOrHandle={selectedVariantHandle}
 					cartID={cartID}
-					baseVariant={baseVariant}
 				/>
 			)}
-		</main>
+		</Flex>
 	);
 }

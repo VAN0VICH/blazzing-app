@@ -1,46 +1,45 @@
 import { cn } from "@blazzing-app/ui";
+import {
+	Drawer,
+	DrawerContent,
+	DrawerOverlay,
+	DrawerTrigger,
+} from "@blazzing-app/ui/drawer";
+import { Icons } from "@blazzing-app/ui/icons";
 import { ToggleGroup, ToggleGroupItem } from "@blazzing-app/ui/toggle-group";
-import type {
-	Product,
-	ProductOption,
-	Variant,
-} from "@blazzing-app/validators/client";
-import { Box, Flex, Grid, Heading, ScrollArea, Text } from "@radix-ui/themes";
+import type { ProductOption, Variant } from "@blazzing-app/validators/client";
+import {
+	Box,
+	Flex,
+	Grid,
+	Heading,
+	IconButton,
+	ScrollArea,
+	Text,
+	Theme,
+} from "@radix-ui/themes";
 import React, { useCallback, useEffect, useState } from "react";
 import Image from "~/components/image";
+import Price from "~/components/price";
 import { toImageURL } from "~/utils/helpers";
 import { Actions } from "./actions";
-import { DesktopGallery, MobileGallery } from "./gallery";
+import { Gallery } from "./gallery";
 import { GeneralInfo } from "./product-info";
-import Price from "~/components/price";
 
 interface ProductOverviewProps {
-	product: Product | undefined;
+	baseVariantIDOrHandle: string | undefined;
 	isDashboard?: boolean;
 	variants: Variant[];
-	selectedVariantIDOrHandle: string | undefined;
+	selectedVariantIDOrHandle: string;
 	selectedVariant: Variant | undefined;
-	setVariantIDOrHandle: (prop: string | undefined) => void;
+	setVariantIDOrHandle: (prop: string) => void;
 	cartID?: string | undefined;
-	baseVariant: Variant | undefined;
 	setView?: (value: "preview" | "input") => void;
-	isScrolled?: boolean;
 }
 
-const ProductOverview = ({
-	product,
-	isDashboard = false,
-	variants,
-	setVariantIDOrHandle,
-	selectedVariantIDOrHandle,
-	selectedVariant,
-	cartID,
-	baseVariant,
-	setView,
-	isScrolled,
-}: ProductOverviewProps) => {
-	const [isShaking, setIsShaking] = React.useState(false);
-	console.log("isShaking", isShaking);
+const ProductOverview = (props: ProductOverviewProps) => {
+	const { isDashboard = false, selectedVariant } = props;
+
 	return (
 		<Flex
 			height="100vh"
@@ -48,18 +47,18 @@ const ProductOverview = ({
 			width="100%"
 			direction={{ initial: "column", md: "row" }}
 		>
-			<MobileGallery
+			{/* <MobileGallery
 				images={selectedVariant?.images ?? baseVariant?.images ?? []}
 				{...(isScrolled && { isScrolled: isScrolled })}
-			/>
-			<DesktopGallery
-				images={selectedVariant?.images ?? baseVariant?.images ?? []}
-			/>
+			/> */}
+			<Gallery images={selectedVariant?.images ?? []} />
+			<Box className="fixed top-[60%] right-5 lg:hidden">
+				<ProductInformationMobile {...props} />
+			</Box>
 
-			{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 			<Flex
 				className={cn(
-					"flex h-screen w-full lg:w-[400px] sticky top-0 dark:bg-black bg-white",
+					"h-screen w-full hidden lg:flex lg:w-[400px] sticky top-0 dark:bg-black bg-white",
 					{
 						"top-14": isDashboard,
 					},
@@ -67,49 +66,101 @@ const ProductOverview = ({
 				onClick={(e) => e.stopPropagation()}
 			>
 				<ScrollArea
-					className={cn(
-						"border-t lg:border-t-0 lg:border-border lg:min-h-screen lg:w-[400px]  lg:mt-0  w-full",
-					)}
+					className={cn("lg:min-h-screen lg:w-[400px] lg:mt-0  w-full")}
 				>
-					<Box p="4" width="100%" height="100%">
-						<GeneralInfo
-							baseVariant={baseVariant}
-							product={product}
-							{...(setView && { setView })}
-						/>
-						<Pricing variant={selectedVariant ?? baseVariant} />
-						<Actions
-							{...(cartID && { cartID })}
-							product={product}
-							baseVariant={baseVariant}
-							selectedVariant={selectedVariant}
-							setIsShaking={setIsShaking}
-							variants={variants}
-							{...(isDashboard && { isDashboard })}
-						/>
-
-						<ProductVariants
-							variants={variants}
-							{...(isDashboard && { isDashboard })}
-							setVariantIDOrHandle={setVariantIDOrHandle}
-							selectedVariantIDOrHandle={selectedVariantIDOrHandle}
-							isDashboard={isDashboard}
-						/>
-						<ProductOptions
-							options={product?.options ?? []}
-							selectedVariant={selectedVariant}
-							variants={variants}
-							setVariantIDOrHandle={setVariantIDOrHandle}
-							isDashboard={isDashboard}
-							isShaking={isShaking}
-						/>
-					</Box>
+					<ProductInformation {...props} />
 				</ScrollArea>
 			</Flex>
 		</Flex>
 	);
 };
+
 export { ProductOverview };
+
+const ProductInformation = (props: ProductOverviewProps) => {
+	const {
+		isDashboard = false,
+		variants,
+		setVariantIDOrHandle,
+		selectedVariantIDOrHandle,
+		selectedVariant,
+		cartID,
+		setView,
+		baseVariantIDOrHandle,
+	} = props;
+
+	const [isShaking, setIsShaking] = React.useState(false);
+	return (
+		<Box p="4" mb="100px" width="100%" height="100%">
+			<GeneralInfo variant={selectedVariant} {...(setView && { setView })} />
+			<Pricing variant={selectedVariant} />
+			<Actions
+				{...(cartID && { cartID })}
+				selectedVariant={selectedVariant}
+				setIsShaking={setIsShaking}
+				variants={variants}
+				{...(isDashboard && { isDashboard })}
+				baseVariantID={selectedVariant?.product?.baseVariantID}
+			/>
+
+			<ProductVariants
+				variants={variants}
+				{...(isDashboard && { isDashboard })}
+				setVariantIDOrHandle={setVariantIDOrHandle}
+				selectedVariantIDOrHandle={selectedVariantIDOrHandle}
+				isDashboard={isDashboard}
+				baseVariantIDOrHandle={baseVariantIDOrHandle}
+			/>
+			<ProductOptions
+				options={selectedVariant?.product?.options ?? []}
+				selectedVariant={selectedVariant}
+				variants={variants}
+				setVariantIDOrHandle={setVariantIDOrHandle}
+				isShaking={isShaking}
+				baseVariantIDOrHandle={baseVariantIDOrHandle}
+				isDashboard={isDashboard}
+			/>
+		</Box>
+	);
+};
+
+const ProductInformationMobile = (props: ProductOverviewProps) => {
+	return (
+		<Drawer>
+			<DrawerTrigger asChild>
+				<IconButton
+					type="button"
+					variant="outline"
+					className="size-[60px] bg-transparent text-accent-11 backdrop-blur-sm rounded-full"
+					onClick={(e) => {
+						e.stopPropagation();
+					}}
+				>
+					<Icons.Info className="size-8" />
+				</IconButton>
+			</DrawerTrigger>
+			<DrawerOverlay
+				className="lg:hidden"
+				onClick={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+				}}
+			/>
+			<DrawerContent
+				onClick={(e) => {
+					e.stopPropagation();
+				}}
+				className="h-[85vh] lg:hidden"
+			>
+				<Theme>
+					<ScrollArea className={cn("h-[calc(100vh-100px)] w-full")}>
+						<ProductInformation {...props} />
+					</ScrollArea>
+				</Theme>
+			</DrawerContent>
+		</Drawer>
+	);
+};
 
 export const Pricing = ({ variant }: { variant: Variant | undefined }) => {
 	return (
@@ -129,73 +180,101 @@ export const ProductVariants = ({
 	variants,
 	selectedVariantIDOrHandle,
 	setVariantIDOrHandle,
+	baseVariantIDOrHandle,
 }: {
 	isDashboard?: boolean;
 	variants: Variant[];
-	selectedVariantIDOrHandle: string | undefined;
-	setVariantIDOrHandle: (prop: string | undefined) => void;
+	selectedVariantIDOrHandle: string;
+	setVariantIDOrHandle: (prop: string) => void;
+	baseVariantIDOrHandle: string | undefined;
 }) => {
 	if (variants.length === 0) return null;
 	return (
-		<Box pb="4">
+		<Box>
 			{variants.length > 0 && (
 				<Heading className="flex min-w-[4rem] pb-2 items-center font-semibold text-base">
 					Variant
 				</Heading>
 			)}
 			<ToggleGroup
-				className="grid grid-cols-3 gap-2"
+				className="flex gap-2 flex-wrap"
 				type="single"
 				value={selectedVariantIDOrHandle ?? ""}
 				variant="outline"
 				onValueChange={(value) => {
+					if (!value) {
+						return (
+							baseVariantIDOrHandle &&
+							setVariantIDOrHandle(baseVariantIDOrHandle)
+						);
+					}
 					setVariantIDOrHandle(value);
 				}}
 			>
-				{variants?.map((v) => (
-					<ToggleGroupItem
-						key={v.id}
-						value={isDashboard ? v.id : (v.handle ?? "")}
-						className="relative border-r border-border size-[100px] p-0"
-						onClick={(e) => e.stopPropagation()}
-					>
-						<Box position="relative">
-							<Image
-								width={{ initial: 100 }}
-								fit="cover"
-								height={{ initial: 100 }}
-								src={
-									v.images?.[0]?.url ??
-									toImageURL(v.images?.[0]?.base64, v.images?.[0]?.fileType)
-								}
-							/>
-						</Box>
-					</ToggleGroupItem>
-				))}
+				{variants?.map((v) => {
+					if (
+						v.handle === baseVariantIDOrHandle ||
+						v.id === baseVariantIDOrHandle
+					) {
+						return (
+							<ToggleGroupItem
+								key={v.id}
+								value={isDashboard ? v.id : (v.handle ?? "")}
+								className="relative border-r border-border size-[100px] p-0"
+								onClick={(e) => e.stopPropagation()}
+							>
+								Base
+							</ToggleGroupItem>
+						);
+					}
+					return (
+						<ToggleGroupItem
+							key={v.id}
+							value={isDashboard ? v.id : (v.handle ?? "")}
+							className="relative border-r border-border size-[100px] p-0"
+							onClick={(e) => e.stopPropagation()}
+						>
+							<Box position="relative">
+								<Image
+									width={{ initial: 100 }}
+									fit="cover"
+									height={{ initial: 100 }}
+									src={
+										v.images?.[0]?.url ??
+										toImageURL(v.images?.[0]?.base64, v.images?.[0]?.fileType)
+									}
+									className="object-cover"
+								/>
+							</Box>
+						</ToggleGroupItem>
+					);
+				})}
 			</ToggleGroup>
 		</Box>
 	);
 };
 
 export const ProductOptions = ({
+	baseVariantIDOrHandle,
+
 	options,
 	selectedVariant,
 	variants,
 	setVariantIDOrHandle,
-	isDashboard,
 	isShaking,
+	isDashboard,
 }: {
+	baseVariantIDOrHandle: string | undefined;
 	options: ProductOption[];
 	selectedVariant: Variant | undefined;
 	isShaking: boolean;
-	setVariantIDOrHandle: (prop: string | undefined) => void;
+	setVariantIDOrHandle: (prop: string) => void;
 	variants: Variant[];
 	isDashboard?: boolean;
 }) => {
 	const [variantOptions, setVariantOptions] = useState<Record<string, string>>(
 		{},
 	);
-	console.log("selected variant", selectedVariant);
 
 	useEffect(() => {
 		if (selectedVariant) {
@@ -228,22 +307,22 @@ export const ProductOptions = ({
 					}
 					if (optionValuesEqual) {
 						variantFound = true;
-						console.log("variant handle", variant);
 						setVariantIDOrHandle(
-							isDashboard ? variant.id : (variant.handle ?? undefined),
+							isDashboard ? variant.id : (variant.handle ?? ""),
 						);
 						break;
 					}
 				}
 				//variant not found
-				if (!variantFound) setVariantIDOrHandle(undefined);
+				if (!variantFound)
+					baseVariantIDOrHandle && setVariantIDOrHandle(baseVariantIDOrHandle);
 			}
 		},
-		[variants, setVariantIDOrHandle, isDashboard],
+		[variants, setVariantIDOrHandle, baseVariantIDOrHandle, isDashboard],
 	);
 	if (options.length === 0) return null;
 	return (
-		<Grid columns="2" pb="4">
+		<Grid columns="2">
 			{options.map((option) => {
 				return (
 					<Flex direction="column" key={option.id}>

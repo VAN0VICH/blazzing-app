@@ -1,4 +1,4 @@
-import type { ParticipantMetadata, RoomMetadata } from "@blazzing-app/core";
+import type { Livekit } from "@blazzing-app/core";
 import {
 	useLocalParticipant,
 	useParticipants,
@@ -27,10 +27,10 @@ function ParticipantListItem({
 }) {
 	const authToken = useAuthToken();
 	const participantMetadata = (participant.metadata &&
-		JSON.parse(participant.metadata)) as ParticipantMetadata;
+		JSON.parse(participant.metadata)) as Livekit.ParticipantMetadata;
 	const room = useRoomContext();
 	const roomMetadata = (room.metadata &&
-		JSON.parse(room.metadata)) as RoomMetadata;
+		JSON.parse(room.metadata)) as Livekit.RoomMetadata;
 
 	const onInvite = async () => {
 		// TODO: optimistic update
@@ -197,7 +197,7 @@ export function PresenceDialog({
 		(participant) => participant.permissions?.canPublish ?? false,
 	);
 	const viewers = participants.filter(
-		(participant) => !participant.permissions?.canPublish ?? true,
+		(participant) => !participant.permissions?.canPublish,
 	);
 
 	return (

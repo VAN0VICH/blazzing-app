@@ -5,6 +5,8 @@ import { Avatar, Box, Checkbox, Flex } from "@radix-ui/themes";
 import { DataTableColumnHeader } from "~/components/templates/table/data-table-column-header";
 import type { DataTableFilterableColumn } from "~/types/table";
 import { RowActions } from "./row-actions";
+import { toImageURL } from "~/utils/helpers";
+import ImagePlaceholder from "~/components/image-placeholder";
 
 export function getVariantColumns({
 	setVariantID,
@@ -47,17 +49,28 @@ export function getVariantColumns({
 			header: ({ column }) => (
 				<DataTableColumnHeader column={column} title="Thumbnail" />
 			),
-			cell: () => (
-				<Flex
-					justify="center"
-					align="center"
-					width="50px"
-					height="50px"
-					className="  "
-				>
-					<Avatar fallback="3" />
-				</Flex>
-			),
+			cell: ({ row }) => {
+				return (
+					<Flex
+						justify="center"
+						align="center"
+						width="50px"
+						height="50px"
+						className="  "
+					>
+						<Avatar
+							fallback={<ImagePlaceholder />}
+							src={
+								row.original?.thumbnail?.url ??
+								toImageURL(
+									row.original?.thumbnail?.base64,
+									row.original?.thumbnail?.fileType,
+								)
+							}
+						/>
+					</Flex>
+				);
+			},
 			enableSorting: false,
 			enableHiding: true,
 		},

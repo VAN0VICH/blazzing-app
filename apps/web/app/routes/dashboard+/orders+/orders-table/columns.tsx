@@ -7,6 +7,7 @@ import { orderStatuses } from "@blazzing-app/validators";
 import { Avatar, Box, Flex, Text } from "@radix-ui/themes";
 import { OrderStatus } from "~/components/badge/order-status";
 import ImagePlaceholder from "~/components/image-placeholder";
+import { formatISODate } from "~/utils/format";
 
 export function getOrdersColumns(): ColumnDef<Order, unknown>[] {
 	return [
@@ -65,7 +66,11 @@ export function getOrdersColumns(): ColumnDef<Order, unknown>[] {
 				<DataTableColumnHeader column={column} title="Date" />
 			),
 			cell: ({ row }) => {
-				return <div className="w-[80px]">{row.original.createdAt}</div>;
+				return (
+					<div className="w-[80px]">
+						{formatISODate(row.original.createdAt)}
+					</div>
+				);
 			},
 
 			enableSorting: false,

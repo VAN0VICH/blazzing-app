@@ -15,7 +15,7 @@ function PartykitProvider() {
 	const client = hc<Routes>(window.ENV.WORKER_URL);
 	const session = useSession();
 
-	const ws = usePartySocket({
+	usePartySocket({
 		// usePartySocket takes the same arguments as PartySocket.
 		host: window.ENV.PARTYKIT_HOST, // or localhost:1999 in dev
 		room: "global",
@@ -68,7 +68,7 @@ function PartykitProvider() {
 			console.log("error");
 		},
 	});
-	const ws2 = usePartySocket({
+	usePartySocket({
 		// usePartySocket takes the same arguments as PartySocket.
 		host: window.ENV.PARTYKIT_HOST, // or localhost:1999 in dev
 		room: "dashboard",
@@ -120,7 +120,7 @@ function PartykitProvider() {
 		},
 	});
 
-	const ws3 = usePartySocket({
+	usePartySocket({
 		// usePartySocket takes the same arguments as PartySocket.
 		host: window.ENV.PARTYKIT_HOST, // or localhost:1999 in dev
 		room: "marketplace",

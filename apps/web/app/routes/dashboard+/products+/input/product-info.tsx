@@ -184,7 +184,7 @@ export function ProductInfo({
 								)}
 							/>
 						) : (
-							<ProductStatus status={product?.status ?? "draft"} />
+							<ProductStatus status={product?.status ?? "draft"} size="3" />
 						)}
 						{editMode ? (
 							<Flex gap="4">
@@ -260,7 +260,9 @@ export function ProductInfo({
 												className="w-full"
 												{...field}
 												value={field.value ?? ""}
-											/>
+											>
+												<TextField.Slot>/</TextField.Slot>
+											</TextField.Root>
 										</FormControl>
 									</FormItem>
 								)}

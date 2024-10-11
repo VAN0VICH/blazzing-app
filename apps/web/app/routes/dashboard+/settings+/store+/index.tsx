@@ -61,9 +61,12 @@ export default function Store() {
 			e.preventDefault();
 			const values = methods.getValues();
 			if (!store) return;
-			const descriptionChanged = values.description !== store.description;
-			const nameChanged = values.name !== store.name;
+			const descriptionChanged =
+				values.description && values.description !== store.description;
+			const nameChanged = values.name && values.name !== store.name;
+
 			if (descriptionChanged || nameChanged) {
+				let nameExists = false;
 				if (nameChanged) {
 					const response = await honoClient.store.name.$get({
 						query: {
@@ -74,23 +77,17 @@ export default function Store() {
 						const { result } = await response.json();
 						if (result) {
 							toast.error("Name already exists");
-						} else {
-							await dashboardRep?.mutate.updateStore({
-								id: store.id,
-								updates: {
-									name: values.name,
-								},
-							});
+							nameExists = true;
 						}
 					}
 				}
-				if (descriptionChanged)
-					await dashboardRep?.mutate.updateStore({
-						id: store.id,
-						updates: {
-							description: values.description,
-						},
-					});
+				await dashboardRep?.mutate.updateStore({
+					id: store.id,
+					updates: {
+						...(descriptionChanged && { description: values.description }),
+						...(nameChanged && !nameExists && { name: values.name }),
+					},
+				});
 			}
 			setIsLoading(false);
 			setEditMode(false);
@@ -107,13 +104,13 @@ export default function Store() {
 					className="border-b"
 				>
 					<Box width="30%" className="hidden lg:block">
-						<Heading as="h2" size="4" className="text-accent-11">
-							Store
+						<Heading as="h2" size="5" className="font-freeman text-accent-11">
+							General
 						</Heading>
 					</Box>
 
 					<Box width="100%">
-						<Card className="p-0">
+						<Card className="p-0 max-w-xl">
 							<ImageUpload store={store} />
 							<Flex
 								p="4"

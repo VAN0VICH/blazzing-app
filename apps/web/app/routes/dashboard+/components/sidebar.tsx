@@ -16,8 +16,6 @@ import {
 } from "@radix-ui/themes";
 import { Link, useLocation } from "@remix-run/react";
 import React from "react";
-import { useWindowSize } from "~/hooks/use-window-size";
-import { useDashboardState } from "~/zustand/state";
 
 export type DashboardSidebarItem = {
 	title: string;

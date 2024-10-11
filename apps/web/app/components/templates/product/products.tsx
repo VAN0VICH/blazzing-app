@@ -1,18 +1,8 @@
 import { cn } from "@blazzing-app/ui";
 import { Icons } from "@blazzing-app/ui/icons";
-import { LoadingSpinner } from "@blazzing-app/ui/loading";
 import { ToggleGroup, ToggleGroupItem } from "@blazzing-app/ui/toggle-group";
 import type { Product } from "@blazzing-app/validators/client";
-import {
-	Avatar,
-	Badge,
-	Box,
-	Button,
-	Flex,
-	Heading,
-	Skeleton,
-	Spinner,
-} from "@radix-ui/themes";
+import { Avatar, Badge, Box, Flex, Heading, Skeleton } from "@radix-ui/themes";
 import { Link } from "@remix-run/react";
 import Image from "~/components/image";
 import Price from "~/components/price";
@@ -50,7 +40,7 @@ const Products = ({
 		);
 	}
 	return (
-		<Flex direction="column" gap="2">
+		<Flex direction="column" gap="2" className="pt- md:pt-0">
 			<div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
 				{products.map((product) => (
 					<ProductComponent
@@ -80,11 +70,6 @@ const ProductComponent = ({
 	return (
 		<Box key={product.id} className="mb-4 break-inside-avoid">
 			<Box className="relative group rounded-[7px] min-h-[100px] bg-accent-3">
-				<Image
-					src={product.baseVariant.thumbnail?.url}
-					alt={product.baseVariant.thumbnail?.alt}
-					className="w-full cursor-pointer rounded-[7px]"
-				/>
 				<Link
 					to={
 						isDashboard
@@ -96,6 +81,11 @@ const ProductComponent = ({
 					unstable_viewTransition={true}
 					prefetch="viewport"
 				>
+					<Image
+						src={product.baseVariant.thumbnail?.url}
+						alt={product.baseVariant.thumbnail?.alt}
+						className="w-full cursor-pointer rounded-[7px]"
+					/>
 					<Box
 						className={cn(
 							"hidden md:flex absolute gap-2 rounded-[7px] cursor-pointer inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 items-center justify-center",

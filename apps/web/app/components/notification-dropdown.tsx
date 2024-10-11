@@ -4,7 +4,6 @@ import {
 	Flex,
 	Grid,
 	Heading,
-	IconButton,
 	ScrollArea,
 	Text,
 } from "@radix-ui/themes";

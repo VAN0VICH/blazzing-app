@@ -69,7 +69,7 @@ function OrdersTable({
 			{/* {dashboardRep?.online && ( */}
 			<div className="w-full px-4 py-2 border-b border-border flex items-center gap-2">
 				<Ping />
-				<p className="text-accent-11 text-sm font-bold">Real time</p>
+				<p className="text-accent-11 text-sm font-bold">Live</p>
 			</div>
 			{/* )} */}
 

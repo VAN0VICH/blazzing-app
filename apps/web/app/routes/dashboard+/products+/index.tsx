@@ -32,8 +32,8 @@ function ProductsPage() {
 				width="100%"
 			>
 				<Heading
-					size="5"
-					className="p-4 justify-center text-accent-11 border-b border-border md:justify-start"
+					size="6"
+					className="p-4 font-freeman justify-center text-accent-11 border-b border-border md:justify-start"
 				>
 					Products
 				</Heading>

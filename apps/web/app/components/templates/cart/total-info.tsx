@@ -13,23 +13,29 @@ export const Total = React.forwardRef<
 		lineItems: LineItem[];
 	}
 >(({ className, cartOrOrder, lineItems, ...props }, ref) => {
-	const subtotal = cartOrOrder
-		? Effect.runSync(
-				cartSubtotal(lineItems, cartOrOrder).pipe(
-					Effect.catchTags({
-						PriceNotFound: (error) =>
-							pipe(
-								Effect.succeed(-1),
-								Effect.zipLeft(Effect.sync(() => toast.error(error.message))),
-							),
-					}),
-				),
-			)
-		: 0;
+	const subtotal = React.useMemo(
+		() =>
+			cartOrOrder
+				? Effect.runSync(
+						cartSubtotal(lineItems, cartOrOrder).pipe(
+							Effect.catchTags({
+								PriceNotFound: (error) =>
+									pipe(
+										Effect.succeed(-1),
+										Effect.zipLeft(
+											Effect.sync(() => toast.error(error.message)),
+										),
+									),
+							}),
+						),
+					)
+				: 0,
+		[cartOrOrder, lineItems],
+	);
 	return (
 		<Box ref={ref} className={cn("w-full", className)} {...props}>
 			<Flex justify="between">
-				<Text>Subtotal:</Text>
+				<Text weight="medium">Subtotal:</Text>
 
 				<Price
 					amount={subtotal}
@@ -38,18 +44,18 @@ export const Total = React.forwardRef<
 			</Flex>
 
 			<Flex justify="between">
-				<Text>Shipping:</Text>
+				<Text weight="medium">Shipping:</Text>
 				<Text>0</Text>
 			</Flex>
 
 			<Flex justify="between">
-				<Text>Taxes:</Text>
+				<Text weight="medium">Taxes:</Text>
 				<Text>0</Text>
 			</Flex>
-			<Separator className="my-4 w-full bg-accent-9" />
+			<Separator className="my-4 w-full bg-border" />
 
 			<Flex justify="between">
-				<Text>Total:</Text>
+				<Text weight="bold">Total:</Text>
 				<Price
 					amount={subtotal}
 					currencyCode={cartOrOrder?.currencyCode ?? "AUD"}

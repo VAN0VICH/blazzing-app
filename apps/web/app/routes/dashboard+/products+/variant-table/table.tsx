@@ -96,11 +96,11 @@ export default function VariantTable({
 			/>
 			<Box
 				ref={parentRef}
-				className="min-h-[calc(20vh)] max-h-[calc-(50vh)] relative overflow-x-scroll"
+				className="min-h-[calc(30vh)] h-full max-h-[calc-(50vh)] relative overflow-x-scroll"
 			>
 				<Box style={{ height: `${virtualizer.getTotalSize()}px` }}>
 					<Table>
-						<TableHeader className="w-full z-20 sticky hover:border-x border-border top-0">
+						<TableHeader className="w-full z-20 backdrop-blur-3xl sticky hover:border-x border-border top-0">
 							{table.getHeaderGroups().map((headerGroup) => (
 								<TableRow key={headerGroup.id}>
 									{headerGroup.headers.map((header) => {

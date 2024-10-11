@@ -145,7 +145,7 @@ export function StoreComponent({
 										store.headerImage.cropped.base64
 									}
 									fit="cover"
-									className="max-h-[200px] z-10 h-[150px] md:h-[180px] lg:h-[200px] object-fill w-full"
+									className="max-h-[200px] z-10 h-[150px] md:h-[180px] lg:h-[200px] object-cover w-full"
 									height={{ initial: 150, sm: 180, lg: 200 }}
 								/>
 							</Box>

@@ -1,6 +1,5 @@
 import { Form, FormControl, FormField, FormItem } from "@blazzing-app/ui/form";
 import { Icons } from "@blazzing-app/ui/icons";
-import { toast } from "@blazzing-app/ui/toast";
 import {
 	ISO_1666,
 	VariantSchema,

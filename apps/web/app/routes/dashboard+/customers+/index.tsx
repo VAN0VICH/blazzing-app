@@ -1,4 +1,3 @@
-import { cn } from "@blazzing-app/ui";
 import type { Customer } from "@blazzing-app/validators/client";
 import {
 	Avatar,
@@ -7,10 +6,8 @@ import {
 	Flex,
 	Grid,
 	Heading,
-	Progress,
 	ScrollArea,
 	Skeleton,
-	Strong,
 	Text,
 } from "@radix-ui/themes";
 import debounce from "lodash.debounce";
@@ -80,7 +77,7 @@ export default function CustomersPage() {
 						<Box className="w-full lg:w-8/12">
 							<Box className="w-full bg-component border border-border rounded-[7px]">
 								<Heading
-									size="5"
+									size="6"
 									className="p-4 font-freeman text-accent-11 justify-center border-b border-border md:justify-start"
 								>
 									Customers
@@ -107,173 +104,55 @@ function CustomersInfo() {
 	return (
 		<Card className="w-full max-w-sm max-h-[64vh] min-w-[320px] sticky top-10 shadow-none p-0">
 			<Box p="4" className="border-b border-border">
-				<Heading size="5" className="text-accent-11 font-freeman">
+				<Heading size="6" className="text-accent-11 font-freeman">
 					New customers
 				</Heading>
 			</Box>
 			<ScrollArea className="h-[60vh]">
 				<Box p="4">
-					{!isInitialized &&
-						Array.from({ length: 5 }).map((_, i) => (
-							<Flex align="center" gap="" key={i}>
-								<Skeleton className="hidden h-9 w-9 rounded-full sm:flex" />
-								<Grid gap="1">
-									<Skeleton className="w-[150px] h-[10px]" />
-								</Grid>
+					<Grid gap="2">
+						{!isInitialized &&
+							Array.from({ length: 3 }).map((_, i) => (
+								<Flex align="center" justify="between" key={i} gap="2">
+									<Flex gap="1">
+										<Skeleton className="hidden h-9 w-9 rounded-[7px] sm:flex" />
+										<Grid>
+											<Skeleton className="w-[100px] h-4" />
+											<Skeleton className="w-[150px] h-4" />
+										</Grid>
+									</Flex>
 
-								<Skeleton className="w-[100px] h-[10px]" />
+									<Skeleton className="w-[100px] h-4" />
+								</Flex>
+							))}
+						{customers.map((customer) => (
+							<Flex align="center" gap="2" key={customer.id}>
+								<Avatar
+									fallback={<ImagePlaceholder />}
+									className="border border-accent-5"
+									src={
+										typeof customer.user?.avatar === "string"
+											? customer.user.avatar
+											: customer.user?.avatar?.url
+									}
+								/>
+								<Grid gap="1">
+									<Text className="text-accent-11 font-freeman">
+										{customer.user?.username ?? "Unknown"}
+									</Text>
+									<Text>{customer.email}</Text>
+								</Grid>
+								<Heading
+									size="4"
+									className="ml-auto text-accent-11 font-medium"
+								>
+									+$1,999.00
+								</Heading>
 							</Flex>
 						))}
-					{customers.map((customer) => (
-						<Flex align="center" gap="2" key={customer.id}>
-							<Avatar
-								fallback={<ImagePlaceholder />}
-								className="border border-accent-5"
-								src={
-									typeof customer.user?.avatar === "string"
-										? customer.user.avatar
-										: customer.user?.avatar?.url
-								}
-							/>
-							<Grid gap="1">
-								<Text className="text-accent-11 font-freeman">
-									{customer.user?.username ?? "Unknown"}
-								</Text>
-								<Text>{customer.email}</Text>
-							</Grid>
-							<Heading size="4" className="ml-auto text-accent-11 font-medium">
-								+$1,999.00
-							</Heading>
-						</Flex>
-					))}
+					</Grid>
 				</Box>
 			</ScrollArea>
 		</Card>
 	);
 }
-
-function Stat({
-	type,
-	customers,
-}: { type: "daily" | "weekly" | "monthly"; customers: Customer[] }) {
-	const today = new Date().toISOString().split("T")[0]!;
-
-	// Utility function to calculate percentage increase
-	const calculatePercentageIncrease = (current: number, previous: number) => {
-		if (previous === 0) return current > 0 ? 100 : 0;
-		return ((current - previous) / previous) * 100;
-	};
-
-	// Aggregate data for required ranges
-	const todayCustomers = React.useMemo(
-		() => aggregateDataForRange(customers, today, today),
-		[customers, today],
-	);
-	const yesterdayCustomers = React.useMemo(
-		() =>
-			aggregateDataForRange(customers, getDateNDaysAgo(1), getDateNDaysAgo(1)),
-		[customers],
-	);
-	const weekAgoCustomers = React.useMemo(
-		() => aggregateDataForRange(customers, getDateNDaysAgo(6), today),
-		[customers, today],
-	);
-	const lastWeekCustomers = React.useMemo(
-		() =>
-			aggregateDataForRange(customers, getDateNDaysAgo(13), getDateNDaysAgo(7)),
-		[customers],
-	);
-	const monthAgoCustomers = React.useMemo(
-		() => aggregateDataForRange(customers, getDateNDaysAgo(29), today),
-		[customers, today],
-	);
-	const lastMonthCustomers = React.useMemo(
-		() =>
-			aggregateDataForRange(
-				customers,
-				getDateNDaysAgo(59),
-				getDateNDaysAgo(30),
-			),
-		[customers],
-	);
-
-	// Get amount based on type
-	const getNumber = (type: "daily" | "weekly" | "monthly") => {
-		switch (type) {
-			case "daily":
-				return todayCustomers;
-			case "weekly":
-				return weekAgoCustomers;
-			case "monthly":
-				return monthAgoCustomers;
-			default:
-				return 0;
-		}
-	};
-
-	// Calculate percentage increase based on type
-	const getPercentageIncreaseFromLast = (
-		type: "daily" | "weekly" | "monthly",
-	) => {
-		switch (type) {
-			case "daily":
-				return calculatePercentageIncrease(todayCustomers, yesterdayCustomers);
-			case "weekly":
-				return calculatePercentageIncrease(weekAgoCustomers, lastWeekCustomers);
-			case "monthly":
-				return calculatePercentageIncrease(
-					monthAgoCustomers,
-					lastMonthCustomers,
-				);
-			default:
-				return 0;
-		}
-	};
-
-	const percentageIncrease = getPercentageIncreaseFromLast(type);
-
-	return (
-		<Card
-			className={cn("max-w-sm p-0", {
-				"hidden sm:block": type === "monthly",
-			})}
-		>
-			<Text>
-				{type === "daily" ? "Daily" : type === "weekly" ? "Weekly" : "Monthly"}{" "}
-				<Strong className="text-accent-11">new customers</Strong>
-			</Text>
-			<Heading className="text-accent-11">{`${getNumber(type)}`}</Heading>
-			<Text size="1" color="gray">
-				{percentageIncrease >= 0 ? "+" : ""}
-				{percentageIncrease.toFixed(2)}% from last{" "}
-				{type === "daily" ? "day" : type === "weekly" ? "week" : "month"}
-			</Text>
-			<Progress
-				value={percentageIncrease}
-				aria-label={`${percentageIncrease.toFixed(2)}% increase`}
-			/>
-		</Card>
-	);
-}
-
-const getDateNDaysAgo = (n: number): string => {
-	const date = new Date();
-	date.setDate(date.getDate() - n);
-	return date.toISOString().split("T")[0]!;
-};
-
-const aggregateDataForRange = (
-	customers: Customer[],
-	startDate: string,
-	endDate: string,
-): number => {
-	return customers
-		.filter((customer) => {
-			const joinedDate = customer.createdAt.split("T")[0]!;
-			return joinedDate >= startDate && joinedDate <= endDate;
-		})
-		.reduce((acc) => {
-			acc++;
-			return acc;
-		}, 0);
-};

@@ -9,6 +9,7 @@ import type { DataTableFilterableColumn } from "~/types/table";
 import { RowActions } from "./row-actions";
 import { useDashboardStore } from "~/zustand/store";
 import { toImageURL } from "~/utils/helpers";
+import ImagePlaceholder from "~/components/image-placeholder";
 
 export function getProductsColumns({
 	deleteProduct,
@@ -60,7 +61,7 @@ export function getProductsColumns({
 						className="  "
 					>
 						<Avatar
-							fallback="3"
+							fallback={<ImagePlaceholder />}
 							src={
 								baseVariant?.thumbnail?.url ??
 								toImageURL(

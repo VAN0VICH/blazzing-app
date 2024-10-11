@@ -3,8 +3,6 @@ import { integer, pgTable, uniqueIndex, varchar } from "drizzle-orm/pg-core";
 
 import { authUsers } from "./auth";
 import { stripe } from "./stripe";
-import { stores } from "./store";
-import { primaryKey } from "drizzle-orm/mysql-core";
 
 export const paymentProfiles = pgTable(
 	"payment_profiles",

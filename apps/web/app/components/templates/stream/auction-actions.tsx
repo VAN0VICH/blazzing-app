@@ -1,7 +1,7 @@
 import type { Routes } from "@blazzing-app/functions";
 import { Icons } from "@blazzing-app/ui/icons";
 import { toast } from "@blazzing-app/ui/toast";
-import { useChat, useDataChannel } from "@livekit/components-react";
+// import { useChat, useDataChannel } from "@livekit/components-react";
 import {
 	Avatar,
 	Button,
@@ -20,20 +20,20 @@ import React from "react";
 import { useAuthToken } from "~/providers/token-context";
 
 export function AuctionActions() {
-	const [encoder] = React.useState(() => new TextEncoder());
+	// const [encoder] = React.useState(() => new TextEncoder());
 	const [isLoading, setLoading] = React.useState(false);
-	const { send } = useDataChannel("reactions");
+	// const { send } = useDataChannel("reactions");
 	const [honoClient] = React.useState(() => hc<Routes>(window.ENV.WORKER_URL));
-	const { send: sendChat } = useChat();
+	// const { send: sendChat } = useChat();
 	const navigate = useNavigate();
 	const authToken = useAuthToken();
 
-	const onSend = (emoji: string) => {
-		send(encoder.encode(emoji), { reliable: false });
-		if (sendChat) {
-			sendChat(emoji);
-		}
-	};
+	// const onSend = (emoji: string) => {
+	// 	send(encoder.encode(emoji), { reliable: false });
+	// 	if (sendChat) {
+	// 		sendChat(emoji);
+	// 	}
+	// };
 
 	const endStream = React.useCallback(async () => {
 		setLoading(true);

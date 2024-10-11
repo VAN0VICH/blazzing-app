@@ -35,7 +35,7 @@ function Header() {
 						className={cn(
 							"absolute left-20 md:left-[52%] flex -translate-x-1/2",
 							{
-								"md:left-[56%]": mode === "open",
+								"md:left-[55%]": mode === "open",
 								"md:left-[52%]": isScrolled,
 							},
 						)}

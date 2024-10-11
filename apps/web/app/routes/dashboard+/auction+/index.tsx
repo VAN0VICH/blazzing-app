@@ -39,8 +39,8 @@ export default function Auction() {
 			<Flex justify="center" width="100%" direction="column" maxWidth="1700px">
 				<Card className="max-w-[300px] p-0">
 					<Heading
-						size="5"
-						className="p-4 justify-center text-accent-11 border-b border-border md:justify-start"
+						size="6"
+						className="p-4 font-freeman justify-center text-accent-11 border-b border-border md:justify-start"
 					>
 						Live auction
 					</Heading>

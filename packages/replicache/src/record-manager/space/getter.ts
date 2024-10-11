@@ -53,6 +53,17 @@ export const fullRowsGetter = (tableName: TableName, keys: string[]) =>
 							baseVariant: {
 								with: {
 									prices: true,
+									product: {
+										with: {
+											options: {
+												with: {
+													optionValues: true,
+												},
+											},
+											baseVariant: true,
+											store: true,
+										},
+									},
 								},
 							},
 							store: true,
@@ -159,6 +170,17 @@ export const fullRowsGetter = (tableName: TableName, keys: string[]) =>
 									},
 								},
 							},
+							product: {
+								with: {
+									options: {
+										with: {
+											optionValues: true,
+										},
+									},
+									store: true,
+									baseVariant: true,
+								},
+							},
 							prices: true,
 						},
 					}),
@@ -224,12 +246,12 @@ export const fullRowsGetter = (tableName: TableName, keys: string[]) =>
 					manager.query.customers.findMany({
 						where: (items, { inArray }) => inArray(items.id, keys),
 						with: {
-						user:{
-							columns:{
-								avatar:true,
-								username:true
-							}
-						}
+							user: {
+								columns: {
+									avatar: true,
+									username: true,
+								},
+							},
 						},
 					}),
 				),

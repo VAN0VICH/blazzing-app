@@ -11,12 +11,11 @@ import {
 import { Icons } from "@blazzing-app/ui/icons";
 import type { Variant } from "@blazzing-app/validators/client";
 import {
-	Box,
-	Button,
+	Avatar,
+	Badge,
 	Dialog,
 	Flex,
 	Grid,
-	IconButton,
 	Kbd,
 	Skeleton,
 	Text,
@@ -25,11 +24,13 @@ import {
 import { useLocation, useNavigate } from "@remix-run/react";
 import { HighlightedText } from "~/highlighted-text";
 import { useDebounce } from "~/hooks/use-debounce";
-import { useGlobalSearch } from "~/zustand/store";
 import type {
 	SearchWorkerRequest,
 	SearchWorkerResponse,
 } from "~/worker/search";
+import { useGlobalSearch } from "~/zustand/store";
+import ImagePlaceholder from "./image-placeholder";
+import { toImageURL } from "~/utils/helpers";
 
 export function GlobalSearchCombobox() {
 	const navigate = useNavigate();
@@ -61,7 +62,7 @@ export function GlobalSearchCombobox() {
 		window.addEventListener("keydown", handleKeyDown);
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, [mainPath]);
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+
 	const onSelect = React.useCallback((callback: () => unknown) => {
 		close();
 		callback();
@@ -122,7 +123,9 @@ export function GlobalSearchCombobox() {
 						)}
 					>
 						<Icons.MagnifyingGlassIcon aria-hidden="true" className="size-5" />
-						<Text size="3">Search</Text>
+						<Text size="3" className="font-freeman">
+							Search
+						</Text>
 						<span className="sr-only">Search...</span>
 						<Kbd title={"Command"} className="text-accent-11">
 							{"⌘"} K
@@ -135,7 +138,7 @@ export function GlobalSearchCombobox() {
 					<TextField.Root
 						autoFocus
 						placeholder="Global search"
-						className="rounded-t-[7px] rounded-b-none"
+						className="rounded-t-[7px] h-14 rounded-b-none"
 						size="3"
 						variant="soft"
 						value={query}
@@ -167,7 +170,7 @@ export function GlobalSearchCombobox() {
 											return (
 												<CommandItem
 													key={variant.id}
-													className="p-2"
+													className="p-2 h-18"
 													value={variant.id}
 													onSelect={() => {
 														onSelect(() =>
@@ -180,16 +183,26 @@ export function GlobalSearchCombobox() {
 													}}
 												>
 													<Flex gap="3">
-														<Icons.Product
-															className="size-6 mt-2"
-															aria-hidden="true"
+														<Avatar
+															className="size-12"
+															fallback={<ImagePlaceholder />}
+															src={
+																variant.thumbnail?.url ??
+																toImageURL(
+																	variant.thumbnail?.base64,
+																	variant.thumbnail?.fileType,
+																)
+															}
 														/>
 														<Grid>
-															<HighlightedText
-																searchTerm={query}
-																text={variant.title ?? ""}
-																className="font-bold text-base"
-															/>
+															<Flex justify="between" gap="2">
+																<HighlightedText
+																	searchTerm={query}
+																	text={variant.title ?? ""}
+																	className="font-bold text-base"
+																/>
+																<Badge color="purple">Product</Badge>
+															</Flex>
 															<HighlightedText
 																searchTerm={query}
 																text={variant.description ?? ""}

@@ -1,6 +1,3 @@
-import { Link, useFetcher } from "@remix-run/react";
-import { useIsPending } from "~/hooks/use-is-pending";
-import { LoadingSpinner } from "@blazzing-app/ui/loading";
 import {
 	Box,
 	Button,
@@ -10,7 +7,9 @@ import {
 	Spinner,
 	Text,
 } from "@radix-ui/themes";
+import { Link, useFetcher } from "@remix-run/react";
 import { useCallback } from "react";
+import { useIsPending } from "~/hooks/use-is-pending";
 import { useUserPreferences } from "~/hooks/use-user-preferences";
 const Login = () => {
 	const isPending = useIsPending();

@@ -6,11 +6,11 @@ import {
 	BreadcrumbPage,
 	BreadcrumbSeparator,
 } from "@blazzing-app/ui/breadcrumb";
-import { Box, Flex, Text } from "@radix-ui/themes";
+import { Flex, Text } from "@radix-ui/themes";
 import { Link, useLocation } from "@remix-run/react";
 import { ProfileDropdown } from "~/components/profile-dropdown";
-import { DashboardSidebarMobile } from "./sidebar";
 import { DashboardSearchCombobox } from "./search";
+import { DashboardSidebarMobile } from "./sidebar";
 
 const DashboardNavbar = () => {
 	return (
@@ -52,7 +52,7 @@ export function DynamicBreadcrumb() {
 		return null;
 	}
 	return (
-		<Breadcrumb className="hidden sm:flex">
+		<Breadcrumb className="hidden sm:flex pl-1">
 			<BreadcrumbList>
 				{pathnames.map((name, index) => {
 					const routeTo = `/dashboard/${pathnames

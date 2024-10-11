@@ -44,6 +44,7 @@ const generateVariants = fn(GenerateVariantsSchema, (input) =>
 							},
 						},
 					},
+					baseVariant: true,
 				},
 			}),
 		).pipe(
@@ -80,6 +81,13 @@ const generateVariants = fn(GenerateVariantsSchema, (input) =>
 			(_, index) => ({
 				id: newVariantIDs[index]!,
 				productID,
+				...(product.status === "published" && {
+					handle: `${product.baseVariant.title ?? ""}${(newValueCombinations[index] ?? []).length > 0 ? "-" : ""}${
+						(newValueCombinations[index] ?? []).length > 0
+							? newValueCombinations[index]!.join("-")
+							: ""
+					}`,
+				}),
 				createdAt: new Date().toISOString(),
 				quantity: 1,
 				title: newValueCombinations[index]!.join("/"),
