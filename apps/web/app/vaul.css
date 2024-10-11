@@ -164,14 +164,6 @@ div[vaul-drawer-direction="bottom"] {
 	opacity: 1;
 }
 
-/* This will allow us to not animate via animation, but still benefit from delaying unmount via Radix. */
-@keyframes fake-animation {
-	from {
-	}
-	to {
-	}
-}
-
 @media (hover: hover) and (pointer: fine) {
 	[vaul-drawer] {
 		user-select: none;

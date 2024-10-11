@@ -55,7 +55,6 @@ export function DashboardSearchCombobox() {
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, []);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	const onSelect = React.useCallback((callback: () => unknown) => {
 		close();
 		callback();

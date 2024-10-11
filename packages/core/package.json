@@ -15,7 +15,7 @@
 		"format": "biome format src",
 		"lint": "biome lint src",
 		"beautify": "biome format ./src --write",
-		"typecheck": "tsc --noEmit --emitDeclarationOnly false"
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@blazzing-app/db": "workspace:*",
@@ -39,6 +39,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@blazzing-app/tsconfig": "workspace:*",
+		"@cloudflare/workers-types": "^4.20240529.0",
 		"dotenv-cli": "^7.4.2",
 		"drizzle-kit": "^0.24.0",
 		"typescript": "^5.5.4"

@@ -68,7 +68,6 @@ export function getMatchingGrayColor(accentColor: AccentColor) {
 		case "cyan":
 			return "slate";
 		case "teal":
-		case "green":
 		case "mint":
 		case "green":
 			return "sage";

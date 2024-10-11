@@ -80,7 +80,6 @@ export function ProductInput({
 		0,
 	);
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	const onPublish = React.useCallback(() => {
 		/* check prices */
 		if (!baseVariant?.prices || baseVariant.prices.length === 0) {

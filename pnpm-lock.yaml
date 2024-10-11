@@ -264,7 +264,7 @@ importers:
         version: 1.9.2
       drizzle-orm:
         specifier: ^0.33.0
-        version: 0.33.0(@neondatabase/serverless@0.9.5)(pg@8.12.0)
+        version: 0.33.0(@cloudflare/workers-types@4.20240909.0)(@neondatabase/serverless@0.9.5)
       drizzle-zod:
         specifier: ^0.5.1
         version: 0.5.1(drizzle-orm@0.33.0)(zod@3.23.8)
@@ -293,6 +293,9 @@ importers:
       '@blazzing-app/tsconfig':
         specifier: workspace:*
         version: link:../../tooling/typescript
+      '@cloudflare/workers-types':
+        specifier: ^4.20240529.0
+        version: 4.20240909.0
       dotenv-cli:
         specifier: ^7.4.2
         version: 7.4.2
@@ -380,7 +383,7 @@ importers:
         version: 1.9.2
       drizzle-orm:
         specifier: ^0.33.0
-        version: 0.33.0(@cloudflare/workers-types@4.20240909.0)
+        version: 0.33.0(@cloudflare/workers-types@4.20240909.0)(@neondatabase/serverless@0.9.5)
       effect:
         specifier: ^3.8.4
         version: 3.8.4
@@ -478,7 +481,7 @@ importers:
         version: link:../validators
       drizzle-orm:
         specifier: ^0.33.0
-        version: 0.33.0(@cloudflare/workers-types@4.20240909.0)
+        version: 0.33.0(@cloudflare/workers-types@4.20240909.0)(@neondatabase/serverless@0.9.5)
       effect:
         specifier: ^3.8.4
         version: 3.8.4
@@ -7373,7 +7376,7 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240909.0):
+  /drizzle-orm@0.33.0(@cloudflare/workers-types@4.20240909.0)(@neondatabase/serverless@0.9.5):
     resolution: {integrity: sha512-SHy72R2Rdkz0LEq0PSG/IdvnT3nGiWuRk+2tXZQ90GVq/XQhpCzu/EFT3V2rox+w8MlkBQxifF8pCStNYnERfA==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
@@ -7463,6 +7466,7 @@ packages:
         optional: true
     dependencies:
       '@cloudflare/workers-types': 4.20240909.0
+      '@neondatabase/serverless': 0.9.5
     dev: false
 
   /drizzle-orm@0.33.0(@neondatabase/serverless@0.9.5)(pg@8.12.0):
@@ -7564,7 +7568,7 @@ packages:
       drizzle-orm: '>=0.23.13'
       zod: '*'
     dependencies:
-      drizzle-orm: 0.33.0(@neondatabase/serverless@0.9.5)(pg@8.12.0)
+      drizzle-orm: 0.33.0(@cloudflare/workers-types@4.20240909.0)(@neondatabase/serverless@0.9.5)
       zod: 3.23.8
     dev: false
 

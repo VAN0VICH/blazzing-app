@@ -1,5 +1,9 @@
 {
 	"extends": "@blazzing-app/tsconfig/internal-package.json",
 	"include": ["src"],
+	"compilerOptions": {
+		"lib": ["ES2023", "dom"],
+		"types": ["@cloudflare/workers-types"]
+	},
 	"exclude": ["node_modules"]
 }
