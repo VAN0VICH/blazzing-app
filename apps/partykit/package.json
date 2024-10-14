@@ -1,0 +1,23 @@
+{
+	"name": "@blazzing-app/partykit",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"beautify": "biome format ./src --write",
+		"dev": "partykit dev",
+		"deploy": "pnpm dlx partykit deploy",
+		"format": "biome format ./src",
+		"lint": "biome lint src",
+		"tail": "pnpm partykit tail"
+	},
+	"dependencies": {
+		"partysocket": "^1.0.2",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"@blazzing-app/tsconfig": "workspace:*",
+		"partykit": "^0.0.110",
+		"typescript": "^5.5.4"
+	}
+}

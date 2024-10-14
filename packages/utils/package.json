@@ -1,0 +1,27 @@
+{
+	"name": "@blazzing-app/utils",
+	"version": "0.1.0",
+	"main": "src/index.ts",
+	"types": "src/index.ts",
+	"license": "MIT",
+
+	"scripts": {
+		"beautify": "biome format ./src --write",
+		"clean": "rm -rf .turbo node_modules",
+		"lint": "biome lint src",
+		"format": "biome format ./src",
+		"typecheck": "tsc --noEmit --emitDeclarationOnly false"
+	},
+	"dependencies": {
+		"@blazzing-app/validators": "workspace:*",
+		"dayjs": "^1.11.13",
+		"effect": "^3.8.4",
+		"ulidx": "^2.3.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"@blazzing-app/tsconfig": "workspace:*",
+		"@cloudflare/workers-types": "^4.20240529.0",
+		"typescript": "^5.5.4"
+	}
+}

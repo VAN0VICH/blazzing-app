@@ -1,5 +1,0 @@
-{
-	"extends": "@blazzing-app/tsconfig/internal-package.json",
-	"include": ["src"],
-	"exclude": ["node_modules"]
-}

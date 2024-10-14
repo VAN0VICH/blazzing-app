@@ -4,7 +4,8 @@
 	"private": true,
 	"type": "module",
 	"exports": {
-		"./*": "./src/*.ts"
+		".": "./src/index.ts",
+		"./*": "./src/*.tsx"
 	},
 	"license": "MIT",
 	"scripts": {
@@ -14,21 +15,31 @@
 		"format": "biome format src",
 		"lint": "biome lint src",
 		"beautify": "biome format ./src --write",
-		"push": "drizzle-kit push",
-		"studio": "drizzle-kit studio --port 3001 --verbose",
-		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
-		"db": "sst shell drizzle-kit",
-		"db:push": "sst shell drizzle-kit push",
-		"db:connect": "sst shell ../scripts/mysql"
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
+		"@blazzing-app/db": "workspace:*",
+		"@blazzing-app/replicache": "workspace:*",
+		"@blazzing-app/shared": "workspace:*",
+		"@blazzing-app/utils": "workspace:*",
+		"@blazzing-app/validators": "workspace:*",
+		"@effect/platform": "^0.66.2",
+		"@effect/schema": "^0.70.4",
+		"@neondatabase/serverless": "^0.9.4",
+		"arctic": "^1.9.2",
 		"drizzle-orm": "^0.33.0",
 		"drizzle-zod": "^0.5.1",
+		"effect": "^3.8.4",
+		"jsonwebtoken": "^9.0.2",
+		"livekit-server-sdk": "^2.6.1",
+		"oslo": "^1.2.1",
+		"stripe": "^17.1.0",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@blazzing-app/tsconfig": "workspace:*",
+		"@cloudflare/workers-types": "^4.20240529.0",
 		"dotenv-cli": "^7.4.2",
 		"drizzle-kit": "^0.24.0",
 		"typescript": "^5.5.4"

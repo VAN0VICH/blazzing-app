@@ -1,0 +1,42 @@
+{
+	"name": "@blazzing-app/functions",
+	"version": "0.1.0",
+	"private": true,
+	"type": "module",
+	"exports": {
+		".": "./src/index.ts",
+		"./*": "./src/*.tsx"
+	},
+	"license": "MIT",
+	"scripts": {
+		"dev": "wrangler dev src/index.ts",
+		"deploy": "wrangler deploy --minify src/index.ts",
+		"deploy-dev": "wrangler deploy --minify --dev src/index.ts"
+	},
+	"dependencies": {
+		"@blazzing-app/core": "workspace:^",
+		"@blazzing-app/db": "workspace:^",
+		"@blazzing-app/replicache": "workspace:*",
+		"@blazzing-app/shared": "workspace:*",
+		"@blazzing-app/utils": "workspace:*",
+		"@blazzing-app/validators": "workspace:*",
+		"@cloudflare/workers-types": "^4.20240529.0",
+		"@effect/platform": "^0.66.2",
+		"@hono/zod-openapi": "^0.16.2",
+		"arctic": "^1.9.2",
+		"drizzle-orm": "^0.33.0",
+		"effect": "^3.8.4",
+		"hono": "^4.6.2",
+		"oslo": "^1.2.1",
+		"stripe": "^17.1.0",
+		"ws": "^8.18.0",
+		"zod": "^3.23.8"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"@blazzing-app/tsconfig": "workspace:*",
+		"@cloudflare/workers-types": "^4.20240529.0",
+		"@types/ws": "^8.5.12",
+		"wrangler": "^3.77.0"
+	}
+}

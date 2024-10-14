@@ -15,13 +15,17 @@
 			"suspicious": {
 				"noExplicitAny": "warn",
 				"noArrayIndexKey": "warn",
-				"noAssignInExpressions": "warn"
+				"noAssignInExpressions": "warn",
+				"noDuplicateFontNames": "warn"
 			},
 			"security": {
 				"noDangerouslySetInnerHtml": "warn"
 			},
 			"complexity": {
 				"noStaticOnlyClass": "off"
+			},
+			"correctness": {
+				"noFlatMapIdentity": "off"
 			}
 		}
 	},

@@ -1,0 +1,257 @@
+import type { Livekit } from "@blazzing-app/core";
+import {
+	useLocalParticipant,
+	useParticipants,
+	useRoomContext,
+} from "@livekit/components-react";
+import { Cross1Icon, PersonIcon } from "@radix-ui/react-icons";
+import {
+	Avatar,
+	Button,
+	Dialog,
+	Flex,
+	IconButton,
+	Text,
+} from "@radix-ui/themes";
+import type { Participant } from "livekit-client";
+import { useAuthToken } from "~/providers/token-context";
+
+function ParticipantListItem({
+	participant,
+	isCurrentUser,
+	isHost = false,
+}: {
+	participant: Participant;
+	isCurrentUser: boolean;
+	isHost?: boolean;
+}) {
+	const authToken = useAuthToken();
+	const participantMetadata = (participant.metadata &&
+		JSON.parse(participant.metadata)) as Livekit.ParticipantMetadata;
+	const room = useRoomContext();
+	const roomMetadata = (room.metadata &&
+		JSON.parse(room.metadata)) as Livekit.RoomMetadata;
+
+	const onInvite = async () => {
+		// TODO: optimistic update
+		await fetch("/api/invite_to_stage", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Token ${authToken}`,
+			},
+			body: JSON.stringify({
+				identity: participant.identity,
+			}),
+		});
+	};
+
+	// TODO: optimistic update
+	const onRaiseHand = async () => {
+		await fetch("/api/raise_hand", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Token ${authToken}`,
+			},
+		});
+	};
+
+	// TODO: optimistic update
+	const onCancel = async () => {
+		await fetch("/api/remove_from_stage", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Token ${authToken}`,
+			},
+			body: JSON.stringify({
+				identity: participant.identity,
+			}),
+		});
+	};
+
+	function HostActions() {
+		if (!isCurrentUser) {
+			if (
+				participantMetadata.invitedToStage &&
+				participantMetadata.handRaised
+			) {
+				return (
+					<Button size="1" variant="outline" onClick={onCancel}>
+						Remove
+					</Button>
+				);
+			}
+			if (participantMetadata.handRaised) {
+				return (
+					<Flex gap="2">
+						<Button size="1" onClick={onInvite}>
+							Accept
+						</Button>
+						<Button size="1" variant="outline" onClick={onCancel}>
+							Reject
+						</Button>
+					</Flex>
+				);
+			}
+			if (participantMetadata.invitedToStage) {
+				return (
+					<Button size="1" variant="outline" disabled>
+						Pending
+					</Button>
+				);
+			}
+			if (!participantMetadata.invitedToStage) {
+				return (
+					<Button size="1" onClick={onInvite}>
+						Invite to stage
+					</Button>
+				);
+			}
+		}
+	}
+
+	function ViewerActions() {
+		if (isCurrentUser) {
+			if (
+				participantMetadata.invitedToStage &&
+				participantMetadata.handRaised
+			) {
+				return (
+					<Button size="1" onClick={onCancel}>
+						Leave stage
+					</Button>
+				);
+			}
+			if (
+				participantMetadata.invitedToStage &&
+				!participantMetadata.handRaised
+			) {
+				return (
+					<Flex gap="2">
+						<Button size="1" onClick={onRaiseHand}>
+							Accept
+						</Button>
+						<Button size="1" variant="outline" onClick={onCancel}>
+							Reject
+						</Button>
+					</Flex>
+				);
+			}
+			if (
+				!participantMetadata.invitedToStage &&
+				participantMetadata.handRaised
+			) {
+				return (
+					<Button size="1" variant="outline" onClick={onCancel}>
+						Cancel
+					</Button>
+				);
+			}
+			if (
+				!participantMetadata.invitedToStage &&
+				!participantMetadata.handRaised
+			) {
+				return (
+					<Button size="1" onClick={onRaiseHand}>
+						Raise hand
+					</Button>
+				);
+			}
+		}
+	}
+
+	return (
+		<Flex key={participant.sid} justify="between">
+			<Flex align="center" gap="2">
+				<Avatar
+					size="1"
+					fallback={participant.identity[0] ?? <PersonIcon />}
+					radius="full"
+				/>
+				<Text className={isCurrentUser ? "text-accent-11" : ""}>
+					{participant.identity}
+					{isCurrentUser && " (you)"}
+				</Text>
+			</Flex>
+			{isHost && roomMetadata.allowParticipation ? (
+				<HostActions />
+			) : (
+				<ViewerActions />
+			)}
+		</Flex>
+	);
+}
+
+export function PresenceDialog({
+	children,
+	isHost = false,
+}: {
+	children: React.ReactNode;
+	isHost?: boolean;
+}) {
+	const { localParticipant } = useLocalParticipant();
+	const participants = useParticipants();
+	const hosts = participants.filter(
+		(participant) => participant.permissions?.canPublish ?? false,
+	);
+	const viewers = participants.filter(
+		(participant) => !participant.permissions?.canPublish,
+	);
+
+	return (
+		<Dialog.Root>
+			<Dialog.Trigger>{children}</Dialog.Trigger>
+
+			<Dialog.Content style={{ maxWidth: 450 }}>
+				<Dialog.Title>
+					<Flex justify="between" align="center">
+						Who&rsquo;s here
+						<Dialog.Close>
+							<IconButton variant="ghost" color="gray">
+								<Cross1Icon />
+							</IconButton>
+						</Dialog.Close>
+					</Flex>
+				</Dialog.Title>
+				<Flex direction="column" gap="4" mt="4">
+					{hosts.length > 0 && (
+						<Flex direction="column" gap="2">
+							<Text size="1" className="uppercase font-bold text-gray-11">
+								{hosts.length > 1 ? "Co-Hosts" : "Host"}
+							</Text>
+							{hosts.map((participant) => (
+								<ParticipantListItem
+									key={participant.identity}
+									participant={participant}
+									isCurrentUser={
+										participant.identity === localParticipant.identity
+									}
+									isHost={isHost}
+								/>
+							))}
+						</Flex>
+					)}
+					{viewers.length > 0 && (
+						<Flex direction="column" gap="2">
+							<Text size="1" className="uppercase font-bold text-gray-11">
+								Viewers
+							</Text>
+							{viewers.map((participant) => (
+								<ParticipantListItem
+									key={participant.identity}
+									participant={participant}
+									isCurrentUser={
+										participant.identity === localParticipant.identity
+									}
+									isHost={isHost}
+								/>
+							))}
+						</Flex>
+					)}
+				</Flex>
+			</Dialog.Content>
+		</Dialog.Root>
+	);
+}
