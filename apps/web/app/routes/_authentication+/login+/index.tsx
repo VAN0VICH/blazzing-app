@@ -43,7 +43,7 @@ const Login = () => {
 		>
 			<Box display={{ initial: "none", md: "block" }}>
 				<img
-					src="https://cdn.midjourney.com/845a8afa-1b61-478c-aff5-013bb5bb3d89/0_0.jpeg"
+					src="https://imagedelivery.net/xQMNneES1WDQrIb5kaZ3XA/5055ad47-5a9d-462b-c608-1025cc4de700/public"
 					alt="Onboarding"
 					className="h-full max-h-screen w-full object-cover dark:brightness-[0.7] dark:grayscale"
 				/>
