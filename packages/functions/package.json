@@ -10,8 +10,8 @@
 	"license": "MIT",
 	"scripts": {
 		"dev": "wrangler dev src/index.ts",
-		"deploy": "wrangler deploy --minify src/index.ts",
-		"deploy-dev": "wrangler deploy --minify --dev src/index.ts"
+		"deploy-prod": "wrangler deploy --minify -e production src/index.ts",
+		"deploy-dev": "wrangler deploy --minify -e dev src/index.ts"
 	},
 	"dependencies": {
 		"@blazzing-app/core": "workspace:^",

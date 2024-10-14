@@ -45,7 +45,7 @@ const noSidebarPaths = new Set(["/", "/onboarding", "/login", "/verify"]);
 const Sidebar = () => {
 	const fetcher = useFetcher<typeof action>();
 	const { sidebarState } = useUserPreferences();
-	const mode = sidebarState ?? "open";
+	const mode = sidebarState ?? "closed";
 	const nextMode = mode === "open" ? "closed" : "open";
 	const location = useLocation();
 	useHotkeys(["s"], () => {
