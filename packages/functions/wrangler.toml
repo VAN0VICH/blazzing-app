@@ -21,7 +21,7 @@ ACCOUNT_ID = '3551fbe61550836037b63f206e50bc73'
 IMAGE_API_TOKEN = 'OAYaj9uMiWegDscsKGF3cOaC2yrQohs4zYuROMbt'
 STRIPE_SECRET_KEY  = 'sk_test_51PoTQ6GCry79Ovxejg9Fgl3T1xmSKr859nGT9go8eiQp8ACHjknXJdoUP1FAyoVI5CQQQOZoRTo1KZpygX22lhMt00H1pbGlpN'
 
-[env.development.vars]
+[env.development]
 LIVEKIT_SERVER_URL = 'wss://test-42h1qr2q.livekit.cloud'
 LIVEKIT_API_KEY = 'APIs6VDf6iqcGgS'
 LIVEKIT_SECRET_KEY = '8Ny4c2mvJGpLpZVI9sf0NoCEiMl59ZZC7eCoiZtffUED'
