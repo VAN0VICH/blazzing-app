@@ -1,29 +1,28 @@
-import { AuthContext, Database } from "@blazzing-app/shared";
+import { schema } from "@blazzing-app/db";
+import { Database } from "@blazzing-app/shared";
+import { generateID } from "@blazzing-app/utils";
 import {
+	AuthUserSchema,
 	NeonDatabaseError,
 	type InsertStore,
 	type InsertUser,
 } from "@blazzing-app/validators";
-import { Console, Effect } from "effect";
-import { generateID } from "@blazzing-app/utils";
-import { schema } from "@blazzing-app/db";
 import { eq, sql } from "drizzle-orm";
-import { fn } from "../util/fn";
+import { Effect } from "effect";
 import { z } from "zod";
+import { fn } from "../util/fn";
 
 export namespace UserService {
 	export const onboard = fn(
 		z.object({
 			countryCode: z.string(),
 			username: z.string(),
+			authUser: AuthUserSchema,
 		}),
 
-		({ countryCode, username }) =>
+		({ countryCode, username, authUser }) =>
 			Effect.gen(function* () {
 				const { manager } = yield* Database;
-				const { authUser } = yield* AuthContext;
-				yield* Console.log("AUTH AUTH AUTH AUTH ", authUser, username);
-				if (!authUser) return;
 				const user: InsertUser = {
 					id: generateID({ prefix: "user" }),
 					createdAt: new Date().toISOString(),
@@ -58,7 +57,6 @@ export namespace UserService {
 							},
 						}),
 				);
-				yield* Console.log("USER USER USER USER USER ", username);
 				yield* Effect.all(
 					[
 						Effect.tryPromise(() =>

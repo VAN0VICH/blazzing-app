@@ -36,6 +36,9 @@ export const Authentication = ({
 			if (!isWithinExpirationDate(expirationDate)) {
 				await fetch(`${env.WORKER_URL}/auth/delete-session`, {
 					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
 					body: JSON.stringify({ sessionID }),
 				});
 				return { user: null, session: null };
@@ -52,6 +55,9 @@ export const Authentication = ({
 			const expiresAt = createDate(sessionExpiresIn);
 			const response = await fetch(`${env.WORKER_URL}/auth/delete-session`, {
 				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
 				body: JSON.stringify({ authID, expiresAt: expiresAt.toISOString() }),
 			});
 			const session = (await response.json()) as AuthSession;
@@ -61,6 +67,9 @@ export const Authentication = ({
 		invalidateSession: (sessionID: string) => {
 			return fetch(`${env.WORKER_URL}/auth/delete-session`, {
 				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
 				body: JSON.stringify({ sessionID }),
 			});
 		},

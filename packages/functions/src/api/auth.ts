@@ -1,7 +1,10 @@
+import { UserService } from "@blazzing-app/core";
 import { schema } from "@blazzing-app/db";
+import { Database } from "@blazzing-app/shared";
 import { generateID } from "@blazzing-app/utils";
 import type {
 	GoogleProfile,
+	InsertAuth,
 	WorkerBindings,
 	WorkerEnv,
 } from "@blazzing-app/validators";
@@ -9,9 +12,10 @@ import { AuthUserSchema, SessionSchema } from "@blazzing-app/validators/server";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { generateCodeVerifier, generateState, Google } from "arctic";
 import { eq, lte } from "drizzle-orm";
+import { Console, Effect } from "effect";
+import { cache } from "hono/cache";
 import { createDate, TimeSpan } from "oslo";
 import { getDB } from "../lib/db";
-import { cache } from "hono/cache";
 export namespace AuthApi {
 	export const route = new OpenAPIHono<{
 		Bindings: WorkerBindings & WorkerEnv;
@@ -107,7 +111,6 @@ export namespace AuthApi {
 		)
 		.openapi(
 			createRoute({
-				security: [{ Bearer: [] }],
 				method: "post",
 				path: "/delete-session",
 				request: {
@@ -135,6 +138,7 @@ export namespace AuthApi {
 				},
 			}),
 			async (c) => {
+				console.log("what < -----------");
 				const { sessionID } = c.req.valid("json");
 				const db = getDB({ connectionString: c.env.DATABASE_URL });
 				await db
@@ -351,6 +355,105 @@ export namespace AuthApi {
 						isOnboard: false,
 					});
 				}
+			},
+		)
+		.openapi(
+			createRoute({
+				security: [{ Bearer: [] }],
+				method: "post",
+				path: "/create-test-user",
+				responses: {
+					200: {
+						content: {
+							"application/json": {
+								schema: z.object({
+									session: SessionSchema.optional(),
+									success: z.boolean(),
+									message: z.string().optional(),
+								}),
+							},
+						},
+						description: "Creates test user and returns the session.",
+					},
+				},
+			}),
+			async (c) => {
+				const db = getDB({ connectionString: c.env.DATABASE_URL });
+
+				const testID = `test-${generateID({})}`;
+
+				const testAuthUser: InsertAuth = {
+					id: generateID({ prefix: "auth" }),
+					createdAt: new Date().toISOString(),
+					email: testID,
+					version: 1,
+					username: testID,
+				};
+
+				await db.insert(schema.authUsers).values(testAuthUser);
+
+				await Effect.runPromise(
+					Effect.gen(function* () {
+						yield* Effect.tryPromise(() =>
+							db.transaction(async (tx) =>
+								UserService.onboard({
+									countryCode: "AU",
+									username: testID,
+									authUser: testAuthUser,
+								})
+									.pipe(
+										Effect.provideService(
+											Database,
+											Database.of({ manager: tx }),
+										),
+									)
+									.pipe(Effect.orDie),
+							),
+						).pipe(
+							Effect.flatMap((_) => _),
+							Effect.retry({ times: 3 }),
+							Effect.catchAll((e) =>
+								Effect.gen(function* () {
+									yield* Console.log(e.message);
+									yield* Effect.succeed({
+										status: "error",
+										message: "Failed to onboard user",
+									});
+								}),
+							),
+							Effect.zipLeft(
+								Effect.all([
+									Effect.tryPromise(() =>
+										fetch(`${c.env.PARTYKIT_ORIGIN}/parties/main/dashboard`, {
+											method: "POST",
+											body: JSON.stringify(["store"]),
+										}),
+									),
+									Effect.tryPromise(() =>
+										fetch(`${c.env.PARTYKIT_ORIGIN}/parties/main/global`, {
+											method: "POST",
+											body: JSON.stringify(["user"]),
+										}),
+									),
+								]),
+							),
+						);
+					}),
+				);
+
+				const sessionExpiresIn = new TimeSpan(30, "d");
+				const expiresAt = createDate(sessionExpiresIn).toISOString();
+				const session = {
+					id: generateID({ prefix: "session" }),
+					authID: testAuthUser!.id,
+					createdAt: new Date().toISOString(),
+					expiresAt,
+				};
+				await db.insert(schema.sessions).values(session).returning();
+				return c.json({
+					success: true,
+					session,
+				});
 			},
 		);
 }

@@ -1,5 +1,5 @@
 import { UserService } from "@blazzing-app/core";
-import { AuthContext, Database } from "@blazzing-app/shared";
+import { Database } from "@blazzing-app/shared";
 import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
 import { UserSchema } from "@blazzing-app/validators/server";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
@@ -133,15 +133,12 @@ export namespace UserApi {
 								UserService.onboard({
 									countryCode,
 									username,
+									authUser,
 								})
 									.pipe(
 										Effect.provideService(
 											Database,
 											Database.of({ manager: tx }),
-										),
-										Effect.provideService(
-											AuthContext,
-											AuthContext.of({ authUser }),
 										),
 									)
 									.pipe(Effect.orDie),

@@ -50,12 +50,12 @@ export async function loader({ request, context }: ActionFunctionArgs) {
 		} = await response.json();
 
 		if (!success || !userSession) {
-			console.error("error login after success", message);
+			console.error(message);
 			return redirect("/login");
 		}
 		session.set(SESSION_KEY, userSession.id);
 
-		return isOnboard ? redirect("/onboarding") : redirect("/dashboard");
+		return isOnboard ? redirect("/onboarding") : redirect("/dashboard/store");
 	}
 	console.log("error login");
 

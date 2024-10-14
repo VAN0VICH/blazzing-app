@@ -10,17 +10,25 @@ import {
 import { Link, useFetcher } from "@remix-run/react";
 import { useCallback } from "react";
 import { useIsPending } from "~/hooks/use-is-pending";
-import { useUserPreferences } from "~/hooks/use-user-preferences";
 const Login = () => {
 	const isPending = useIsPending();
 	const fetcher = useFetcher();
-	const { accentColor } = useUserPreferences();
 	const onGoogleClick = useCallback(() => {
 		return fetcher.submit(
 			{},
 			{
 				method: "POST",
 				action: "/google/login",
+			},
+		);
+	}, [fetcher.submit]);
+
+	const onTestUserClick = useCallback(() => {
+		return fetcher.submit(
+			{},
+			{
+				method: "POST",
+				action: "/action/create-test-user",
 			},
 		);
 	}, [fetcher.submit]);
@@ -58,9 +66,21 @@ const Login = () => {
 						<Box maxWidth="400px" width={{ initial: "100%", xs: "400px" }}>
 							<Button
 								type="button"
+								variant="outline"
+								size="3"
+								className="w-full"
+								onClick={onTestUserClick}
+								disabled={isPending || isGoogleSubmitting}
+							>
+								{(isPending || isGoogleSubmitting) && <Spinner />}
+								Demo user
+							</Button>
+						</Box>
+						<Box maxWidth="400px" width={{ initial: "100%", xs: "400px" }}>
+							<Button
+								type="button"
 								variant="surface"
 								size="3"
-								color={accentColor ?? "ruby"}
 								className="w-full"
 								onClick={onGoogleClick}
 								disabled={isPending || isGoogleSubmitting}
