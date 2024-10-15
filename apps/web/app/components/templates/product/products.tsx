@@ -5,7 +5,9 @@ import type { Product } from "@blazzing-app/validators/client";
 import { Avatar, Badge, Box, Flex, Heading, Skeleton } from "@radix-ui/themes";
 import { Link } from "@remix-run/react";
 import Image from "~/components/image";
+import ImagePlaceholder from "~/components/image-placeholder";
 import Price from "~/components/price";
+import { toImageURL } from "~/utils/helpers";
 const Products = ({
 	isAuction = false,
 	products,
@@ -82,7 +84,7 @@ const ProductComponent = ({
 					prefetch="viewport"
 				>
 					<Image
-						src={product.baseVariant.thumbnail?.url}
+						src={product.baseVariant.thumbnail?.url ?? toImageURL(product.baseVariant.thumbnail?.base64, product.baseVariant.thumbnail?.fileType)}
 						alt={product.baseVariant.thumbnail?.alt}
 						className="w-full cursor-pointer rounded-[7px]"
 					/>
@@ -124,7 +126,7 @@ const ProductComponent = ({
 			</Box>
 			<Flex justify="between" gap="2" pt="2" align="center">
 				<Flex gap="2" align="center">
-					<Avatar fallback="f" className="size-8" />
+					<Avatar fallback={<ImagePlaceholder/>} className="size-8" src={product?.store.image?.cropped?.url ?? toImageURL(product?.store?.image?.cropped?.base64,product?.store?.image?.cropped?.fileType )  }  />
 					<Heading
 						size="2"
 						className="overflow-hidden text-ellipsis line-clamp-1"
