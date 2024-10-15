@@ -185,7 +185,7 @@ export function Media({
 																position="absolute"
 																left="2"
 																top="2"
-																className="rounded-full bg-accent-9"
+																className="rounded-full bg-accent-11"
 															>
 																<Icons.Thumbnail
 																	className="text-white"
