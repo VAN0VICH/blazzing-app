@@ -1,6 +1,6 @@
 {
 	"extends": "@blazzing-app/tsconfig/internal-package.json",
-	"include": ["src"],
+	"include": ["src", "../../apps/web/app/client/authentication.tsx"],
 	"compilerOptions": {
 		"lib": ["ES2023", "dom"],
 		"types": ["@cloudflare/workers-types"]

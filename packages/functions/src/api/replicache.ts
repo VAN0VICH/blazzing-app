@@ -50,12 +50,12 @@ import {
 		  },
 		}),
 		async (c) => {
-		  const authUser = await getAuthUser(c);
-		  console.log("USER FROM PULL", authUser);
 		  const db = getDB({ connectionString: c.env.DATABASE_URL });
 		  const { spaceID, subspaces } = c.req.valid("query");
 		  console.log("--------->SPACE ID<-------", spaceID);
 		  const body = c.req.valid("json");
+          const authUser = await getAuthUser(c);
+		  console.log("USER FROM PULL", authUser);
 		  console.log("subspaceIDs", subspaces);
   
 		  const CloudflareLive = Layer.succeed(

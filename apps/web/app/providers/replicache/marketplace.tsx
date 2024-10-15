@@ -36,7 +36,7 @@ function MarketplaceReplicacheProvider({
 			},
 			//@ts-ignore
 			puller: async (req) => {
-				console.log("request", req)
+				console.log("request", req);
 				const response = await client.replicache.pull.$post(
 					{
 						//@ts-ignore
@@ -49,7 +49,7 @@ function MarketplaceReplicacheProvider({
 						...(session && {
 							headers: {
 								Authorization: `Bearer ${session.id}`,
-								"Content-Type":"application/json",
+								"Content-Type": "application/json",
 							},
 						}),
 					},
@@ -76,7 +76,7 @@ function MarketplaceReplicacheProvider({
 						...(session && {
 							headers: {
 								Authorization: `Bearer ${session.id}`,
-								"Content-Type":"application/json",
+								"Content-Type": "application/json",
 							},
 						}),
 					},

@@ -43,7 +43,7 @@ export function GlobalReplicacheProvider({
 					},
 					{
 						headers: {
-								"Content-Type":"application/json",
+							"Content-Type": "application/json",
 							...(session && { Authorization: `Bearer ${session.id}` }),
 							...(cartID && { "x-cart-id": cartID }),
 							...(authUser?.userID && { "x-user-id": authUser.userID }),
@@ -71,7 +71,7 @@ export function GlobalReplicacheProvider({
 					{
 						...(session && {
 							headers: {
-								"Content-Type":"application/json",
+								"Content-Type": "application/json",
 								Authorization: `Bearer ${session.id}`,
 							},
 						}),

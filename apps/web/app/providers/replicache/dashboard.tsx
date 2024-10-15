@@ -40,7 +40,7 @@ function DashboardReplicacheProvider({
 					{
 						headers: {
 							Authorization: `Bearer ${session.id}`,
-								"Content-Type":"application/json",
+							"Content-Type": "application/json",
 						},
 					},
 				);
@@ -65,7 +65,7 @@ function DashboardReplicacheProvider({
 					{
 						headers: {
 							Authorization: `Bearer ${session.id}`,
-								"Content-Type":"application/json",
+							"Content-Type": "application/json",
 						},
 					},
 				);

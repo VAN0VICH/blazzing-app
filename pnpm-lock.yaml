@@ -42,9 +42,6 @@ importers:
 
   apps/web:
     dependencies:
-      '@blazzing-app/core':
-        specifier: workspace:^
-        version: link:../../packages/core
       '@blazzing-app/functions':
         specifier: workspace:^
         version: link:../../packages/functions
@@ -141,6 +138,9 @@ importers:
       lodash.debounce:
         specifier: ^4.0.8
         version: 4.0.8
+      oslo:
+        specifier: ^1.2.1
+        version: 1.2.1
       partysocket:
         specifier: ^1.0.2
         version: 1.0.2
@@ -2974,8 +2974,8 @@ packages:
     transitivePeerDependencies:
       - supports-color
 
-  /@million/install@1.0.9:
-    resolution: {integrity: sha512-tJk7azrjsIkHl/xTppFw8K7M/CIrqa1y9J75By+dtW6jZBQi51DQlsp5J1SuAcTR89XwpGEuhN29HOvHosblPw==}
+  /@million/install@1.0.11:
+    resolution: {integrity: sha512-koRlY6tCYa6isBUTheP0pL7PC31pBY1QlL8F/Yaorcx6gIyZSJNVqTGBDqLvDeeV8QcmD/S9mswSazI/FsyGKQ==}
     hasBin: true
     dependencies:
       '@antfu/ni': 0.21.12
@@ -2986,6 +2986,7 @@ packages:
       ast-types: 0.14.2
       cli-high: 0.4.2
       diff: 5.2.0
+      effect: 3.8.4
       nanoid: 5.0.7
       recast: 0.23.9
       xycolors: 0.1.2
@@ -2999,7 +3000,7 @@ packages:
       '@babel/core': 7.25.2
       '@babel/types': 7.25.2
       '@hono/node-server': 1.13.0(hono@4.6.2)
-      '@million/install': 1.0.9
+      '@million/install': 1.0.11
       '@rollup/pluginutils': 5.1.2
       '@rrweb/types': 2.0.0-alpha.16
       babel-plugin-syntax-hermes-parser: 0.21.1
