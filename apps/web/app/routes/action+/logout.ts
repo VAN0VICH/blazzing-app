@@ -16,9 +16,10 @@ export async function action({ request, context }: ActionFunctionArgs) {
 	if (!response.ok) {
 		console.error("response error", response.statusText);
 	}
+	
 	cookie.authUser = null;
 	cookie.userSession = null;
-	console.log("why is this not working?");
+	session.unset(SESSION_KEY);
 
 	return json(
 		{},

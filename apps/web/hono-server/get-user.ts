@@ -13,7 +13,6 @@ export const getUserAndSession = async (
 	const sessionID =
 		(honoSession.get(auth.sessionKey) as string) ??
 		auth.readBearerToken(c.req.raw.headers.get("Authorization") ?? "");
-	console.log("session ID", sessionID);
 
 	if (!sessionID) {
 		return { user: null, session: null };

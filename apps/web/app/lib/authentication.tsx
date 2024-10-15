@@ -41,7 +41,6 @@ export const Authentication = ({
 					},
 					body: JSON.stringify({ sessionID }),
 				});
-				console.log("validate session 5...");
 				return { user: null, session: null };
 			}
 
