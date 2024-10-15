@@ -78,7 +78,7 @@ export function ProductInput({
 	const totalStock = variants.reduce(
 		(acc, curr) => acc + (curr.quantity ?? 0),
 		0,
-	);
+	) + (baseVariant?.quantity ?? 0);
 
 	const onPublish = React.useCallback(() => {
 		/* check prices */
