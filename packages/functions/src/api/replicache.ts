@@ -23,7 +23,6 @@ export namespace ReplicacheApi {
 	export const route = new Hono<{
 		Bindings: WorkerBindings & WorkerEnv;
 	}>()
-		.get("/hello", (c) => c.text("hello"))
 		.post(
 			"/pull",
 			zValidator(

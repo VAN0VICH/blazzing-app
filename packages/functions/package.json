@@ -37,6 +37,6 @@
 		"@blazzing-app/tsconfig": "workspace:*",
 		"@cloudflare/workers-types": "^4.20240529.0",
 		"@types/ws": "^8.5.12",
-		"wrangler": "^3.77.0"
+		"wrangler": "^3.80.4"
 	}
 }
