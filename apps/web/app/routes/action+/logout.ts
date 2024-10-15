@@ -1,5 +1,5 @@
-import { Authentication } from "@blazzing-app/core";
 import { json, type ActionFunctionArgs } from "@remix-run/cloudflare";
+import { Authentication } from "~/lib/authentication";
 import { SESSION_KEY } from "~/constants";
 import { userContext } from "~/server/sessions.server";
 
