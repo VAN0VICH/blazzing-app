@@ -41,7 +41,7 @@ const Gallery = ({ images }: GalleryProps) => {
 			}}
 		>
 			<Carousel>
-				<CarouselContent className="shadow-none px-3 w-screen lg:w-[calc(100vw-400px)]">
+				<CarouselContent className="shadow-none gap-3 px-3 w-screen lg:w-[calc(100vw-400px)]">
 					{images.map(({ base64, url, alt, id, fileType }) => (
 						<CarouselItem
 							key={id}

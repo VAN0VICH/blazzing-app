@@ -24,8 +24,8 @@ const Products = ({
 	console.log("products", products);
 	if (!isInitialized)
 		return (
-			<Flex direction="column" gap="2">
-				<div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
+			<Flex direction="column" gap="2" pt="2">
+				<div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5  gap-4">
 					{[...Array(10)].map((_, index) => (
 						<ProductSkeleton key={index} />
 					))}
@@ -42,7 +42,7 @@ const Products = ({
 		);
 	}
 	return (
-		<Flex direction="column" gap="2" className="pt- md:pt-0">
+		<Flex direction="column" gap="2" className="pt-2 md:pt-0">
 			<div className="columns-2 md:columns-3 lg:columns-4 xl:columns-5 gap-4">
 				{products.map((product) => (
 					<ProductComponent
