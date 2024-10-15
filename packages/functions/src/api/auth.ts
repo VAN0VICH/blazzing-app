@@ -30,11 +30,6 @@ export namespace AuthApi {
 						sessionID: z.string(),
 					}),
 				},
-				middleware: [
-					cache({
-						cacheName: "blazzing-cache",
-					}),
-				],
 				responses: {
 					200: {
 						content: {
