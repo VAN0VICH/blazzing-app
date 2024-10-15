@@ -79,7 +79,8 @@ export function StoreComponent({
 			setHeaderImage(store.headerImage);
 		}
 	}, [store?.headerImage]);
-	console.log("store", store);
+
+
 
 	return (
 		<>
@@ -141,10 +142,10 @@ export function StoreComponent({
 							>
 								<Image
 									src={
-										store?.image?.cropped?.url ??
+										store?.headerImage?.cropped?.url ??
 										toImageURL(
-											store?.image?.cropped?.base64,
-											store?.image?.cropped?.fileType,
+											store?.headerImage?.cropped?.base64,
+											store?.headerImage?.cropped?.fileType,
 										)
 									}
 									fit="cover"
