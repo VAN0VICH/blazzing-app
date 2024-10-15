@@ -45,6 +45,7 @@ function PartykitProvider() {
 								Authorization: `Bearer ${session?.id}`,
 								...(cartID && { "x-cart-id": cartID }),
 								...(authUser?.userID && { "x-user-id": authUser.userID }),
+								"Content-Type":"application/json",
 							},
 						},
 					);
@@ -96,6 +97,7 @@ function PartykitProvider() {
 						{
 							headers: {
 								Authorization: `Bearer ${session.id}`,
+								"Content-Type":"application/json",
 							},
 						},
 					);
@@ -148,6 +150,7 @@ function PartykitProvider() {
 						{
 							headers: {
 								Authorization: `Bearer ${session?.id}`,
+								"Content-Type":"application/json",
 							},
 						},
 					);
