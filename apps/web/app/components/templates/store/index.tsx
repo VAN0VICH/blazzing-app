@@ -148,6 +148,7 @@ export function StoreComponent({
 											store?.headerImage?.cropped?.fileType,
 										)
 									}
+									quality={95}
 									fit="cover"
 									className="max-h-[200px] z-10 h-[150px] md:h-[180px] lg:h-[200px] object-cover w-full"
 									height={{ initial: 150, sm: 180, lg: 200 }}
