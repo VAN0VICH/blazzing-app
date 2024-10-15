@@ -1,7 +1,7 @@
-import { Authentication } from "@blazzing-app/core";
 import type { AuthSession, AuthUser } from "@blazzing-app/validators";
 import type { Session, SessionData } from "@remix-run/cloudflare";
 import type { Context } from "hono";
+import { Authentication } from "~/lib/authentication";
 
 export const getUserAndSession = async (
 	c: Context,
