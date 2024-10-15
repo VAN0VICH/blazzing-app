@@ -138,7 +138,6 @@ export namespace AuthApi {
 				},
 			}),
 			async (c) => {
-				console.log("what < -----------");
 				const { sessionID } = c.req.valid("json");
 				const db = getDB({ connectionString: c.env.DATABASE_URL });
 				await db

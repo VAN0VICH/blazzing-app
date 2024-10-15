@@ -17,6 +17,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 		console.error("response error", response.statusText);
 	}
 	cookie.authUser = null;
+	cookie.userSession = null;
 
 	return json(
 		{},

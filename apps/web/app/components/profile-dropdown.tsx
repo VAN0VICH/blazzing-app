@@ -35,7 +35,6 @@ const ProfileDropdown = () => {
 	const logout = React.useCallback(() => {
 		return fetcher.submit(
 			{
-				authUser: null,
 			},
 			{
 				method: "POST",

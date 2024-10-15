@@ -98,8 +98,8 @@ export const loader: LoaderFunction = async (args) => {
 			},
 			userContext: {
 				cartID: userContextCookie.cartID,
-				authUser,
-				userSession,
+				authUser: userContextCookie.authUser ?? authUser,
+				userSession:userContextCookie.userSession ?? userSession,
 			},
 		},
 	});
