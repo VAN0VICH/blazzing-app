@@ -141,8 +141,11 @@ export function StoreComponent({
 							>
 								<Image
 									src={
-										store.headerImage.cropped.url ??
-										store.headerImage.cropped.base64
+										store?.image?.cropped?.url ??
+										toImageURL(
+											store?.image?.cropped?.base64,
+											store?.image?.cropped?.fileType,
+										)
 									}
 									fit="cover"
 									className="max-h-[200px] z-10 h-[150px] md:h-[180px] lg:h-[200px] object-cover w-full"
