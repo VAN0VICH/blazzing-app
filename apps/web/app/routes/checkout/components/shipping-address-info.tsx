@@ -57,6 +57,7 @@ export const ShippingAddressInfo = () => {
 									<Select.Trigger
 										className="w-full rounded-[5px] h-10 px-2 "
 										variant="soft"
+										placeholder="Country"
 									/>
 									<Select.Content className="backdrop-blur-sm z-50">
 										<Select.Group>

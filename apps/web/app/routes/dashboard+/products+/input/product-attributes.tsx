@@ -325,7 +325,7 @@ export function Attributes({
 												value={field.value ?? "Australia"}
 												onValueChange={field.onChange}
 											>
-												<Select.Trigger />
+												<Select.Trigger placeholder="Origin"/>
 												<Select.Content>
 													<Select.Group>
 														{countries.map(([_, name]) => (
