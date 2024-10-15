@@ -165,11 +165,8 @@ export function ProductInput({
 						/>
 						{totalStock <= 0 ? "Out of stock" : "In stock"}
 					</Badge>
-					<Flex
-						align="center"
-						gap="2"
-						display={{ initial: "flex", md: "none" }}
-					>
+										<section className="min-[1200px]:hidden flex items-center justify-end gap-2 h-14">
+
 						<DeleteOrPublish
 							product={product}
 							setView={setView}
@@ -178,7 +175,7 @@ export function ProductInput({
 							onDelete={onDelete}
 							onUnpublish={onUnpublish}
 						/>
-					</Flex>
+										</section>
 				</Flex>
 				<Grid gap="3">
 					<ProductInfo

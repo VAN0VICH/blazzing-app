@@ -126,15 +126,15 @@ const PriceComponent = ({
 
 	const onSave = React.useCallback(
 		async ({ amount }: { amount: number }) => {
-			if (amount * 100 !== price.amount && variantID) {
+			if (Math.round(amount * 100) !== price.amount && variantID) {
 				await updatePrice({
-					priceID: price.id,
-					id: variantID,
-					updates: {
-						amount: amount * 100,
-					},
+				  priceID: price.id,
+				  id: variantID,
+				  updates: {
+					amount: Math.round(amount * 100),
+				  },
 				});
-			}
+			  }
 
 			setEditMode(false);
 		},
