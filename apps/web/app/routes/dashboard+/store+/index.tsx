@@ -11,7 +11,7 @@ export default function StoresPage() {
 		state.products.filter((product) => product.storeID === activeStoreID),
 	);
 	return (
-		<Flex justify="center" width="100%" p="3">
+		<Flex justify="center" width="100%" p="3" pb="20">
 			<StoreComponent
 				isDashboard={true}
 				isInitialized={isInitialized}
