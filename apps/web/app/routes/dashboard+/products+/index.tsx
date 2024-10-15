@@ -82,7 +82,7 @@ function Products({
 		(keys: string[]) => {
 			if (!dashboardRep) return;
 			toast.promise(
-				"Product deleted. Press CMD+Z to undo.",
+				"Product deleted.",
 				dashboardRep?.mutate.deleteProduct({ keys }),
 			);
 		},
