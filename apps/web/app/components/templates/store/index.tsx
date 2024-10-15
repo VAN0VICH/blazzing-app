@@ -80,8 +80,6 @@ export function StoreComponent({
 		}
 	}, [store?.headerImage]);
 
-
-
 	return (
 		<>
 			{headerImage && store && isDashboard && (

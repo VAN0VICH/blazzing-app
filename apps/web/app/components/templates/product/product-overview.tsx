@@ -51,7 +51,13 @@ const ProductOverview = (props: ProductOverviewProps) => {
 				images={selectedVariant?.images ?? baseVariant?.images ?? []}
 				{...(isScrolled && { isScrolled: isScrolled })}
 			/> */}
-			<Gallery images={selectedVariant?.images ?? selectedVariant?.product?.baseVariant.images ??[]} />
+			<Gallery
+				images={
+					selectedVariant?.images ??
+					selectedVariant?.product?.baseVariant.images ??
+					[]
+				}
+			/>
 			<Box className="fixed top-[60%] right-5 lg:hidden">
 				<ProductInformationMobile {...props} />
 			</Box>
@@ -227,8 +233,11 @@ export const ProductVariants = ({
 							</ToggleGroupItem>
 						);
 					}
-					if(!v.images?.[0]?.url ||
-						!toImageURL(v.images?.[0]?.base64, v.images?.[0]?.fileType)) return null
+					if (
+						!v.thumbnail?.url ||
+						!toImageURL(v.thumbnail?.base64, v.thumbnail?.fileType)
+					)
+						return null;
 					return (
 						<ToggleGroupItem
 							key={v.id}
@@ -242,8 +251,8 @@ export const ProductVariants = ({
 									fit="cover"
 									height={{ initial: 100 }}
 									src={
-										v.images?.[0]?.url ??
-										toImageURL(v.images?.[0]?.base64, v.images?.[0]?.fileType)
+										v.thumbnail?.url ??
+										toImageURL(v.thumbnail?.base64, v.thumbnail?.fileType)
 									}
 									className="object-cover"
 								/>

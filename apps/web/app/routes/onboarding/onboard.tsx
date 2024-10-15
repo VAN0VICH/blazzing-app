@@ -100,7 +100,11 @@ export function Onboard() {
 							</label>
 							{/* @ts-ignore */}
 							<Select.Root {...getSelectProps(fields.countryCode)} size="3">
-								<Select.Trigger variant="soft" placeholder="Select country" disabled={isPending}/>
+								<Select.Trigger
+									variant="soft"
+									placeholder="Select country"
+									disabled={isPending}
+								/>
 								<Select.Content>
 									<ScrollArea>
 										<Select.Item key={"AU"} value={"AU"}>

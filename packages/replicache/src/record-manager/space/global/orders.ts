@@ -61,6 +61,12 @@ export const ordersCVD: GetRowsWTableName = ({ fullRows }) => {
 											},
 											product: {
 												with: {
+													options: {
+														with: {
+															optionValues: true,
+														},
+													},
+													store: true,
 													baseVariant: true,
 												},
 											},

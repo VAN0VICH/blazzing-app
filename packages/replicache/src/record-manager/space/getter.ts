@@ -229,7 +229,17 @@ export const fullRowsGetter = (tableName: TableName, keys: string[]) =>
 									prices: true,
 								},
 							},
-							product: true,
+							product: {
+								with: {
+									options: {
+										with: {
+											optionValues: true,
+										},
+									},
+									store: true,
+									baseVariant: true,
+								},
+							},
 						},
 					}),
 				),
@@ -296,7 +306,17 @@ export const fullRowsGetter = (tableName: TableName, keys: string[]) =>
 											prices: true,
 										},
 									},
-									product: true,
+									product: {
+										with: {
+											options: {
+												with: {
+													optionValues: true,
+												},
+											},
+											store: true,
+											baseVariant: true,
+										},
+									},
 								},
 							},
 							shippingAddress: true,

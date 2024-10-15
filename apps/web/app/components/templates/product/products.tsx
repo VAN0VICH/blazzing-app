@@ -84,7 +84,13 @@ const ProductComponent = ({
 					prefetch="viewport"
 				>
 					<Image
-						src={product.baseVariant.thumbnail?.url ?? toImageURL(product.baseVariant.thumbnail?.base64, product.baseVariant.thumbnail?.fileType)}
+						src={
+							product.baseVariant.thumbnail?.url ??
+							toImageURL(
+								product.baseVariant.thumbnail?.base64,
+								product.baseVariant.thumbnail?.fileType,
+							)
+						}
 						alt={product.baseVariant.thumbnail?.alt}
 						className="w-full cursor-pointer rounded-[7px]"
 					/>
@@ -126,7 +132,17 @@ const ProductComponent = ({
 			</Box>
 			<Flex justify="between" gap="2" pt="2" align="center">
 				<Flex gap="2" align="center">
-					<Avatar fallback={<ImagePlaceholder/>} className="size-8" src={product?.store.image?.cropped?.url ?? toImageURL(product?.store?.image?.cropped?.base64,product?.store?.image?.cropped?.fileType )  }  />
+					<Avatar
+						fallback={<ImagePlaceholder />}
+						className="size-8"
+						src={
+							product?.store.image?.cropped?.url ??
+							toImageURL(
+								product?.store?.image?.cropped?.base64,
+								product?.store?.image?.cropped?.fileType,
+							)
+						}
+					/>
 					<Heading
 						size="2"
 						className="overflow-hidden text-ellipsis line-clamp-1"

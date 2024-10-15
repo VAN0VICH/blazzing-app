@@ -13,7 +13,6 @@ import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { generateCodeVerifier, generateState, Google } from "arctic";
 import { eq, lte } from "drizzle-orm";
 import { Console, Effect } from "effect";
-import { cache } from "hono/cache";
 import { createDate, TimeSpan } from "oslo";
 import { getDB } from "../lib/db";
 export namespace AuthApi {

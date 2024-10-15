@@ -75,10 +75,9 @@ export function ProductInput({
 		await dashboardRep?.mutate.publishProduct({ id: productID });
 		toast.success("Product published!");
 	}, [dashboardRep, productID]);
-	const totalStock = variants.reduce(
-		(acc, curr) => acc + (curr.quantity ?? 0),
-		0,
-	) + (baseVariant?.quantity ?? 0);
+	const totalStock =
+		variants.reduce((acc, curr) => acc + (curr.quantity ?? 0), 0) +
+		(baseVariant?.quantity ?? 0);
 
 	const onPublish = React.useCallback(() => {
 		/* check prices */
@@ -165,8 +164,7 @@ export function ProductInput({
 						/>
 						{totalStock <= 0 ? "Out of stock" : "In stock"}
 					</Badge>
-										<section className="min-[1200px]:hidden flex items-center justify-end gap-2 h-14">
-
+					<section className="min-[1200px]:hidden flex items-center justify-end gap-2 h-14">
 						<DeleteOrPublish
 							product={product}
 							setView={setView}
@@ -175,7 +173,7 @@ export function ProductInput({
 							onDelete={onDelete}
 							onUnpublish={onUnpublish}
 						/>
-										</section>
+					</section>
 				</Flex>
 				<Grid gap="3">
 					<ProductInfo
