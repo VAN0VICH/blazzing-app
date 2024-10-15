@@ -51,7 +51,7 @@ const ProductOverview = (props: ProductOverviewProps) => {
 				images={selectedVariant?.images ?? baseVariant?.images ?? []}
 				{...(isScrolled && { isScrolled: isScrolled })}
 			/> */}
-			<Gallery images={selectedVariant?.images ?? []} />
+			<Gallery images={selectedVariant?.images ?? selectedVariant?.product?.baseVariant.images ??[]} />
 			<Box className="fixed top-[60%] right-5 lg:hidden">
 				<ProductInformationMobile {...props} />
 			</Box>
@@ -227,6 +227,8 @@ export const ProductVariants = ({
 							</ToggleGroupItem>
 						);
 					}
+					if(!v.images?.[0]?.url ||
+						!toImageURL(v.images?.[0]?.base64, v.images?.[0]?.fileType)) return null
 					return (
 						<ToggleGroupItem
 							key={v.id}
