@@ -43,6 +43,7 @@ function PartykitProvider() {
 						{
 							headers: {
 								Authorization: `Bearer ${session?.id}`,
+								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
 								...(cartID && { "x-cart-id": cartID }),
 								...(authUser?.userID && { "x-user-id": authUser.userID }),
 								"Content-Type": "application/json",
@@ -55,7 +56,7 @@ function PartykitProvider() {
 							response.status === 200 ? await response.json() : undefined,
 						httpRequestInfo: {
 							httpStatusCode: response.status,
-							errorMessage: response.statusText,
+							errorMessage: response.status === 200 ? "" : response.statusText,
 						},
 					};
 				};
@@ -97,6 +98,7 @@ function PartykitProvider() {
 						{
 							headers: {
 								Authorization: `Bearer ${session.id}`,
+								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
 								"Content-Type": "application/json",
 							},
 						},
@@ -107,7 +109,7 @@ function PartykitProvider() {
 							response.status === 200 ? await response.json() : undefined,
 						httpRequestInfo: {
 							httpStatusCode: response.status,
-							errorMessage: response.statusText,
+							errorMessage: response.status === 200 ? "" : response.statusText,
 						},
 					};
 				};
@@ -150,6 +152,7 @@ function PartykitProvider() {
 						{
 							headers: {
 								Authorization: `Bearer ${session?.id}`,
+								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
 								"Content-Type": "application/json",
 							},
 						},
@@ -160,7 +163,7 @@ function PartykitProvider() {
 							response.status === 200 ? await response.json() : undefined,
 						httpRequestInfo: {
 							httpStatusCode: response.status,
-							errorMessage: response.statusText,
+							errorMessage: response.status === 200 ? "" : response.statusText,
 						},
 					};
 				};

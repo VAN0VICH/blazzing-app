@@ -82,11 +82,18 @@ export default function General() {
 			) {
 				let usernameExists = false;
 				if (usernameChanged && values.username) {
-					const response = await honoClient.user.username.$get({
-						query: {
-							username: values.username,
+					const response = await honoClient.user.username.$get(
+						{
+							query: {
+								username: values.username,
+							},
 						},
-					});
+						{
+							headers: {
+								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+							},
+						},
+					);
 					if (response.ok) {
 						const { result } = await response.json();
 						if (result) {

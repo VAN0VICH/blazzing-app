@@ -5,7 +5,7 @@ declare global {
 			REPLICACHE_KEY: string;
 			PARTYKIT_HOST: string;
 			WORKER_URL: string;
-			LIVEKIT_SERVER_URL: string;
+			BLAZZING_PUBLISHABLE_KEY: string;
 		};
 	}
 }

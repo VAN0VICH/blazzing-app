@@ -8,6 +8,7 @@ const WebEnvSchema = z.object({
 	HONEYPOT_SECRET: z.string().optional(),
 	SESSION_SECRET: z.string().optional(),
 	STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+	BLAZZING_PUBLISHABLE_KEY: z.string(),
 });
 
 type WebEnv = z.infer<typeof WebEnvSchema>;

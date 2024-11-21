@@ -21,6 +21,11 @@ export const Authentication = ({
 		validateSession: async (sessionID: string) => {
 			const response = await fetch(
 				`${env.WORKER_URL}/auth/user-and-session?sessionID=${sessionID}`,
+				{
+					headers: {
+						"x-publishable-key": env.BLAZZING_PUBLISHABLE_KEY,
+					},
+				},
 			);
 			const { session, user } = (await response.json()) as Auth;
 
@@ -38,6 +43,7 @@ export const Authentication = ({
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
+						"x-publishable-key": env.BLAZZING_PUBLISHABLE_KEY,
 					},
 					body: JSON.stringify({ sessionID }),
 				});
@@ -57,6 +63,7 @@ export const Authentication = ({
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					"x-publishable-key": env.BLAZZING_PUBLISHABLE_KEY,
 				},
 				body: JSON.stringify({ authID, expiresAt: expiresAt.toISOString() }),
 			});
@@ -69,6 +76,7 @@ export const Authentication = ({
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
+					"x-publishable-key": env.BLAZZING_PUBLISHABLE_KEY,
 				},
 				body: JSON.stringify({ sessionID }),
 			});
@@ -76,6 +84,9 @@ export const Authentication = ({
 		deleteExpiredSessions: () => {
 			return fetch(`${env.WORKER_URL}/auth/delete-expired-sessions`, {
 				method: "POST",
+				headers: {
+					"x-publishable-key": env.BLAZZING_PUBLISHABLE_KEY,
+				},
 			});
 		},
 		readBearerToken: (authorizationHeader: string) => {

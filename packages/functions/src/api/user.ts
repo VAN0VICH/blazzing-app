@@ -1,10 +1,10 @@
 import { UserService } from "@blazzing-app/core";
+import type { Db } from "@blazzing-app/db";
 import { Database } from "@blazzing-app/shared";
 import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
 import { UserSchema } from "@blazzing-app/validators/server";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { Console, Effect } from "effect";
-import { getDB } from "../lib/db";
 import { getAuthUser } from "../lib/get-user";
 export namespace UserApi {
 	export const route = new OpenAPIHono<{
@@ -36,7 +36,7 @@ export namespace UserApi {
 			//@ts-ignore
 			async (c) => {
 				const { id } = c.req.valid("query");
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 
 				const user = await db.query.users.findFirst({
 					where: (users, { eq }) => eq(users.id, id),
@@ -75,8 +75,7 @@ export namespace UserApi {
 			async (c) => {
 				const { username } = c.req.valid("query");
 
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
-
+				const db = c.get("db" as never) as Db;
 				const user = await db.query.users.findFirst({
 					where: (users, { eq }) => eq(users.username, username),
 					with: {
@@ -125,7 +124,7 @@ export namespace UserApi {
 					console.error("Unauthorized");
 					return c.json({ success: false, message: "Unauthorized" });
 				}
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 				await Effect.runPromise(
 					Effect.gen(function* () {
 						yield* Effect.tryPromise(() =>

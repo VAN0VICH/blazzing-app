@@ -11,7 +11,14 @@ export async function action({ context }: ActionFunctionArgs) {
 
 	const client = hc<Routes>(env.WORKER_URL);
 
-	const response = await client.auth["create-test-user"].$post();
+	const response = await client.auth["create-test-user"].$post(
+		{},
+		{
+			headers: {
+				"x-publishable-key": env.BLAZZING_PUBLISHABLE_KEY,
+			},
+		},
+	);
 	if (response.ok) {
 		const { success, message, session: userSession } = await response.json();
 

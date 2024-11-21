@@ -31,15 +31,22 @@ export const loader: LoaderFunction = async ({ context, params }) => {
 		});
 	}
 	const client = hc<Routes>(context.cloudflare.env.WORKER_URL);
-	const variantResponse = await client.variant.handle.$get({
-		query: {
-			handle,
+	const variantResponse = await client.variant.handle.$get(
+		{
+			query: {
+				handle,
+			},
 		},
-	});
+		{
+			headers: {
+				"x-publishable-key": context.cloudflare.env.BLAZZING_PUBLISHABLE_KEY,
+			},
+		},
+	);
 	if (variantResponse.ok) {
-		const { result: variant } = await variantResponse.json();
+		const { result: variants } = await variantResponse.json();
 
-		if (!variant) {
+		if (!variants[0]) {
 			throw new Response(null, {
 				status: 404,
 				statusText: "Not Found",
@@ -47,7 +54,7 @@ export const loader: LoaderFunction = async ({ context, params }) => {
 		}
 		return json(
 			{
-				variant,
+				variant: variants[0],
 			},
 			{ headers: { "Cache-Control": "public, max-age=31536000" } },
 		);

@@ -4,7 +4,7 @@ import { vitePlugin as remix } from "@remix-run/dev";
 import { flatRoutes } from "remix-flat-routes";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
-import MillionLint from "@million/lint";
+// import MillionLint from "@million/lint";
 
 export default defineConfig({
 	ssr: {
@@ -21,7 +21,7 @@ export default defineConfig({
 			exclude: [...defaultOptions.exclude, "/assets/**", "/app/**"],
 			injectClientScript: false,
 		}),
-		MillionLint.vite(),
+		// MillionLint.vite(),
 		remix({
 			future: {
 				v3_fetcherPersist: true,

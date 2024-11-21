@@ -1,3 +1,5 @@
+import type { Db } from "@blazzing-app/db";
+import { generateID } from "@blazzing-app/utils";
 import {
 	CheckoutFormSchema,
 	type WorkerBindings,
@@ -5,8 +7,6 @@ import {
 } from "@blazzing-app/validators";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import Stripe from "stripe";
-import { getDB } from "../lib/db";
-import { generateID } from "@blazzing-app/utils";
 export namespace PaymentApi {
 	export const route = new OpenAPIHono<{
 		Bindings: WorkerBindings & WorkerEnv;
@@ -44,8 +44,8 @@ export namespace PaymentApi {
 			//@ts-ignore
 			async (c) => {
 				const { cartID, checkoutInfo } = c.req.valid("json");
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
 				const stripe = new Stripe(c.env.STRIPE_SECRET_KEY);
+				const db = c.get("db" as never) as Db;
 				const cart = await db.query.carts.findFirst({
 					where: (carts, { eq }) => eq(carts.id, cartID),
 					with: {

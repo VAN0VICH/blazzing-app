@@ -222,7 +222,7 @@ export function ProductInput({
 						variantID={baseVariant?.id}
 						prices={baseVariant?.prices ?? []}
 					/>
-					<Organize product={product} />
+					<Organize product={product} updateProduct={updateProduct} />
 					<Attributes variant={baseVariant} updateVariant={updateVariant} />
 				</Flex>
 			</Flex>

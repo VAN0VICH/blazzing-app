@@ -1,3 +1,4 @@
+import type { Db } from "@blazzing-app/db";
 import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
 import {
 	PriceSchema,
@@ -5,7 +6,6 @@ import {
 	VariantSchema,
 } from "@blazzing-app/validators/server";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { getDB } from "../lib/db";
 
 const FullProductSchema = ProductSchema.extend({
 	baseVariant: VariantSchema.extend({
@@ -66,7 +66,7 @@ export namespace ProductApi {
 						result: JSON.parse(cached),
 					});
 				}
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 
 				const variants = await db.query.variants.findMany({
 					where: (variants, { inArray }) =>
@@ -154,7 +154,7 @@ export namespace ProductApi {
 						result: JSON.parse(cached),
 					});
 				}
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 
 				const products = await db.query.products.findMany({
 					where: (products, { eq }) => eq(products.status, "published"),
@@ -221,7 +221,7 @@ export namespace ProductApi {
 						result: JSON.parse(cached),
 					});
 				}
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 
 				const products = await db.query.products.findMany({
 					where: (products, { eq }) => eq(products.collectionHandle, handle),

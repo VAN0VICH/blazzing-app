@@ -1,7 +1,7 @@
+import type { Db } from "@blazzing-app/db";
 import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
 import { OrderSchema } from "@blazzing-app/validators/server";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { getDB } from "../lib/db";
 import { cache } from "hono/cache";
 export namespace OrderApi {
 	export const route = new OpenAPIHono<{
@@ -46,7 +46,7 @@ export namespace OrderApi {
 			}
 
 			if (!id) return [];
-			const db = getDB({ connectionString: c.env.DATABASE_URL });
+			const db = c.get("db" as never) as Db;
 			const result = await db.query.orders.findMany({
 				where: (orders, { inArray }) =>
 					inArray(orders.id, typeof id === "string" ? [id] : id),

@@ -17,6 +17,7 @@ type WorkerEnv = {
 	ACCOUNT_ID: string;
 	STRIPE_SECRET_KEY: string;
 	STRIPE_WEBHOOK_SECRET: string;
+	BLAZZING_PUBLISHABLE_KEY: string;
 };
 
 export type { WorkerBindings, WorkerEnv };

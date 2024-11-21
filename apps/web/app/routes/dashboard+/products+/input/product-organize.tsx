@@ -1,30 +1,63 @@
-import { Form } from "@blazzing-app/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@blazzing-app/ui/form";
 import { Icons } from "@blazzing-app/ui/icons";
 import { TagInput } from "@blazzing-app/ui/tag-input";
+import type { UpdateProduct } from "@blazzing-app/validators";
 import type { Product } from "@blazzing-app/validators/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { Card, Flex, Heading, IconButton, Text } from "@radix-ui/themes";
+import {
+	Card,
+	Flex,
+	Heading,
+	IconButton,
+	Text,
+	TextField,
+} from "@radix-ui/themes";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 const schema = z.object({
 	tags: z.array(z.string()),
+	collectionHandle: z.string().optional(),
 });
 
 type ProductOrganize = z.infer<typeof schema>;
 export function Organize({
 	product,
+	updateProduct,
 }: {
 	product: Product | undefined;
+	updateProduct: (updates: UpdateProduct["updates"]) => Promise<void>;
 }) {
 	const [editMode, setEditMode] = React.useState(false);
 	const [tags, setTags] = React.useState<string[]>([]);
 
 	const methods = useForm<ProductOrganize>({
 		resolver: zodResolver(schema),
+		defaultValues: {
+			collectionHandle: product?.collectionHandle ?? "",
+			tags: [],
+		},
 	});
-	console.log("product", product);
+	const onSave = React.useCallback(
+		async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+			e.preventDefault();
+			const values = methods.getValues();
+			if (!product) return;
+			if (
+				values.collectionHandle &&
+				values.collectionHandle !== product.collectionHandle
+			) {
+				await updateProduct({
+					...(values.collectionHandle && {
+						collectionHandle: values.collectionHandle,
+					}),
+				});
+			}
+			setEditMode(false);
+		},
+		[product, updateProduct, methods.getValues],
+	);
 	return (
 		<Form {...methods}>
 			<Card className="p-0 w-full">
@@ -40,11 +73,7 @@ export function Organize({
 
 					{editMode ? (
 						<Flex gap="4">
-							<IconButton
-								size="3"
-								variant="ghost"
-								onClick={() => setEditMode(false)}
-							>
+							<IconButton size="3" variant="ghost" onClick={onSave}>
 								<Icons.Check className="size-4" />
 							</IconButton>
 							<IconButton
@@ -64,6 +93,42 @@ export function Organize({
 							<Icons.Edit className="size-4" />
 						</IconButton>
 					)}
+				</Flex>
+				<Flex
+					p="4"
+					height="50px"
+					className="border-b border-border"
+					align="center"
+				>
+					<Text className="w-full" size="2">
+						Collection handle
+					</Text>
+
+					<Flex className="w-full" align="center">
+						{editMode ? (
+							<FormField
+								control={methods.control}
+								name="collectionHandle"
+								render={({ field }) => (
+									<FormItem className="w-full">
+										<FormControl>
+											<TextField.Root
+												variant="soft"
+												{...field}
+												value={field.value ?? ""}
+											/>
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+						) : (
+							<Text size="2">
+								{product?.collectionHandle ?? (
+									<Icons.Minus className="size-4" />
+								)}
+							</Text>
+						)}
+					</Flex>
 				</Flex>
 
 				<Flex

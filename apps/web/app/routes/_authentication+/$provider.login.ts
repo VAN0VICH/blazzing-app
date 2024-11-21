@@ -10,10 +10,14 @@ export async function action({ request, context }: ActionFunctionArgs) {
 
 	const honoClient = hc<Routes>(env.WORKER_URL);
 
-	console.log("url", env.WORKER_URL);
-	console.log("session", session);
-
-	const response = await honoClient.auth.google.$get();
+	const response = await honoClient.auth.google.$get(
+		{},
+		{
+			headers: {
+				"x-publishable-key": env.BLAZZING_PUBLISHABLE_KEY,
+			},
+		},
+	);
 	const url = new URL(request.url);
 	const errorURL = new URL(`${url.origin}/error`);
 	errorURL.searchParams.set("error", "Error authenticating");

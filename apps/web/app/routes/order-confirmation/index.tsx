@@ -17,11 +17,18 @@ export const loader: LoaderFunction = async (args) => {
 
 	const honoClient = hc<Routes>(context.cloudflare.env.WORKER_URL);
 
-	const response = await honoClient.order.id.$get({
-		query: {
-			id,
+	const response = await honoClient.order.id.$get(
+		{
+			query: {
+				id,
+			},
 		},
-	});
+		{
+			headers: {
+				"x-publishable-key": context.cloudflare.env.BLAZZING_PUBLISHABLE_KEY,
+			},
+		},
+	);
 	if (response.ok) {
 		const { result: orders } = await response.json();
 		if (orders.length === 0) {

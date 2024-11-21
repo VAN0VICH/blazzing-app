@@ -82,7 +82,6 @@ export function Attributes({
 		},
 		[variant, updateVariant, methods.getValues],
 	);
-	console.log("variant", variant?.originCountry);
 
 	return (
 		<Form {...methods}>

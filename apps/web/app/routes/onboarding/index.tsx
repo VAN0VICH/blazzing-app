@@ -35,11 +35,19 @@ export async function action({
 	const url = new URL(request.url);
 	const redirectTo = url.searchParams.get("redirectTo");
 	const honoClient = hc<Routes>(env.WORKER_URL);
-	const userResponse = await honoClient.user.username.$get({
-		query: {
-			username: submission.value.username,
+	const userResponse = await honoClient.user.username.$get(
+		{
+			query: {
+				username: submission.value.username,
+			},
 		},
-	});
+
+		{
+			headers: {
+				"x-publishable-key": env.BLAZZING_PUBLISHABLE_KEY,
+			},
+		},
+	);
 	const sessionID = session.get(SESSION_KEY);
 	if (userResponse.ok) {
 		const { result } = await userResponse.json();
@@ -63,6 +71,7 @@ export async function action({
 		{
 			headers: {
 				Authorization: `Bearer ${sessionID}`,
+				"x-publishable-key": env.BLAZZING_PUBLISHABLE_KEY,
 			},
 		},
 	);

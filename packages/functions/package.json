@@ -1,6 +1,6 @@
 {
 	"name": "@blazzing-app/functions",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"type": "module",
 	"publishConfig": {
 		"access": "public"
@@ -47,6 +47,6 @@
 		"@cloudflare/workers-types": "^4.20240529.0",
 		"@types/ws": "^8.5.12",
 		"tsup": "^8.3.5",
-		"wrangler": "^3.80.4"
+		"wrangler": "^3.89.0"
 	}
 }

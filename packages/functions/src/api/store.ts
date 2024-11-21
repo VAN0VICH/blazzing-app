@@ -1,7 +1,7 @@
+import type { Db } from "@blazzing-app/db";
 import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
 import { StoreSchema } from "@blazzing-app/validators/server";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { getDB } from "../lib/db";
 export namespace StoreApi {
 	export const route = new OpenAPIHono<{
 		Bindings: WorkerBindings & WorkerEnv;
@@ -31,7 +31,7 @@ export namespace StoreApi {
 		//@ts-ignore
 		async (c) => {
 			const { name } = c.req.valid("query");
-			const db = getDB({ connectionString: c.env.DATABASE_URL });
+			const db = c.get("db" as never) as Db;
 
 			const store = await db.query.stores.findFirst({
 				where: (stores, { eq }) => eq(stores.name, name),

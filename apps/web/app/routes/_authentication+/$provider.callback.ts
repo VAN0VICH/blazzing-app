@@ -35,12 +35,19 @@ export async function loader({ request, context }: ActionFunctionArgs) {
 	}
 	const client = hc<Routes>(env.WORKER_URL);
 
-	const response = await client.auth["google-callback"].$post({
-		json: {
-			code,
-			codeVerifier,
+	const response = await client.auth["google-callback"].$post(
+		{
+			json: {
+				code,
+				codeVerifier,
+			},
 		},
-	});
+		{
+			headers: {
+				"x-publishable-key": env.BLAZZING_PUBLISHABLE_KEY,
+			},
+		},
+	);
 	if (response.ok) {
 		const {
 			isOnboard,

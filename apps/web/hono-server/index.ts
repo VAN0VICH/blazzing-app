@@ -71,7 +71,6 @@ app
 			} else {
 				const session = getSession(c);
 				const env = WebEnvSchema.parse(c.env);
-				console.log("hello");
 
 				const { session: userSession, user } = await getUserAndSession(
 					c,

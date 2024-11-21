@@ -71,7 +71,12 @@ export const loader: LoaderFunction = async (args) => {
 		request,
 		context: { authUser, cloudflare, userSession },
 	} = args;
-	const { REPLICACHE_KEY, PARTYKIT_HOST, WORKER_URL } = cloudflare.env;
+	const {
+		REPLICACHE_KEY,
+		PARTYKIT_HOST,
+		WORKER_URL,
+		BLAZZING_PUBLISHABLE_KEY,
+	} = cloudflare.env;
 
 	const cookieHeader = request.headers.get("Cookie");
 	const prefsCookie = (await prefs.parse(cookieHeader)) || {};
@@ -81,6 +86,7 @@ export const loader: LoaderFunction = async (args) => {
 			REPLICACHE_KEY,
 			PARTYKIT_HOST,
 			WORKER_URL,
+			BLAZZING_PUBLISHABLE_KEY,
 		},
 
 		requestInfo: {
@@ -108,7 +114,7 @@ function App() {
 	const nonce = useNonce();
 	const preferences = useUserPreferences();
 	return (
-		<Document nonce={nonce} env={data.ENV} theme={preferences.theme ?? "light"}>
+		<Document nonce={nonce} env={data.ENV} theme={preferences.theme ?? "dark"}>
 			<MarketplaceReplicacheProvider>
 				<GlobalReplicacheProvider>
 					<DashboardReplicacheProvider>

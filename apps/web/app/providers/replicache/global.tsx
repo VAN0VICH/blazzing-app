@@ -44,6 +44,7 @@ export function GlobalReplicacheProvider({
 					{
 						headers: {
 							"Content-Type": "application/json",
+							"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
 							...(session && { Authorization: `Bearer ${session.id}` }),
 							...(cartID && { "x-cart-id": cartID }),
 							...(authUser?.userID && { "x-user-id": authUser.userID }),
@@ -55,7 +56,7 @@ export function GlobalReplicacheProvider({
 					response: response.status === 200 ? await response.json() : undefined,
 					httpRequestInfo: {
 						httpStatusCode: response.status,
-						errorMessage: response.statusText,
+						errorMessage: response.status === 200 ? "" : response.statusText,
 					},
 				};
 			},
@@ -69,18 +70,16 @@ export function GlobalReplicacheProvider({
 						},
 					},
 					{
-						...(session && {
-							headers: {
-								"Content-Type": "application/json",
-								Authorization: `Bearer ${session.id}`,
-							},
-						}),
+						headers: {
+							...(session && { Authorization: `Bearer ${session.id}` }),
+							"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+						},
 					},
 				);
 				return {
 					httpRequestInfo: {
 						httpStatusCode: response.status,
-						errorMessage: response.statusText,
+						errorMessage: response.status === 200 ? "" : response.statusText,
 					},
 				};
 			},

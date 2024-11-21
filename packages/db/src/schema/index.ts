@@ -22,3 +22,4 @@ export * from "./auth";
 export * from "./customer";
 export * from "./payment-profile";
 export * from "./stripe";
+export * from "./api-key";

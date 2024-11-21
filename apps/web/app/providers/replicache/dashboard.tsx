@@ -41,6 +41,7 @@ function DashboardReplicacheProvider({
 						headers: {
 							Authorization: `Bearer ${session.id}`,
 							"Content-Type": "application/json",
+							"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
 						},
 					},
 				);
@@ -49,7 +50,7 @@ function DashboardReplicacheProvider({
 					response: response.status === 200 ? await response.json() : undefined,
 					httpRequestInfo: {
 						httpStatusCode: response.status,
-						errorMessage: response.statusText,
+						errorMessage: response.status === 200 ? "" : response.statusText,
 					},
 				};
 			},
@@ -66,13 +67,14 @@ function DashboardReplicacheProvider({
 						headers: {
 							Authorization: `Bearer ${session.id}`,
 							"Content-Type": "application/json",
+							"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
 						},
 					},
 				);
 				return {
 					httpRequestInfo: {
 						httpStatusCode: response.status,
-						errorMessage: response.statusText,
+						errorMessage: response.status === 200 ? "" : response.statusText,
 					},
 				};
 			},

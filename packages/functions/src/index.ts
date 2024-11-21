@@ -13,6 +13,7 @@ import { StoreApi } from "./api/store";
 import { UserApi } from "./api/user";
 import { PaymentApi } from "./api/payment";
 import { VariantApi } from "./api/variant";
+import { withKey } from "./middleware/with-key";
 
 const app = new OpenAPIHono<{ Bindings: WorkerBindings & WorkerEnv }>();
 
@@ -24,6 +25,7 @@ app
 				c.env.ENVIRONMENT === "production"
 					? "https://blazzing.app"
 					: [
+							"http://localhost:3000",
 							"http://localhost:5173",
 							"https://development.blazzing-app.pages.dev",
 							"https://blazzing-app.com",
@@ -42,13 +44,16 @@ app
 					? "https://blazzing.app"
 					: [
 							"http://localhost:5173",
+							"http://localhost:3000",
 							"https://development.blazzing-app.pages.dev",
 							"https://blazzing-app.com",
 							"http://localhost:8788",
 						],
 		});
 		return wrapped(c, next);
-	});
+	})
+	//@ts-ignore
+	.use("*", withKey);
 
 const routes = app
 	.route("/hello", HelloApi.route)

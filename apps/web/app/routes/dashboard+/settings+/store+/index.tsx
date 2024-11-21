@@ -68,11 +68,19 @@ export default function Store() {
 			if (descriptionChanged || nameChanged) {
 				let nameExists = false;
 				if (nameChanged) {
-					const response = await honoClient.store.name.$get({
-						query: {
-							name: values.name,
+					const response = await honoClient.store.name.$get(
+						{
+							query: {
+								name: values.name,
+							},
 						},
-					});
+
+						{
+							headers: {
+								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+							},
+						},
+					);
 					if (response.ok) {
 						const { result } = await response.json();
 						if (result) {

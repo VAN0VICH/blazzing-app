@@ -1,7 +1,7 @@
 import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
-import { getDB } from "../lib/db";
 import { VariantSchema } from "@blazzing-app/validators/server";
+import type { Db } from "@blazzing-app/db";
 
 export namespace VariantApi {
 	export const route = new OpenAPIHono<{
@@ -13,7 +13,7 @@ export namespace VariantApi {
 			path: "/handle",
 			request: {
 				query: z.object({
-					handle: z.string(),
+					handle: z.string().or(z.array(z.string())),
 				}),
 			},
 			responses: {
@@ -21,7 +21,7 @@ export namespace VariantApi {
 					content: {
 						"application/json": {
 							schema: z.object({
-								result: z.nullable(VariantSchema),
+								result: z.array(VariantSchema),
 							}),
 						},
 					},
@@ -31,10 +31,20 @@ export namespace VariantApi {
 		}),
 		async (c) => {
 			const { handle } = c.req.valid("query");
-			const db = getDB({ connectionString: c.env.DATABASE_URL });
+			const db = c.get("db" as never) as Db;
+			const cached = await c.env.KV.get(`variant_${JSON.stringify(handle)}`);
+			if (cached) {
+				return c.json({
+					result: JSON.parse(cached),
+				});
+			}
 
-			const variant = await db.query.variants.findFirst({
-				where: (variants, { eq }) => eq(variants.handle, handle),
+			const variants = await db.query.variants.findMany({
+				where: (variants, { inArray }) =>
+					inArray(
+						variants.handle,
+						typeof handle === "string" ? [handle] : handle,
+					),
 				with: {
 					optionValues: {
 						with: {
@@ -59,12 +69,13 @@ export namespace VariantApi {
 					prices: true,
 				},
 			});
-			if (!variant) {
-				return c.json({ result: null });
-			}
+			await c.env.KV.put(
+				`variant_${JSON.stringify(handle)}`,
+				JSON.stringify(variants),
+			);
 
 			return c.json({
-				result: variant,
+				result: variants,
 			});
 		},
 	);

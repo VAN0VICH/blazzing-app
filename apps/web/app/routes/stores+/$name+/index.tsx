@@ -20,11 +20,18 @@ export const loader: LoaderFunction = async (args) => {
 		});
 	}
 	const client = hc<Routes>(context.cloudflare.env.WORKER_URL);
-	const storeResponse = await client.store.name.$get({
-		query: {
-			name,
+	const storeResponse = await client.store.name.$get(
+		{
+			query: {
+				name,
+			},
 		},
-	});
+		{
+			headers: {
+				"x-publishable-key": context.cloudflare.env.BLAZZING_PUBLISHABLE_KEY,
+			},
+		},
+	);
 	if (storeResponse.ok) {
 		const { result: store } = await storeResponse.json();
 

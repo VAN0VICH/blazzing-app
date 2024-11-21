@@ -1,5 +1,5 @@
 import { UserService } from "@blazzing-app/core";
-import { schema } from "@blazzing-app/db";
+import { schema, type Db } from "@blazzing-app/db";
 import { Database } from "@blazzing-app/shared";
 import { generateID } from "@blazzing-app/utils";
 import type {
@@ -14,7 +14,6 @@ import { generateCodeVerifier, generateState, Google } from "arctic";
 import { eq, lte } from "drizzle-orm";
 import { Console, Effect } from "effect";
 import { createDate, TimeSpan } from "oslo";
-import { getDB } from "../lib/db";
 export namespace AuthApi {
 	export const route = new OpenAPIHono<{
 		Bindings: WorkerBindings & WorkerEnv;
@@ -46,7 +45,7 @@ export namespace AuthApi {
 			async (c) => {
 				const { sessionID } = c.req.valid("query");
 
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 
 				const session = await db.query.sessions.findFirst({
 					where: (sessions, { eq }) => eq(sessions.id, sessionID),
@@ -91,7 +90,7 @@ export namespace AuthApi {
 			}),
 			async (c) => {
 				const { authID, expiresAt } = c.req.valid("json");
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 
 				const session = {
 					id: generateID({ prefix: "session" }),
@@ -133,8 +132,9 @@ export namespace AuthApi {
 			}),
 			async (c) => {
 				const { sessionID } = c.req.valid("json");
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 				await db
+
 					.delete(schema.sessions)
 					.where(eq(schema.sessions.id, sessionID));
 				return c.json(
@@ -164,7 +164,7 @@ export namespace AuthApi {
 				},
 			}),
 			async (c) => {
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 				await db
 					.delete(schema.sessions)
 					.where(lte(schema.sessions.expiresAt, new Date().toISOString()));
@@ -262,7 +262,7 @@ export namespace AuthApi {
 			}),
 			async (c) => {
 				const { code, codeVerifier } = c.req.valid("json");
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 				try {
 					const google = new Google(
 						c.env.GOOGLE_CLIENT_ID,
@@ -371,7 +371,7 @@ export namespace AuthApi {
 				},
 			}),
 			async (c) => {
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 
 				const testID = `test-${generateID({})}`;
 

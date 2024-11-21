@@ -67,12 +67,20 @@ export const DesktopCheckout = ({ cartID }: { cartID: string }) => {
 		// 	},
 		// });
 
-		const response = await honoClient.cart["complete-cart"].$post({
-			json: {
-				checkoutInfo: data,
-				id: cartID,
+		const response = await honoClient.cart["complete-cart"].$post(
+			{
+				json: {
+					checkoutInfo: data,
+					id: cartID,
+				},
 			},
-		});
+
+			{
+				headers: {
+					"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+				},
+			},
+		);
 		if (response.ok) {
 			const { result: orderIDs } = await response.json();
 

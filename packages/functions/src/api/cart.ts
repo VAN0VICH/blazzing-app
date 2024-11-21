@@ -1,4 +1,5 @@
 import { CartService } from "@blazzing-app/core";
+import type { Db } from "@blazzing-app/db";
 import { Cloudflare, Database } from "@blazzing-app/shared";
 import {
 	CheckoutFormSchema,
@@ -13,7 +14,6 @@ import {
 } from "@blazzing-app/validators/server";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { Effect } from "effect";
-import { getDB } from "../lib/db";
 const fullCartSchema = CartSchema.extend({
 	items: z.array(
 		LineItemSchema.extend({
@@ -67,7 +67,7 @@ export namespace CartApi {
 			}),
 			async (c) => {
 				const { id } = c.req.valid("param");
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
+				const db = c.get("db" as never) as Db;
 
 				const cart = await db.query.carts.findFirst({
 					where: (carts, { eq }) => eq(carts.id, id),
@@ -135,8 +135,8 @@ export namespace CartApi {
 			//@ts-ignore
 			async (c) => {
 				const { checkoutInfo, id } = c.req.valid("json");
-				const db = getDB({ connectionString: c.env.DATABASE_URL });
 
+				const db = c.get("db" as never) as Db;
 				const orderIDs = await Effect.runPromise(
 					CartService.completeCart({
 						checkoutInfo,

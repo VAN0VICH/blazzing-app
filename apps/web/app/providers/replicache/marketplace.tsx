@@ -46,12 +46,10 @@ function MarketplaceReplicacheProvider({
 						},
 					},
 					{
-						...(session && {
-							headers: {
-								Authorization: `Bearer ${session.id}`,
-								"Content-Type": "application/json",
-							},
-						}),
+						headers: {
+							...(session && { Authorization: `Bearer ${session.id}` }),
+							"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+						},
 					},
 				);
 
@@ -59,7 +57,7 @@ function MarketplaceReplicacheProvider({
 					response: response.status === 200 ? await response.json() : undefined,
 					httpRequestInfo: {
 						httpStatusCode: response.status,
-						errorMessage: response.statusText,
+						errorMessage: response.status === 200 ? "" : response.statusText,
 					},
 				};
 			},
@@ -73,18 +71,16 @@ function MarketplaceReplicacheProvider({
 						},
 					},
 					{
-						...(session && {
-							headers: {
-								Authorization: `Bearer ${session.id}`,
-								"Content-Type": "application/json",
-							},
-						}),
+						headers: {
+							...(session && { Authorization: `Bearer ${session.id}` }),
+							"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+						},
 					},
 				);
 				return {
 					httpRequestInfo: {
 						httpStatusCode: response.status,
-						errorMessage: response.statusText,
+						errorMessage: response.status === 200 ? "" : response.statusText,
 					},
 				};
 			},
