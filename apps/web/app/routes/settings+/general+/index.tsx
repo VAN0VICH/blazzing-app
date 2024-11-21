@@ -187,6 +187,7 @@ export default function General() {
 															<TextField.Root
 																variant="soft"
 																{...field}
+																value={field.value ?? ""}
 															/>
 														</FormControl>
 													</FormItem>
@@ -222,6 +223,7 @@ export default function General() {
 															variant="soft"
 															className="w-full"
 															{...field}
+															value={field.value ?? ""}
 														/>
 													</FormControl>
 												</FormItem>
@@ -252,6 +254,7 @@ export default function General() {
 																variant="soft"
 																className="w-full"
 																{...field}
+																value={field.value ?? ""}
 															/>
 														</FormControl>
 													</FormItem>
@@ -278,6 +281,7 @@ export default function General() {
 																variant="soft"
 																className="max-w-[300px]"
 																{...field}
+																value={field.value ?? ""}
 															/>
 														</FormControl>
 													</FormItem>

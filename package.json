@@ -1,6 +1,5 @@
 {
 	"name": "blazzing-app",
-	"private": true,
 	"engines": {
 		"node": ">=20.16.0"
 	},
@@ -21,7 +20,9 @@
 		"lint:ws": "pnpm dlx sherif@latest",
 		"postinstall": "pnpm lint:ws",
 		"typecheck": "turbo run typecheck",
-		"ui-add": "turbo run ui-add"
+		"ui-add": "turbo run ui-add",
+		"publish-packages": "turbo run build lint && changeset version && changeset publish",
+		"changeset-init": "turbo run changeset init"
 	},
 	"devDependencies": {
 		"@turbo/gen": "^2.0.13",

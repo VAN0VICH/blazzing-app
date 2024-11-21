@@ -1,25 +1,30 @@
 {
 	"name": "@blazzing-app/db",
 	"version": "0.1.0",
-	"private": true,
 	"type": "module",
-	"main": "src/index.ts",
-	"types": "src/index.ts",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"publishConfig": {
+		"access": "public"
+	},
 	"license": "MIT",
 	"exports": {
 		".": "./src/index.ts",
 		"./*": "./src/*.tsx"
 	},
 	"scripts": {
+		"build": "tsup src/index.ts --format cjs --dts",
 		"clean": "rm -rf .turbo node_modules",
 		"lint": "biome lint src",
 		"beautify": "biome format ./src --write",
 		"format": "biome format ./src",
-		"migrate": "tsx src/migrate.ts",
 		"typecheck": "tsc --noEmit",
+		"migrate": "tsx src/migrate.ts",
 		"push": "drizzle-kit push",
 		"studio": "drizzle-kit studio",
-		"generate": "drizzle-kit generate:pg"
+		"generate": "drizzle-kit generate:pg",
+		"publish-packages": "pnpm changeset version && changeset publish --access public",
+		"changeset-init": "pnpm changeset init"
 	},
 	"dependencies": {
 		"@effect/schema": "^0.70.4",
@@ -33,8 +38,10 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@blazzing-app/tsconfig": "workspace:^0.1.0",
+		"@changesets/cli": "^2.27.9",
 		"dotenv-cli": "^7.4.2",
 		"drizzle-kit": "^0.24.0",
+		"tsup": "^8.3.5",
 		"tsx": "^4.7.2",
 		"typescript": "^5.5.4"
 	}

@@ -25,7 +25,9 @@ export const products = pgTable(
 		id: varchar("id").notNull().primaryKey(),
 		baseVariantID: varchar("base_variant_id").notNull(),
 		metadata: json("metadata").$type<Record<string, string>>(),
-		collectionID: varchar("collection_pk").references(() => collections.id),
+
+		collectionID: varchar("collection_id").references(() => collections.id),
+		collectionHandle: varchar("collection_handle"),
 		score: integer("score").default(0),
 		status: text("status", {
 			enum: productStatus,
@@ -52,6 +54,9 @@ export const products = pgTable(
 		scoreIndex: index("score_index").on(product.score),
 		baseVariantIDIndex: index("base_variant_id_index").on(
 			product.baseVariantID,
+		),
+		collectionHandleIndex: index("collection_handle_index").on(
+			product.collectionHandle,
 		),
 	}),
 );

@@ -1,15 +1,12 @@
-import { ImageSchema, schema } from "@blazzing-app/db";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { schema } from "@blazzing-app/db";
+import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+import { PriceSchema, VariantSchema } from "../server/entities";
 import { UpdateImagesOrderSchema } from "./image";
-import { InsertPriceSchema, PriceSchema } from "./price";
+import { InsertPriceSchema } from "./price";
 
 export const InsertVariantSchema = createInsertSchema(schema.variants);
 
-export const VariantSchema = createSelectSchema(schema.variants).extend({
-	thumbnail: ImageSchema.optional().nullable(),
-	images: z.array(ImageSchema).optional().nullable(),
-});
 export type InsertVariant = z.infer<typeof InsertVariantSchema>;
 export const GenerateVariantsSchema = z.object({
 	productID: z.string(),

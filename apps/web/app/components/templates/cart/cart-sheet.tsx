@@ -25,7 +25,6 @@ import { LineItem, LineItemSkeleton } from "../line-item/line-item";
 import { Total } from "./total-info";
 
 export const CartSheet = ({ cartID }: { cartID: string | null }) => {
-	const rep = useReplicache((state) => state.globalRep);
 	const isInitialized = useGlobalStore((state) => state.isInitialized);
 	const cartMap = useGlobalStore((state) => state.cartMap);
 	const cart = cartMap.get(cartID ?? "");
@@ -35,6 +34,7 @@ export const CartSheet = ({ cartID }: { cartID: string | null }) => {
 	const [parent] = useAutoAnimate({ duration: 200 });
 
 	const { opened, setOpened } = useCartState();
+	const rep = useReplicache((state) => state.globalRep);
 
 	const deleteItem = React.useCallback(
 		async (id: string) => {

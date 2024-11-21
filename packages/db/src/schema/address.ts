@@ -7,8 +7,7 @@ export const addresses = pgTable(
 	"addresses",
 	{
 		id: varchar("id").notNull().primaryKey(),
-
-		type: text("type", { enum: ["shipping", "billing", "living"] }),
+		type: text("type", { enum: ["shipping", "billing", "living"] as const }),
 		line1: varchar("line_1"),
 		line2: varchar("line_2"),
 		city: varchar("city"),

@@ -1,17 +1,25 @@
 {
 	"name": "@blazzing-app/functions",
 	"version": "0.1.0",
-	"private": true,
 	"type": "module",
+	"publishConfig": {
+		"access": "public"
+	},
+
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": "./src/index.ts",
 		"./*": "./src/*.tsx"
 	},
 	"license": "MIT",
 	"scripts": {
+		"build": "tsup src/index.ts --format cjs --dts",
 		"dev": "wrangler dev src/index.ts",
 		"deploy-prod": "wrangler deploy --minify -e production src/index.ts",
-		"deploy-dev": "wrangler deploy --minify -e dev src/index.ts"
+		"deploy-dev": "wrangler deploy --minify -e dev src/index.ts",
+		"publish-packages": "pnpm changeset version && changeset publish",
+		"changeset-init": "pnpm changeset init"
 	},
 	"dependencies": {
 		"@blazzing-app/core": "workspace:^",
@@ -25,7 +33,7 @@
 		"@hono/zod-openapi": "^0.16.2",
 		"arctic": "^1.9.2",
 		"drizzle-orm": "^0.33.0",
-		"effect": "^3.8.4",
+		"effect": "^3.10.15",
 		"hono": "^4.6.2",
 		"oslo": "^1.2.1",
 		"stripe": "^17.1.0",
@@ -35,8 +43,10 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@blazzing-app/tsconfig": "workspace:*",
+		"@changesets/cli": "^2.27.9",
 		"@cloudflare/workers-types": "^4.20240529.0",
 		"@types/ws": "^8.5.12",
+		"tsup": "^8.3.5",
 		"wrangler": "^3.80.4"
 	}
 }

@@ -6,7 +6,6 @@ import {
 } from "@remix-run/react";
 import { captureRemixErrorBoundaryError } from "@sentry/remix";
 import { getErrorMessage } from "~/utils/helpers";
-
 type StatusHandler = (info: {
 	error: ErrorResponse;
 	params: Record<string, string | undefined>;

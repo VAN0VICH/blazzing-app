@@ -1,10 +1,7 @@
-import {
-	VariantSchema,
-	type WorkerBindings,
-	type WorkerEnv,
-} from "@blazzing-app/validators";
+import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { getDB } from "../lib/db";
+import { VariantSchema } from "@blazzing-app/validators/server";
 
 export namespace VariantApi {
 	export const route = new OpenAPIHono<{

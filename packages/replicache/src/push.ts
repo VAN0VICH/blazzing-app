@@ -1,6 +1,6 @@
 import { Clock, Effect, Layer } from "effect";
 
-import { schema, tableNameToTableMap, type Db } from "@blazzing-app/db";
+import { schema, type Db } from "@blazzing-app/db";
 import { AuthContext, Database } from "@blazzing-app/shared";
 import {
 	MutatorNotFoundError,
@@ -64,7 +64,6 @@ export const push = ({
 									Database,
 									Database.of({
 										manager: transaction,
-										tableNameToTableMap,
 									}),
 								);
 

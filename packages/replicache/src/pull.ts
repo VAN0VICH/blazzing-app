@@ -1,7 +1,7 @@
 import { Clock, Effect, Layer } from "effect";
 import type { PatchOperation, PullResponseOKV1 } from "replicache";
 
-import { tableNameToTableMap, type Db } from "@blazzing-app/db";
+import type { Db } from "@blazzing-app/db";
 import { AuthContext, Database, type Cloudflare } from "@blazzing-app/shared";
 import {
 	NeonDatabaseError,
@@ -189,7 +189,6 @@ export const pull = ({
 							Effect.provide(
 								Layer.succeed(Database, {
 									manager: transaction,
-									tableNameToTableMap,
 								}),
 							),
 						),

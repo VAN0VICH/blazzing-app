@@ -1,6 +1,6 @@
 import { schema } from "@blazzing-app/db";
 import { Cloudflare, Database } from "@blazzing-app/shared";
-import { cartSubtotal, generateID } from "@blazzing-app/utils";
+import { generateID } from "@blazzing-app/utils";
 import {
 	CartError,
 	CheckoutFormSchema,
@@ -11,6 +11,7 @@ import { eq, sql } from "drizzle-orm";
 import { Console, Effect } from "effect";
 import { z } from "zod";
 import { fn } from "../util/fn";
+import { cartSubtotal } from "../business";
 
 export namespace CartService {
 	export const completeCart = fn(

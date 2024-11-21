@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 import { schema } from "@blazzing-app/db";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import { createInsertSchema } from "drizzle-zod";
+import { ProductSchema } from "../server/entities";
 import { InsertVariantSchema } from "./variant";
 
 const InsertProductSchema = createInsertSchema(schema.products).extend({
 	baseVariant: InsertVariantSchema.optional(),
 });
-export const ProductSchema = createSelectSchema(schema.products);
 export const PublishedProductSchema = ProductSchema;
 export type InsertProduct = z.infer<typeof InsertProductSchema>;
 export const CreateProductSchema = z.object({

@@ -1,6 +1,6 @@
 import { Icons } from "@blazzing-app/ui/icons";
 import { toast } from "@blazzing-app/ui/toast";
-import { getLineItemPriceAmount } from "@blazzing-app/utils";
+import { getLineItemPriceAmount } from "@blazzing-app/core";
 import type { LineItem as LineItemType } from "@blazzing-app/validators/client";
 import {
 	Avatar,

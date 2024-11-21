@@ -5,5 +5,5 @@
 		"lib": ["ES2023", "dom"],
 		"types": ["@cloudflare/workers-types"]
 	},
-	"exclude": ["node_modules"]
+	"exclude": ["node_modules", ".changeset", "dist"]
 }

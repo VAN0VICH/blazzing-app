@@ -16,6 +16,7 @@
 		"format": "biome format app"
 	},
 	"dependencies": {
+		"@blazzing-app/core": "workspace:^",
 		"@blazzing-app/functions": "workspace:^",
 		"@blazzing-app/replicache": "workspace:^",
 		"@blazzing-app/ui": "workspace:^",
@@ -40,7 +41,7 @@
 		"@tanstack/react-virtual": "^3.10.8",
 		"@uidotdev/usehooks": "^2.4.1",
 		"base64-arraybuffer": "^1.0.2",
-		"effect": "^3.8.4",
+		"effect": "^3.10.15",
 		"framer-motion": "^11.3.30",
 		"fuse.js": "^7.0.0",
 		"hono": "^4.6.2",

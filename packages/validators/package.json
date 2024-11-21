@@ -1,8 +1,12 @@
 {
 	"name": "@blazzing-app/validators",
-	"private": true,
 	"version": "0.1.0",
 	"type": "module",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"publishConfig": {
+		"access": "public"
+	},
 	"exports": {
 		".": "./src/index.ts",
 		"./client": "./src/client/entities.ts",
@@ -10,13 +14,15 @@
 	},
 	"license": "MIT",
 	"scripts": {
-		"build": "tsc",
+		"build": "tsup src/index.ts --format cjs --dts",
 		"clean": "git clean -xdf .cache .turbo dist node_modules",
 		"dev": "tsc",
 		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
 		"beautify": "biome format ./src --write",
 		"lint": "biome lint src",
-		"format": "biome format ./src"
+		"format": "biome format ./src",
+		"publish-packages": "pnpm run build lint && changeset version && changeset publish",
+		"changeset-init": "pnpm changeset init"
 	},
 	"dependencies": {
 		"drizzle-zod": "^0.5.1",
@@ -25,7 +31,10 @@
 	"devDependencies": {
 		"@blazzing-app/db": "workspace:*",
 		"@blazzing-app/tsconfig": "workspace:*",
+		"@changesets/cli": "^2.27.9",
 		"@cloudflare/workers-types": "^4.20240529.0",
+		"add": "^2.0.6",
+		"tsup": "^8.3.5",
 		"typescript": "^5.5.4"
 	}
 }

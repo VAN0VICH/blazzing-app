@@ -8,6 +8,7 @@ import {
 	NotFound,
 	ProductDuplicateSchema,
 	UpdateProductSchema,
+	type InsertProduct,
 	type InsertVariant,
 } from "@blazzing-app/validators";
 
@@ -16,7 +17,6 @@ import { Database } from "@blazzing-app/shared";
 import { toUrlFriendly } from "@blazzing-app/utils";
 import type {
 	Price,
-	Product,
 	ProductOption,
 	ProductOptionValue,
 	Variant,
@@ -274,7 +274,7 @@ const duplicate = fn(ProductDuplicateSchema, (input) =>
 				version: 0,
 				updatedBy: null,
 				type: "digital",
-			} satisfies Product,
+			} satisfies InsertProduct,
 			"products",
 		);
 

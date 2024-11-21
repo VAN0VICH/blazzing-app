@@ -1,4 +1,3 @@
-import { cartSubtotal } from "@blazzing-app/utils";
 import React from "react";
 import type { Cart, LineItem, Order } from "@blazzing-app/validators/client";
 import { cn } from "@blazzing-app/ui";
@@ -6,6 +5,7 @@ import { Effect, pipe } from "effect";
 import { toast } from "@blazzing-app/ui/toast";
 import Price from "~/components/price";
 import { Box, Flex, Separator, Text } from "@radix-ui/themes";
+import { cartSubtotal } from "@blazzing-app/core";
 export const Total = React.forwardRef<
 	HTMLDivElement,
 	React.HTMLAttributes<HTMLDivElement> & {

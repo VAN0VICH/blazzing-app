@@ -1,7 +1,12 @@
 {
 	"name": "@blazzing-app/core",
 	"version": "0.1.0",
-	"private": true,
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"publishConfig": {
+		"access": "public"
+	},
+
 	"type": "module",
 	"exports": {
 		".": "./src/index.ts",
@@ -9,13 +14,15 @@
 	},
 	"license": "MIT",
 	"scripts": {
-		"build": "tsc",
+		"build": "tsup src/index.ts --format cjs --dts",
 		"clean": "git clean -xdf .cache .turbo dist node_modules",
 		"dev": "tsc",
 		"format": "biome format src",
 		"lint": "biome lint src",
 		"beautify": "biome format ./src --write",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"publish-packages": "pnpm changeset version && changeset publish",
+		"changeset-init": "pnpm changeset init"
 	},
 	"dependencies": {
 		"@blazzing-app/db": "workspace:*",
@@ -29,7 +36,7 @@
 		"arctic": "^1.9.2",
 		"drizzle-orm": "^0.33.0",
 		"drizzle-zod": "^0.5.1",
-		"effect": "^3.8.4",
+		"effect": "^3.10.15",
 		"jsonwebtoken": "^9.0.2",
 		"livekit-server-sdk": "^2.6.1",
 		"oslo": "^1.2.1",
@@ -39,9 +46,12 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@blazzing-app/tsconfig": "workspace:*",
+		"@changesets/cli": "^2.27.9",
 		"@cloudflare/workers-types": "^4.20240529.0",
+		"add": "^2.0.6",
 		"dotenv-cli": "^7.4.2",
 		"drizzle-kit": "^0.24.0",
+		"tsup": "^8.3.5",
 		"typescript": "^5.5.4"
 	}
 }

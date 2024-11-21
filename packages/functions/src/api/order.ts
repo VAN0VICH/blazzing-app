@@ -38,7 +38,13 @@ export namespace OrderApi {
 		async (c) => {
 			console.log("what");
 			const { id } = c.req.valid("query");
-			console.log("id", id);
+			const cached = await c.env.KV.get(`order_${JSON.stringify(id)}`);
+			if (cached) {
+				return c.json({
+					result: JSON.parse(cached),
+				});
+			}
+
 			if (!id) return [];
 			const db = getDB({ connectionString: c.env.DATABASE_URL });
 			const result = await db.query.orders.findMany({
@@ -81,6 +87,7 @@ export namespace OrderApi {
 			});
 
 			if (!result) return [];
+			await c.env.KV.put(`order_${JSON.stringify(id)}`, JSON.stringify(result));
 
 			return c.json({ result });
 		},

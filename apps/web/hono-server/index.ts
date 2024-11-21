@@ -21,7 +21,7 @@ app
 			autoCommit: true,
 			createSessionStorage(c) {
 				return createWorkersKVSessionStorage({
-					kv: c.env.KV,
+					kv: c.env.SESSION_KV,
 					cookie: {
 						name: "auth_session",
 						httpOnly: true,

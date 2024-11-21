@@ -1,8 +1,7 @@
 import { schema } from "@blazzing-app/db";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { ProductSchema } from "./product";
-import { VariantSchema } from "./variant";
+import { ProductSchema, VariantSchema } from "../server/entities";
 
 const LineItemSchema = createInsertSchema(schema.lineItems);
 export const CreateLineItemSchema = z.object({

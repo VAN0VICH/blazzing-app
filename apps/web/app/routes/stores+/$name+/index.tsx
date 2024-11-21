@@ -55,8 +55,6 @@ export default function Store() {
 	const products = useMarketplaceStore((state) =>
 		state.products.filter((product) => product.storeID === serverStore.id),
 	);
-	console.log("store", store);
-	console.log("server store", serverStore);
 	return (
 		<StoreComponent
 			isInitialized={isInitialized}

@@ -1,11 +1,8 @@
 import { Form, FormControl, FormField, FormItem } from "@blazzing-app/ui/form";
 import { Icons } from "@blazzing-app/ui/icons";
-import {
-	ISO_1666,
-	VariantSchema,
-	type UpdateVariant,
-} from "@blazzing-app/validators";
+import { ISO_1666, type UpdateVariant } from "@blazzing-app/validators";
 import type { Variant } from "@blazzing-app/validators/client";
+import { VariantSchema } from "@blazzing-app/validators/server";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	Card,

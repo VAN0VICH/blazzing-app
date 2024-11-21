@@ -12,6 +12,6 @@ const WebEnvSchema = z.object({
 });
 
 type WebEnv = z.infer<typeof WebEnvSchema>;
-type WebBindings = { KV: KVNamespace };
+type WebBindings = { SESSION_KV: KVNamespace; KV: KVNamespace };
 export { WebEnvSchema };
 export type { WebEnv, WebBindings };

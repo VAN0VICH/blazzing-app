@@ -1,27 +1,38 @@
 {
 	"name": "@blazzing-app/utils",
 	"version": "0.1.0",
-	"main": "src/index.ts",
-	"types": "src/index.ts",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": "./src/index.ts",
+		"./*": "./src/*.tsx"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
 	"license": "MIT",
-
 	"scripts": {
+		"build": "tsup src/index.ts --format cjs,esm --dts",
 		"beautify": "biome format ./src --write",
 		"clean": "rm -rf .turbo node_modules",
 		"lint": "biome lint src",
 		"format": "biome format ./src",
-		"typecheck": "tsc --noEmit --emitDeclarationOnly false"
+		"typecheck": "tsc --noEmit --emitDeclarationOnly false",
+		"publish-packages": "pnpm changeset version && changeset publish",
+		"changeset-init": "pnpm changeset init"
 	},
 	"dependencies": {
 		"@blazzing-app/validators": "workspace:*",
 		"dayjs": "^1.11.13",
-		"effect": "^3.8.4",
-		"ulidx": "^2.3.0"
+		"effect": "^3.10.15",
+		"ulidx": "^2.4.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
 		"@blazzing-app/tsconfig": "workspace:*",
+		"@changesets/cli": "^2.27.9",
 		"@cloudflare/workers-types": "^4.20240529.0",
+		"tsup": "^8.3.5",
 		"typescript": "^5.5.4"
 	}
 }
