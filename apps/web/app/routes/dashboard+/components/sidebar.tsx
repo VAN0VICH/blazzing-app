@@ -45,11 +45,11 @@ const items: DashboardSidebarItem[] = [
 		href: "/dashboard/customers",
 		icon: "Customer",
 	},
-	{
-		title: "Auction",
-		href: "/dashboard/auction",
-		icon: "Auction",
-	},
+	// {
+	// 	title: "Auction",
+	// 	href: "/dashboard/auction",
+	// 	icon: "Auction",
+	// },
 	{
 		title: "Settings",
 		href: "/dashboard/settings/store",

@@ -5,7 +5,6 @@ const WebEnvSchema = z.object({
 	REPLICACHE_KEY: z.string(),
 	ENVIRONMENT: z.enum(["production", "test", "staging", "development"]),
 	PARTYKIT_HOST: z.string().optional(),
-	LIVEKIT_SERVER_URL: z.string().optional(),
 	HONEYPOT_SECRET: z.string().optional(),
 	SESSION_SECRET: z.string().optional(),
 	STRIPE_PUBLISHABLE_KEY: z.string().optional(),

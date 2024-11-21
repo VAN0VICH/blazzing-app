@@ -25,12 +25,12 @@ const items: SidebarItem[] = [
 		icon: "Marketplace",
 		items: [],
 	},
-	{
-		title: "Auctions",
-		href: "/auction",
-		icon: "Billing",
-		items: [],
-	},
+	// {
+	// 	title: "Auctions",
+	// 	href: "/auction",
+	// 	icon: "Billing",
+	// 	items: [],
+	// },
 
 	{
 		title: "Settings",

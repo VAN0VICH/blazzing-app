@@ -3,7 +3,6 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { cors } from "hono/cors";
 import { csrf } from "hono/csrf";
 import { logger } from "hono/logger";
-import { AuctionApi } from "./api/auction";
 import { AuthApi } from "./api/auth";
 import { CartApi } from "./api/cart";
 import { HelloApi } from "./api/hello";
@@ -53,7 +52,7 @@ app
 
 const routes = app
 	.route("/hello", HelloApi.route)
-	.route("/auction", AuctionApi.route)
+	// .route("/auction", AuctionApi.route)
 	.route("/auth", AuthApi.route)
 	.route("/user", UserApi.route)
 	.route("/replicache", ReplicacheApi.route)

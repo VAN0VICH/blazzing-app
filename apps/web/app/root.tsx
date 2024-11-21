@@ -71,8 +71,7 @@ export const loader: LoaderFunction = async (args) => {
 		request,
 		context: { authUser, cloudflare, userSession },
 	} = args;
-	const { REPLICACHE_KEY, PARTYKIT_HOST, WORKER_URL, LIVEKIT_SERVER_URL } =
-		cloudflare.env;
+	const { REPLICACHE_KEY, PARTYKIT_HOST, WORKER_URL } = cloudflare.env;
 
 	const cookieHeader = request.headers.get("Cookie");
 	const prefsCookie = (await prefs.parse(cookieHeader)) || {};
@@ -82,7 +81,6 @@ export const loader: LoaderFunction = async (args) => {
 			REPLICACHE_KEY,
 			PARTYKIT_HOST,
 			WORKER_URL,
-			LIVEKIT_SERVER_URL,
 		},
 
 		requestInfo: {

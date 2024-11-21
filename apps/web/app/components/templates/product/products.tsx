@@ -80,7 +80,6 @@ const ProductComponent = ({
 								? `/marketplace/products/${product.baseVariant.handle}`
 								: `/stores/${product.store.name}/products/${product.baseVariant.handle}`
 					}
-					unstable_viewTransition={true}
 					prefetch="viewport"
 				>
 					<Image

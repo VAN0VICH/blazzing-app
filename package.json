@@ -1,5 +1,6 @@
 {
 	"name": "blazzing-app",
+	"private": true,
 	"engines": {
 		"node": ">=20.16.0"
 	},

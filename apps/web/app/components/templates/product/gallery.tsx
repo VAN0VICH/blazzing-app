@@ -35,7 +35,6 @@ const Gallery = ({ images }: GalleryProps) => {
 
 				navigate("/marketplace", {
 					preventScrollReset: true,
-					unstable_viewTransition: true,
 					replace: true,
 				});
 			}}

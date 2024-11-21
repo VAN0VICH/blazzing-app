@@ -29,7 +29,6 @@ export namespace VariantApi {
 				},
 			},
 		}),
-		//@ts-ignore
 		async (c) => {
 			const { handle } = c.req.valid("query");
 			const db = getDB({ connectionString: c.env.DATABASE_URL });
@@ -61,7 +60,7 @@ export namespace VariantApi {
 				},
 			});
 			if (!variant) {
-				return null;
+				return c.json({ result: null });
 			}
 
 			return c.json({

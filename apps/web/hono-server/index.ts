@@ -21,7 +21,7 @@ app
 			autoCommit: true,
 			createSessionStorage(c) {
 				return createWorkersKVSessionStorage({
-					kv: c.env.SESSION_KV,
+					kv: c.env.KV,
 					cookie: {
 						name: "auth_session",
 						httpOnly: true,
@@ -71,6 +71,7 @@ app
 			} else {
 				const session = getSession(c);
 				const env = WebEnvSchema.parse(c.env);
+				console.log("hello");
 
 				const { session: userSession, user } = await getUserAndSession(
 					c,

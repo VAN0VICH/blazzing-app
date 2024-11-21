@@ -140,7 +140,6 @@ export default function ProductPage() {
 				// Handle Escape key press here
 				navigate("/marketplace", {
 					preventScrollReset: true,
-					unstable_viewTransition: true,
 					replace: true,
 				});
 			}
