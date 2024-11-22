@@ -11,7 +11,12 @@ import { Icons } from "@blazzing-app/ui/icons";
 import type { Variant } from "@blazzing-app/validators/client";
 import { Flex, Heading, IconButton } from "@radix-ui/themes";
 import { json, type LoaderFunction } from "@remix-run/cloudflare";
-import { useLoaderData, useNavigate, useParams } from "@remix-run/react";
+import {
+	useLoaderData,
+	useNavigate,
+	useParams,
+	useSearchParams,
+} from "@remix-run/react";
 import { hc } from "hono/client";
 import React from "react";
 import { useSubscribe } from "replicache-react";
@@ -22,9 +27,18 @@ import { useMarketplaceStore } from "~/zustand/store";
 type LoaderData = {
 	variant: Variant;
 };
-export const loader: LoaderFunction = async ({ context, params }) => {
+export const loader: LoaderFunction = async ({ context, params, request }) => {
 	const handle = params.handle;
+	const url = new URL(request.url);
+	const searchParams = url.searchParams;
+	const storeID = searchParams.get("storeID");
 	if (!handle) {
+		throw new Response(null, {
+			status: 404,
+			statusText: "Not Found",
+		});
+	}
+	if (!storeID) {
 		throw new Response(null, {
 			status: 404,
 			statusText: "Not Found",
@@ -35,6 +49,7 @@ export const loader: LoaderFunction = async ({ context, params }) => {
 		{
 			query: {
 				handle,
+				storeID,
 			},
 		},
 		{
@@ -67,6 +82,7 @@ export const loader: LoaderFunction = async ({ context, params }) => {
 export default function ProductPage() {
 	const { userContext } = useRequestInfo();
 	const params = useParams();
+	const [searchParams] = useSearchParams();
 	const { variant: serverVariant } = useLoaderData<LoaderData>();
 	const cartID = userContext.cartID;
 	const navigate = useNavigate();
@@ -110,10 +126,17 @@ export default function ProductPage() {
 
 	const [selectedVariantHandle, _setSelectedVariantHandle] =
 		React.useState<string>(params.handle!);
-	const setSelectedVariantHandle = React.useCallback((handle: string) => {
-		_setSelectedVariantHandle(handle);
-		window.history.replaceState({}, "", `/marketplace/products/${handle}`);
-	}, []);
+	const setSelectedVariantHandle = React.useCallback(
+		(handle: string) => {
+			_setSelectedVariantHandle(handle);
+			window.history.replaceState(
+				{},
+				"",
+				`/marketplace/products/${handle}?storeID=${searchParams.get("storeID")}`,
+			);
+		},
+		[searchParams],
+	);
 
 	const selectedVariant = React.useMemo(
 		() => variants.find((v) => v.handle === selectedVariantHandle) ?? variant,

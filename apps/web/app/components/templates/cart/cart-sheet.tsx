@@ -88,7 +88,7 @@ export const CartSheet = ({ cartID }: { cartID: string | null }) => {
 									key={item.id}
 									deleteItem={deleteItem}
 									updateItem={updateItem}
-									currencyCode={cart?.currencyCode ?? "AUD"}
+									currencyCode={cart?.currencyCode ?? "BYN"}
 								/>
 							))}
 						</Grid>

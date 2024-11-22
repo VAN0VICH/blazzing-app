@@ -7,6 +7,7 @@ class Cloudflare extends Context.Tag("Cloudflare")<
 		readonly env: WorkerEnv;
 		readonly bindings: WorkerBindings;
 		readonly request: Request;
+		readonly get: (val: string) => string;
 	}
 >() {}
 

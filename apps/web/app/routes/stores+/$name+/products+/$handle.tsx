@@ -3,7 +3,7 @@ import type { Variant } from "@blazzing-app/validators/client";
 import { Flex, Heading } from "@radix-ui/themes";
 import type { LoaderFunction } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";
-import { useLoaderData, useParams } from "@remix-run/react";
+import { useLoaderData, useParams, useSearchParams } from "@remix-run/react";
 import { hc } from "hono/client";
 import React from "react";
 import { useSubscribe } from "replicache-react";
@@ -16,9 +16,18 @@ type LoaderData = {
 	variant: Variant;
 };
 
-export const loader: LoaderFunction = async ({ context, params }) => {
+export const loader: LoaderFunction = async ({ context, params, request }) => {
 	const handle = params.handle;
+	const url = new URL(request.url);
+	const searchParams = url.searchParams;
+	const storeID = searchParams.get("storeID");
 	if (!handle) {
+		throw new Response(null, {
+			status: 404,
+			statusText: "Not Found",
+		});
+	}
+	if (!storeID) {
 		throw new Response(null, {
 			status: 404,
 			statusText: "Not Found",
@@ -29,6 +38,7 @@ export const loader: LoaderFunction = async ({ context, params }) => {
 		{
 			query: {
 				handle,
+				storeID,
 			},
 		},
 		{
@@ -62,6 +72,7 @@ export const loader: LoaderFunction = async ({ context, params }) => {
 export default function Page() {
 	const { userContext } = useRequestInfo();
 	const params = useParams();
+	const [searchParams] = useSearchParams();
 	const { variant: serverVariant } = useLoaderData<LoaderData>();
 	const cartID = userContext.cartID;
 	const isInitialized = useMarketplaceStore((state) => state.isInitialized);
@@ -100,10 +111,10 @@ export default function Page() {
 				window.history.replaceState(
 					{},
 					"",
-					`/stores/${variant.product.store.name}/products/${handle}`,
+					`/stores/${variant.product.store.name}/products/${handle}?storeID=${searchParams.get("storeID")}`,
 				);
 		},
-		[variant],
+		[variant, searchParams],
 	);
 
 	const selectedVariant = React.useMemo(

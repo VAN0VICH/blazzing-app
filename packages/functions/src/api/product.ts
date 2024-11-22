@@ -39,10 +39,11 @@ export namespace ProductApi {
 			createRoute({
 				security: [{ Bearer: [] }],
 				method: "get",
-				path: "/handle",
+				path: "/id",
 				request: {
 					query: z.object({
-						handle: z.string().or(z.array(z.string())),
+						id: z.string().or(z.array(z.string())),
+						storeID: z.string(),
 					}),
 				},
 				responses: {
@@ -59,7 +60,89 @@ export namespace ProductApi {
 				},
 			}),
 			async (c) => {
-				const { handle } = c.req.valid("query");
+				const { id, storeID } = c.req.valid("query");
+				const cached = await c.env.KV.get(`product_${JSON.stringify(id)}`);
+				if (cached) {
+					return c.json({
+						result: JSON.parse(cached),
+					});
+				}
+				const db = c.get("db" as never) as Db;
+
+				const products = await db.query.products.findMany({
+					where: (products, { inArray, and, eq }) =>
+						and(
+							inArray(products.id, typeof id === "string" ? [id] : id),
+							eq(products.status, "published"),
+							eq(products.storeID, storeID),
+						),
+					with: {
+						options: {
+							with: {
+								optionValues: true,
+							},
+						},
+						baseVariant: {
+							with: {
+								prices: true,
+								optionValues: {
+									with: {
+										optionValue: true,
+									},
+								},
+								product: true,
+							},
+						},
+						store: true,
+						variants: {
+							with: {
+								prices: true,
+								optionValues: {
+									with: {
+										optionValue: true,
+									},
+								},
+								product: true,
+							},
+						},
+					},
+				});
+				await c.env.KV.put(
+					`product_${JSON.stringify(id)}`,
+					JSON.stringify(products),
+				);
+
+				return c.json({
+					result: products,
+				});
+			},
+		)
+		.openapi(
+			createRoute({
+				security: [{ Bearer: [] }],
+				method: "get",
+				path: "/handle",
+				request: {
+					query: z.object({
+						handle: z.string().or(z.array(z.string())),
+						storeID: z.string(),
+					}),
+				},
+				responses: {
+					200: {
+						content: {
+							"application/json": {
+								schema: z.object({
+									result: z.array(FullProductSchema),
+								}),
+							},
+						},
+						description: "Returns product by handle.",
+					},
+				},
+			}),
+			async (c) => {
+				const { handle, storeID } = c.req.valid("query");
 				const cached = await c.env.KV.get(`product_${JSON.stringify(handle)}`);
 				if (cached) {
 					return c.json({
@@ -77,6 +160,17 @@ export namespace ProductApi {
 					with: {
 						product: {
 							with: {
+								baseVariant: {
+									with: {
+										prices: true,
+										optionValues: {
+											with: {
+												optionValue: true,
+											},
+										},
+										product: true,
+									},
+								},
 								options: {
 									with: {
 										optionValues: true,
@@ -91,26 +185,21 @@ export namespace ProductApi {
 												optionValue: true,
 											},
 										},
+										product: true,
 									},
 								},
-							},
-						},
-						prices: true,
-						optionValues: {
-							with: {
-								optionValue: true,
 							},
 						},
 					},
 				});
 				const result = variants
 					.map((variant) => {
-						if (variant.product.status !== "published") return undefined;
-						return {
-							...variant.product,
-							baseVariant: variant,
-							variants: variant.product.variants,
-						};
+						if (
+							variant.product.status !== "published" ||
+							variant.product.storeID !== storeID
+						)
+							return undefined;
+						return variant.product;
 					})
 					.filter(Boolean);
 				await c.env.KV.put(
@@ -128,6 +217,11 @@ export namespace ProductApi {
 				security: [{ Bearer: [] }],
 				method: "get",
 				path: "/list",
+				request: {
+					query: z.object({
+						storeID: z.string(),
+					}),
+				},
 				responses: {
 					200: {
 						content: {
@@ -148,6 +242,7 @@ export namespace ProductApi {
 				},
 			}),
 			async (c) => {
+				const { storeID } = c.req.valid("query");
 				const cached = await c.env.KV.get("product_list");
 				if (cached) {
 					return c.json({
@@ -157,7 +252,11 @@ export namespace ProductApi {
 				const db = c.get("db" as never) as Db;
 
 				const products = await db.query.products.findMany({
-					where: (products, { eq }) => eq(products.status, "published"),
+					where: (products, { eq, and }) =>
+						and(
+							eq(products.status, "published"),
+							eq(products.storeID, storeID),
+						),
 					with: {
 						options: {
 							with: {
@@ -192,6 +291,7 @@ export namespace ProductApi {
 				request: {
 					query: z.object({
 						handle: z.string(),
+						storeID: z.string(),
 					}),
 				},
 				responses: {
@@ -214,7 +314,7 @@ export namespace ProductApi {
 				},
 			}),
 			async (c) => {
-				const { handle } = c.req.valid("query");
+				const { handle, storeID } = c.req.valid("query");
 				const cached = await c.env.KV.get(`collection_${handle}`);
 				if (cached) {
 					return c.json({
@@ -224,7 +324,11 @@ export namespace ProductApi {
 				const db = c.get("db" as never) as Db;
 
 				const products = await db.query.products.findMany({
-					where: (products, { eq }) => eq(products.collectionHandle, handle),
+					where: (products, { eq, and }) =>
+						and(
+							eq(products.collectionHandle, handle),
+							eq(products.storeID, storeID),
+						),
 					with: {
 						baseVariant: {
 							with: {

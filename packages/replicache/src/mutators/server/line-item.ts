@@ -41,7 +41,7 @@ const createLineItem = fn(CreateLineItemSchema, (input) =>
 					createdAt: new Date().toISOString(),
 					//TODO: get country code
 					countryCode: "AU",
-					currencyCode: "AUD",
+					currencyCode: "BYN",
 				},
 			});
 		}

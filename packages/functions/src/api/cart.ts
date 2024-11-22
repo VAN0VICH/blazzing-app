@@ -151,6 +151,7 @@ export namespace CartApi {
 							},
 							env: c.env,
 							request: c.req.raw,
+							get: c.get,
 						}),
 					),
 				);

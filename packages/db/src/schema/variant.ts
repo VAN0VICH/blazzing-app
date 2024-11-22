@@ -49,6 +49,7 @@ export const variants = pgTable(
 	},
 	(variant) => ({
 		productIDIndex: index("product_id_index").on(variant.productID),
+		handleIndex: index("variant_handle_index").on(variant.handle),
 	}),
 );
 export const variantRelations = relations(variants, ({ one, many }) => ({

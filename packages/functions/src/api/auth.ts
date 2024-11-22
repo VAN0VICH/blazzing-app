@@ -20,7 +20,6 @@ export namespace AuthApi {
 	}>()
 		.openapi(
 			createRoute({
-				security: [{ Bearer: [] }],
 				method: "get",
 				path: "/user-and-session",
 				request: {
@@ -53,6 +52,7 @@ export namespace AuthApi {
 						user: true,
 					},
 				});
+
 				return c.json({
 					user: session?.user ?? null,
 					session: session ?? null,
@@ -61,7 +61,6 @@ export namespace AuthApi {
 		)
 		.openapi(
 			createRoute({
-				security: [{ Bearer: [] }],
 				method: "post",
 				path: "/create-session",
 
@@ -147,7 +146,6 @@ export namespace AuthApi {
 		)
 		.openapi(
 			createRoute({
-				security: [{ Bearer: [] }],
 				method: "post",
 				path: "/delete-expired-session",
 				responses: {
@@ -175,7 +173,6 @@ export namespace AuthApi {
 		)
 		.openapi(
 			createRoute({
-				security: [{ Bearer: [] }],
 				method: "get",
 				path: "/google",
 				responses: {
@@ -195,8 +192,6 @@ export namespace AuthApi {
 				},
 			}),
 			async (c) => {
-				console.log("is it even here");
-
 				const google = new Google(
 					c.env.GOOGLE_CLIENT_ID,
 					c.env.GOOGLE_CLIENT_SECRET,
@@ -229,7 +224,6 @@ export namespace AuthApi {
 		)
 		.openapi(
 			createRoute({
-				security: [{ Bearer: [] }],
 				method: "post",
 				path: "/google-callback",
 				request: {
@@ -352,7 +346,6 @@ export namespace AuthApi {
 		)
 		.openapi(
 			createRoute({
-				security: [{ Bearer: [] }],
 				method: "post",
 				path: "/create-test-user",
 				responses: {
@@ -371,6 +364,7 @@ export namespace AuthApi {
 				},
 			}),
 			async (c) => {
+				console.log("hello");
 				const db = c.get("db" as never) as Db;
 
 				const testID = `test-${generateID({})}`;
@@ -390,7 +384,7 @@ export namespace AuthApi {
 						yield* Effect.tryPromise(() =>
 							db.transaction(async (tx) =>
 								UserService.onboard({
-									countryCode: "AU",
+									countryCode: "BY",
 									username: testID,
 									authUser: testAuthUser,
 								})

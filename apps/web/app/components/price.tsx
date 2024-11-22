@@ -4,7 +4,7 @@ import { cn } from "@blazzing-app/ui";
 const Price = ({
 	amount,
 	className,
-	currencyCode = "AUD",
+	currencyCode = "BYN",
 	currencyCodeClassName,
 }: {
 	amount: number;

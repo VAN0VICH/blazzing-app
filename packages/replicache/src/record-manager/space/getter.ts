@@ -8,6 +8,7 @@ import { storeCVD } from "./dashboard";
 import { userCVD } from "./global/user";
 import type { GetRowsWTableName } from "./types";
 import { cartCVD } from "./global/cart";
+import { cartCVD as storefrontCartCVD } from "./storefront/cart";
 import { ordersCVD } from "./global/orders";
 import { tableNameToTableMap, type TableName } from "@blazzing-app/db";
 import { Effect, pipe } from "effect";
@@ -17,6 +18,7 @@ import { inArray } from "drizzle-orm";
 import { notificationsCVD } from "./global/notifications";
 import { storesCVD } from "./marketplace/stores";
 import { paymentCVD } from "./global/payment";
+import { productsAndVariantsCVD } from "./storefront/products";
 
 export type SpaceRecordGetterType = {
 	[K in SpaceID]: Record<SpaceRecord[K][number], GetRowsWTableName>;
@@ -34,6 +36,11 @@ export const SpaceRecordGetter: SpaceRecordGetterType = {
 	},
 	marketplace: {
 		stores: storesCVD,
+	},
+
+	storefront: {
+		cart: storefrontCartCVD,
+		products: productsAndVariantsCVD,
 	},
 };
 export const fullRowsGetter = (tableName: TableName, keys: string[]) =>

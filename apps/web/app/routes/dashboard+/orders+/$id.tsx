@@ -210,7 +210,7 @@ const OrderInfo = ({ order }: { order: Order | undefined }) => {
 					<LineItem
 						lineItem={item}
 						key={item.id}
-						currencyCode={order?.currencyCode ?? "AUD"}
+						currencyCode={order?.currencyCode ?? "BYN"}
 						readonly={true}
 					/>
 				))}

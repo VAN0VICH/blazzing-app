@@ -3,6 +3,7 @@ import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
 import { StoreSchema } from "@blazzing-app/validators/server";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 export namespace StoreApi {
+	//@ts-ignore
 	export const route = new OpenAPIHono<{
 		Bindings: WorkerBindings & WorkerEnv;
 	}>().openapi(

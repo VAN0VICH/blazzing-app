@@ -22,6 +22,7 @@ const withKey = async (
 	const cached = await c.env.KV.get(key);
 	if (cached) {
 		c.set("db" as never, db); // Set the db in context
+		c.set("storeID" as never, cached);
 		return await next(); // Proceed to the next middleware/route
 	}
 
@@ -38,6 +39,7 @@ const withKey = async (
 
 		// Cache the key for future use (optional, depending on your logic)
 		await c.env.KV.put(key, result.value); // You can store the result or just the key for efficiency
+		c.set("storeID" as never, result.value);
 
 		// Set the db in context and proceed
 		c.set("db" as never, db);

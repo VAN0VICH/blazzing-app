@@ -38,11 +38,13 @@ export const SPACE_RECORD = {
 	],
 	dashboard: ["store" as const],
 	marketplace: ["stores"],
+	storefront: ["cart" as const, "products" as const],
 };
 export const SpaceIDSchema = Schema.Literal(
 	"dashboard",
 	"marketplace",
 	"global",
+	"storefront",
 );
 export type SpaceID = Schema.Schema.Type<typeof SpaceIDSchema>;
 

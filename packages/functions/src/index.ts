@@ -23,7 +23,7 @@ app
 		const wrapped = cors({
 			origin:
 				c.env.ENVIRONMENT === "production"
-					? "https://blazzing.app"
+					? ["https://blazzing.app", "http://localhost:3000"]
 					: [
 							"http://localhost:3000",
 							"http://localhost:5173",
@@ -41,7 +41,7 @@ app
 		const wrapped = csrf({
 			origin:
 				c.env.ENVIRONMENT === "production"
-					? "https://blazzing.app"
+					? ["https://blazzing.app", "http://localhost:3000"]
 					: [
 							"http://localhost:5173",
 							"http://localhost:3000",
@@ -57,7 +57,6 @@ app
 
 const routes = app
 	.route("/hello", HelloApi.route)
-	// .route("/auction", AuctionApi.route)
 	.route("/auth", AuthApi.route)
 	.route("/user", UserApi.route)
 	.route("/replicache", ReplicacheApi.route)

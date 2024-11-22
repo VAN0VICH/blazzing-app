@@ -1,6 +1,6 @@
 {
 	"name": "@blazzing-app/replicache",
-	"version": "0.1.1",
+	"version": "0.1.3",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"publishConfig": {
@@ -28,7 +28,7 @@
 		"@blazzing-app/validators": "workspace:*",
 		"@effect/platform": "^0.66.2",
 		"base64-arraybuffer": "^1.0.2",
-		"drizzle-orm": "^0.33.0",
+		"drizzle-orm": "^0.36.4",
 		"effect": "^3.10.15",
 		"remeda": "^2.17.0",
 		"replicache": "15.0.1",

@@ -1,11 +1,10 @@
 {
 	"name": "@blazzing-app/functions",
-	"version": "0.1.1",
+	"version": "0.1.3",
 	"type": "module",
 	"publishConfig": {
 		"access": "public"
 	},
-
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"exports": {
@@ -31,13 +30,13 @@
 		"@cloudflare/workers-types": "^4.20240529.0",
 		"@effect/platform": "^0.66.2",
 		"@hono/zod-openapi": "^0.16.2",
+		"@neondatabase/serverless": "^0.10.3",
 		"arctic": "^1.9.2",
-		"drizzle-orm": "^0.33.0",
+		"drizzle-orm": "^0.36.4",
 		"effect": "^3.10.15",
-		"hono": "^4.6.2",
+		"hono": "^4.6.11",
 		"oslo": "^1.2.1",
 		"stripe": "^17.1.0",
-		"ws": "^8.18.0",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {

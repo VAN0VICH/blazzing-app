@@ -42,7 +42,7 @@ export const CartInfo = ({
 							key={item.id}
 							deleteItem={deleteItem}
 							updateItem={updateItem}
-							currencyCode={cart?.currencyCode ?? "AUD"}
+							currencyCode={cart?.currencyCode ?? "BYN"}
 						/>
 					))}
 				</Grid>

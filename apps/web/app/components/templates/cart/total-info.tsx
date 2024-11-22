@@ -39,7 +39,7 @@ export const Total = React.forwardRef<
 
 				<Price
 					amount={subtotal}
-					currencyCode={cartOrOrder?.currencyCode ?? "AUD"}
+					currencyCode={cartOrOrder?.currencyCode ?? "BYN"}
 				/>
 			</Flex>
 
@@ -58,7 +58,7 @@ export const Total = React.forwardRef<
 				<Text weight="bold">Total:</Text>
 				<Price
 					amount={subtotal}
-					currencyCode={cartOrOrder?.currencyCode ?? "AUD"}
+					currencyCode={cartOrOrder?.currencyCode ?? "BYN"}
 				/>
 			</Flex>
 		</Box>

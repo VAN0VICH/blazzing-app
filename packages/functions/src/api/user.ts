@@ -7,12 +7,12 @@ import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { Console, Effect } from "effect";
 import { getAuthUser } from "../lib/get-user";
 export namespace UserApi {
+	//@ts-ignore
 	export const route = new OpenAPIHono<{
 		Bindings: WorkerBindings & WorkerEnv;
 	}>()
 		.openapi(
 			createRoute({
-				security: [{ Bearer: [] }],
 				method: "get",
 				path: "/id",
 				request: {
@@ -33,7 +33,6 @@ export namespace UserApi {
 					},
 				},
 			}),
-			//@ts-ignore
 			async (c) => {
 				const { id } = c.req.valid("query");
 				const db = c.get("db" as never) as Db;
@@ -50,7 +49,6 @@ export namespace UserApi {
 		)
 		.openapi(
 			createRoute({
-				security: [{ Bearer: [] }],
 				method: "get",
 				path: "/username",
 				request: {
@@ -71,7 +69,6 @@ export namespace UserApi {
 					},
 				},
 			}),
-			//@ts-ignore
 			async (c) => {
 				const { username } = c.req.valid("query");
 
@@ -88,7 +85,6 @@ export namespace UserApi {
 		)
 		.openapi(
 			createRoute({
-				security: [{ Bearer: [] }],
 				method: "post",
 				path: "/onboard",
 				request: {

@@ -107,8 +107,8 @@ export function Onboard() {
 								/>
 								<Select.Content>
 									<ScrollArea>
-										<Select.Item key={"AU"} value={"AU"}>
-											Australia
+										<Select.Item key={"BY"} value={"BY"}>
+											Belarus
 										</Select.Item>
 									</ScrollArea>
 								</Select.Content>

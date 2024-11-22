@@ -66,6 +66,7 @@ export namespace ReplicacheApi {
 						bindings: {
 							KV: c.env.KV,
 						},
+						get: c.get,
 					}),
 				);
 				const ReplicacheContextLive = Layer.succeed(
@@ -140,6 +141,7 @@ export namespace ReplicacheApi {
 							bindings: {
 								KV: c.env.KV,
 							},
+							get: c.get,
 						}),
 					),
 					Effect.orDie,
@@ -203,6 +205,7 @@ export namespace ReplicacheApi {
 							bindings: {
 								KV: c.env.KV,
 							},
+							get: c.get,
 						}),
 					),
 					Effect.provideService(

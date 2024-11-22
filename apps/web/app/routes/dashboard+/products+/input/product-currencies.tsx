@@ -63,14 +63,14 @@ function Currencies({
 							>
 								{/* {Object.values(currencies).map((c) => ( */}
 								<ToggleGroupItem
-									value={"AUD"}
-									key={"AUD"}
+									value={"BYN"}
+									key={"BYN"}
 									className="rounded-[5px] w-full pl-0"
 								>
 									<div className="w-16 border-r h-10 flex justify-center items-center">
-										{"AUD"}
+										{"BYN"}
 									</div>
-									<div className="w-full">Australian Dollar</div>
+									<div className="w-full">Belorussian ruble</div>
 								</ToggleGroupItem>
 								{/* ))} */}
 							</ToggleGroup>

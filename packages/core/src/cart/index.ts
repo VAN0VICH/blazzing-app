@@ -149,7 +149,7 @@ export namespace CartService {
 											const newOrder: InsertOrder = {
 												id: generateID({ prefix: "order" }),
 												countryCode: cart.countryCode ?? "AU",
-												currencyCode: "AUD",
+												currencyCode: "BYN",
 												createdAt: new Date().toISOString(),
 												email: checkoutInfo.email ?? "email not provided",
 												//TODO

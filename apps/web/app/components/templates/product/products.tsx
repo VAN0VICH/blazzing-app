@@ -77,8 +77,8 @@ const ProductComponent = ({
 						isDashboard
 							? `/dashboard/products/${product.id}`
 							: isMarketplace
-								? `/marketplace/products/${product.baseVariant.handle}`
-								: `/stores/${product.store.name}/products/${product.baseVariant.handle}`
+								? `/marketplace/products/${product.baseVariant.handle}?storeID=${product.storeID}`
+								: `/stores/${product.store.name}/products/${product.baseVariant.handle}?storeID=${product.storeID}`
 					}
 					prefetch="viewport"
 				>
@@ -119,7 +119,7 @@ const ProductComponent = ({
 					{!isAuction ? (
 						<Price
 							amount={12}
-							currencyCode="AUD"
+							currencyCode="BYN"
 							className="border rounded-[5px] font-bold max-h-[30px] flex items-center justify-center text-sm p-1 bg-accent-3 border-accent-9 text-accent-11"
 						/>
 					) : (

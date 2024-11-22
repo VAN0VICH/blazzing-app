@@ -174,7 +174,7 @@ export const Pricing = ({ variant }: { variant: Variant | undefined }) => {
 			<Heading>
 				<Price
 					amount={variant?.prices?.[0]?.amount ?? 0}
-					currencyCode={variant?.prices?.[0]?.currencyCode ?? "AUD"}
+					currencyCode={variant?.prices?.[0]?.currencyCode ?? "BYN"}
 				/>
 			</Heading>
 		</Box>

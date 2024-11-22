@@ -14,6 +14,7 @@ export namespace VariantApi {
 			request: {
 				query: z.object({
 					handle: z.string().or(z.array(z.string())),
+					storeID: z.string(),
 				}),
 			},
 			responses: {
@@ -30,7 +31,7 @@ export namespace VariantApi {
 			},
 		}),
 		async (c) => {
-			const { handle } = c.req.valid("query");
+			const { handle, storeID } = c.req.valid("query");
 			const db = c.get("db" as never) as Db;
 			const cached = await c.env.KV.get(`variant_${JSON.stringify(handle)}`);
 			if (cached) {
@@ -39,36 +40,38 @@ export namespace VariantApi {
 				});
 			}
 
-			const variants = await db.query.variants.findMany({
-				where: (variants, { inArray }) =>
-					inArray(
-						variants.handle,
-						typeof handle === "string" ? [handle] : handle,
-					),
-				with: {
-					optionValues: {
-						with: {
-							optionValue: {
-								with: {
-									option: true,
+			const variants = (
+				await db.query.variants.findMany({
+					where: (variants, { inArray }) =>
+						inArray(
+							variants.handle,
+							typeof handle === "string" ? [handle] : handle,
+						),
+					with: {
+						optionValues: {
+							with: {
+								optionValue: {
+									with: {
+										option: true,
+									},
 								},
 							},
 						},
-					},
 
-					product: {
-						with: {
-							options: {
-								with: {
-									optionValues: true,
+						product: {
+							with: {
+								options: {
+									with: {
+										optionValues: true,
+									},
 								},
+								store: true,
 							},
-							store: true,
 						},
+						prices: true,
 					},
-					prices: true,
-				},
-			});
+				})
+			).filter((v) => v.product.storeID === storeID);
 			await c.env.KV.put(
 				`variant_${JSON.stringify(handle)}`,
 				JSON.stringify(variants),

@@ -85,7 +85,25 @@ export const UserMutatorsMap = new Map(Object.entries(UserMutators));
 export type UserMutatorsType = typeof UserMutators;
 export type UserMutatorsMapType = typeof UserMutatorsMap;
 
-type MutatorKeys = keyof DashboardMutatorsType | keyof UserMutatorsType;
+export const StorefrontMutators = {
+	createLineItem,
+	updateLineItem,
+	deleteLineItem,
+	updateAddress,
+	updateCart,
+	createCart,
+};
+
+export const StorefrontMutatorsMap = new Map(
+	Object.entries(StorefrontMutators),
+);
+export type StorefrontMutatorsType = typeof StorefrontMutators;
+export type StorefrontMutatorsMapType = typeof StorefrontMutatorsMap;
+
+type MutatorKeys =
+	| keyof DashboardMutatorsType
+	| keyof UserMutatorsType
+	| keyof StorefrontMutatorsType;
 //affected spaces and its subspaces
 export type AffectedSpaces = Record<
 	MutatorKeys,
@@ -116,6 +134,7 @@ export const affectedSpaces: AffectedSpaces = {
 		dashboard: ["store"],
 		marketplace: ["stores"],
 		global: ["cart"],
+		storefront: ["products"],
 	},
 	copyProduct: {
 		dashboard: ["store"],
@@ -147,6 +166,7 @@ export const affectedSpaces: AffectedSpaces = {
 		dashboard: ["store"],
 		marketplace: ["stores"],
 		global: ["cart"],
+		storefront: ["products"],
 	},
 	updateProductOption: {
 		dashboard: ["store"],
@@ -161,6 +181,7 @@ export const affectedSpaces: AffectedSpaces = {
 	updatePrice: {
 		dashboard: ["store"],
 		marketplace: ["stores"],
+		storefront: ["products"],
 	},
 	updateVariant: {
 		dashboard: ["store"],
@@ -189,24 +210,30 @@ export const affectedSpaces: AffectedSpaces = {
 	},
 	createLineItem: {
 		global: ["cart"],
+		storefront: ["cart"],
 	},
 	updateLineItem: {
 		global: ["cart"],
+		storefront: ["cart"],
 	},
 	deleteLineItem: {
 		global: ["cart"],
+		storefront: ["cart"],
 	},
 	updateAddress: {
 		global: ["cart"],
+		storefront: ["cart"],
 	},
 	updateCart: {
 		global: ["cart"],
+		storefront: ["cart"],
 	},
 	setActiveStoreID: {
 		dashboard: ["store"],
 	},
 	createCart: {
 		global: ["cart"],
+		storefront: ["cart"],
 	},
 	deleteImage: {
 		dashboard: ["store"],
