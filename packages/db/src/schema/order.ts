@@ -10,14 +10,18 @@ export const orders = pgTable(
 	"orders",
 	{
 		id: varchar("id").notNull().primaryKey(),
+		displayId: varchar("display_id"),
 		paymentStatus: text("payment_status", {
-			enum: ["paid", "refunded"],
+			enum: ["paid", "refunded", "not_paid"],
 		}).default("paid"),
 		status: text("status", {
-			enum: ["pending", "completed", "cancelled"],
+			enum: ["pending", "processing", "completed", "cancelled"],
 		})
+
 			.notNull()
 			.default("pending"),
+		type: text("type", { enum: ["delivery", "onsite"] }).notNull(),
+		tableNumber: integer("tableNumber"),
 		shippingStatus: text("shipping_status", {
 			enum: ["pending", "shipped", "delivered", "cancelled"],
 		}).default("pending"),
@@ -49,6 +53,7 @@ export const orders = pgTable(
 		version: integer("version").notNull().default(0),
 	},
 	(orders) => ({
+		displayId: index("display_id_index").on(orders.displayId),
 		userIDIndex: index("customer_id_index").on(orders.customerID),
 		shippingAddressIndex: index("shipping_address_id_1").on(
 			orders.shippingAddressID,

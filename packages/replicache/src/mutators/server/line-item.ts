@@ -40,7 +40,7 @@ const createLineItem = fn(CreateLineItemSchema, (input) =>
 					id: newCartID,
 					createdAt: new Date().toISOString(),
 					//TODO: get country code
-					countryCode: "AU",
+					countryCode: "BY",
 					currencyCode: "BYN",
 				},
 			});

@@ -1,4 +1,4 @@
-import type { CheckoutForm } from "@blazzing-app/validators";
+import type { DeliveryCheckoutForm } from "@blazzing-app/validators";
 import type { User } from "@blazzing-app/validators/client";
 import { Box, Grid, Heading, Text, TextField } from "@radix-ui/themes";
 import { useFormContext } from "react-hook-form";
@@ -7,7 +7,8 @@ export const CustomerInfo = ({
 }: {
 	user: User | null | undefined;
 }) => {
-	const { register, formState, clearErrors } = useFormContext<CheckoutForm>();
+	const { register, formState, clearErrors } =
+		useFormContext<DeliveryCheckoutForm>();
 	return (
 		<Box>
 			<Heading size="4" className="py-2">

@@ -1,6 +1,16 @@
 import type { Db } from "@blazzing-app/db";
-import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
-import { OrderSchema } from "@blazzing-app/validators/server";
+import {
+	ProductOptionValueSchema,
+	ShippingAddressSchema,
+	type WorkerBindings,
+	type WorkerEnv,
+} from "@blazzing-app/validators";
+import {
+	LineItemSchema,
+	OrderSchema,
+	PriceSchema,
+	VariantSchema,
+} from "@blazzing-app/validators/server";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { cache } from "hono/cache";
 export namespace OrderApi {
@@ -26,7 +36,23 @@ export namespace OrderApi {
 					content: {
 						"application/json": {
 							schema: z.object({
-								result: z.array(OrderSchema),
+								result: z.array(
+									OrderSchema.extend({
+										items: z.array(
+											LineItemSchema.extend({
+												variant: VariantSchema.extend({
+													prices: z.array(PriceSchema),
+													optionValues: z.array(
+														z.object({
+															optionValue: ProductOptionValueSchema,
+														}),
+													),
+												}),
+											}),
+										),
+										shippingAddress: ShippingAddressSchema,
+									}),
+								),
 							}),
 						},
 					},

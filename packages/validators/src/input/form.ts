@@ -18,10 +18,21 @@ export const ShippingAddressSchema = z.object({
 
 export type ShippingAddress = z.infer<typeof ShippingAddressSchema>;
 
-export const CheckoutFormSchema = z.object({
+export const DeliveryCheckoutFormSchema = z.object({
 	fullName: z.string().min(1, { message: "Must contain at least 1 char" }),
-	email: z.string().email(),
+	email: z.string().email().optional(),
 	phone: z.string().min(3, { message: "Must contain at least 1 char" }),
 	shippingAddress: ShippingAddressSchema,
 });
-export type CheckoutForm = z.infer<typeof CheckoutFormSchema>;
+
+export const OnsiteCheckoutFormSchema = z.object({
+	fullName: z.string().min(1, { message: "Must contain at least 1 char" }),
+	email: z.string().email().optional(),
+	phone: z
+		.string()
+		.min(3, { message: "Must contain at least 1 char" })
+		.optional(),
+	tableNumber: z.number().optional(),
+});
+export type DeliveryCheckoutForm = z.infer<typeof DeliveryCheckoutFormSchema>;
+export type OnsiteCheckoutForm = z.infer<typeof OnsiteCheckoutFormSchema>;

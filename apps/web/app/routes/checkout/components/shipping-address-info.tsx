@@ -1,4 +1,4 @@
-import { ISO_1666, type CheckoutForm } from "@blazzing-app/validators";
+import { ISO_1666, type DeliveryCheckoutForm } from "@blazzing-app/validators";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Box, Grid, Heading, Select, Text, TextField } from "@radix-ui/themes";
 import { Controller, useFormContext } from "react-hook-form";
@@ -7,7 +7,7 @@ export const ShippingAddressInfo = () => {
 	const [parent] = useAutoAnimate({ duration: 100 });
 
 	const { register, formState, control, clearErrors } =
-		useFormContext<CheckoutForm>();
+		useFormContext<DeliveryCheckoutForm>();
 
 	return (
 		<Box ref={parent}>

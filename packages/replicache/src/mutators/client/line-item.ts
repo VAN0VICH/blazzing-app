@@ -12,7 +12,7 @@ async function createLineItem(tx: WriteTransaction, input: CreateLineItem) {
 				id: newCartID,
 				createdAt: new Date().toISOString(),
 				//TODO: get country code
-				countryCode: "AU",
+				countryCode: "BY",
 				currencyCode: "BYN",
 			},
 		});

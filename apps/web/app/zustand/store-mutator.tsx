@@ -8,7 +8,7 @@ import {
 } from "./store";
 import type { PaymentProfile } from "@blazzing-app/validators/client";
 import type { ActiveStoreID } from "@blazzing-app/validators";
-
+import type {} from "@blazzing-app/replicache";
 export const GlobalStoreMutator = ({
 	children,
 }: { children: React.ReactNode }) => {

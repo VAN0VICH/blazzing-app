@@ -8,7 +8,8 @@ export const customers = pgTable(
 	{
 		id: varchar("id").notNull().primaryKey(),
 		userID: varchar("user_id").references(() => users.id),
-		email: varchar("email").notNull(),
+		email: varchar("email"),
+		phone: varchar("phone"),
 		createdAt: varchar("created_at").notNull(),
 		updatedAt: varchar("updated_at").$onUpdate(() => new Date().toISOString()),
 		version: integer("version").notNull(),
@@ -16,6 +17,7 @@ export const customers = pgTable(
 	(customers) => ({
 		emailIndex: uniqueIndex("email_index2").on(customers.email),
 		userIDIndex: uniqueIndex("user_id_index1").on(customers.userID),
+		phoneIndex: uniqueIndex("phone_customer_index").on(customers.phone),
 	}),
 );
 

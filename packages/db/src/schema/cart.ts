@@ -13,8 +13,6 @@ export const carts = pgTable(
 		countryCode: varchar("country_code", { length: 2 }).notNull(),
 		currencyCode: varchar("currency_code", { length: 3 }).notNull(),
 		userID: varchar("user_id").references(() => users.id),
-		subtotal: integer("subtotal"),
-		total: integer("total"),
 		shippingAddressID: varchar("shipping_address_id").references(
 			() => addresses.id,
 		),

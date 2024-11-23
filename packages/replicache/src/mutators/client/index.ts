@@ -90,3 +90,18 @@ export const GlobalMutators: GlobalMutatorsType = {
 	createCart,
 	deleteAvatar,
 };
+
+export type StorefrontMutatorsType = {
+	[key in keyof Server.StorefrontMutatorsType]: (
+		ctx: WriteTransaction,
+		args: Parameters<Server.StorefrontMutatorsType[key]>[0],
+	) => Promise<void>;
+};
+export const StorefrontMutators: StorefrontMutatorsType = {
+	createLineItem,
+	updateLineItem,
+	deleteLineItem,
+	updateAddress,
+	updateCart,
+	createCart,
+};

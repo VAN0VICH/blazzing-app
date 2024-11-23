@@ -1,7 +1,7 @@
 import type { Db } from "@blazzing-app/db";
 import { generateID } from "@blazzing-app/utils";
 import {
-	CheckoutFormSchema,
+	DeliveryCheckoutFormSchema,
 	type WorkerBindings,
 	type WorkerEnv,
 } from "@blazzing-app/validators";
@@ -22,7 +22,7 @@ export namespace PaymentApi {
 							"application/json": {
 								schema: z.object({
 									cartID: z.string(),
-									checkoutInfo: CheckoutFormSchema,
+									checkoutInfo: DeliveryCheckoutFormSchema,
 								}),
 							},
 						},

@@ -2,7 +2,8 @@ import { CartService } from "@blazzing-app/core";
 import type { Db } from "@blazzing-app/db";
 import { Cloudflare, Database } from "@blazzing-app/shared";
 import {
-	CheckoutFormSchema,
+	DeliveryCheckoutFormSchema,
+	OnsiteCheckoutFormSchema,
 	type WorkerBindings,
 	type WorkerEnv,
 } from "@blazzing-app/validators";
@@ -111,8 +112,11 @@ export namespace CartApi {
 						content: {
 							"application/json": {
 								schema: z.object({
-									checkoutInfo: CheckoutFormSchema,
+									checkoutInfo: DeliveryCheckoutFormSchema.or(
+										OnsiteCheckoutFormSchema,
+									),
 									id: z.string(),
+									type: z.enum(["delivery", "onsite"] as const),
 								}),
 							},
 						},
@@ -134,13 +138,14 @@ export namespace CartApi {
 			}),
 			//@ts-ignore
 			async (c) => {
-				const { checkoutInfo, id } = c.req.valid("json");
+				const { checkoutInfo, id, type } = c.req.valid("json");
 
 				const db = c.get("db" as never) as Db;
 				const orderIDs = await Effect.runPromise(
 					CartService.completeCart({
 						checkoutInfo,
 						id,
+						type,
 					}).pipe(
 						Effect.provideService(Database, {
 							manager: db,

@@ -1,8 +1,8 @@
 import type { Routes } from "@blazzing-app/functions";
 import { toast } from "@blazzing-app/ui/toast";
 import {
-	CheckoutFormSchema,
-	type CheckoutForm,
+	DeliveryCheckoutFormSchema,
+	type DeliveryCheckoutForm,
 } from "@blazzing-app/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box, Button, Flex, Grid, Spinner } from "@radix-ui/themes";
@@ -23,7 +23,9 @@ export const DesktopCheckout = ({ cartID }: { cartID: string }) => {
 	const [isLoading, setIsLoading] = React.useState(false);
 
 	const items = useGlobalStore((state) =>
-		state.lineItems.sort((a, b) => a.createdAt.localeCompare(b.createdAt)),
+		state.lineItems
+			.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+			.filter((item) => item.cartID === cartID),
 	);
 
 	const [honoClient] = React.useState(() => hc<Routes>(window.ENV.WORKER_URL));
@@ -32,15 +34,15 @@ export const DesktopCheckout = ({ cartID }: { cartID: string }) => {
 	const [user] = users;
 
 	const { opened, setOpened } = useCartState();
-	const methods = useForm<CheckoutForm>({
-		resolver: zodResolver(CheckoutFormSchema),
+	const methods = useForm<DeliveryCheckoutForm>({
+		resolver: zodResolver(DeliveryCheckoutFormSchema),
 		defaultValues: {
-			email: user ? user.email : (cart?.email ?? ""),
+			email: user?.email ? user.email : (cart?.email ?? ""),
 			phone: user?.phone ?? cart?.phone ?? "",
 			fullName: user?.fullName ?? cart?.fullName ?? "",
 			...(cart?.shippingAddress && {
 				shippingAddress:
-					cart?.shippingAddress as CheckoutForm["shippingAddress"],
+					cart?.shippingAddress as DeliveryCheckoutForm["shippingAddress"],
 			}),
 		},
 	});
@@ -53,7 +55,7 @@ export const DesktopCheckout = ({ cartID }: { cartID: string }) => {
 	}, [opened]);
 
 	//TODO: CREATE ACTUAL WORKFLOW
-	const onSubmit = async (data: CheckoutForm) => {
+	const onSubmit = async (data: DeliveryCheckoutForm) => {
 		if (items.length === 0) {
 			toast.error("Cart is empty");
 			return;
@@ -72,6 +74,7 @@ export const DesktopCheckout = ({ cartID }: { cartID: string }) => {
 				json: {
 					checkoutInfo: data,
 					id: cartID,
+					type: "delivery",
 				},
 			},
 
@@ -81,8 +84,10 @@ export const DesktopCheckout = ({ cartID }: { cartID: string }) => {
 				},
 			},
 		);
+		console.log("response status", response.status);
 		if (response.ok) {
 			const { result: orderIDs } = await response.json();
+			console.log("order ids", orderIDs);
 
 			if (orderIDs.length > 0) {
 				return navigate(

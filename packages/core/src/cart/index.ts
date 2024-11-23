@@ -3,8 +3,9 @@ import { Cloudflare, Database } from "@blazzing-app/shared";
 import { generateID } from "@blazzing-app/utils";
 import {
 	CartError,
-	CheckoutFormSchema,
+	DeliveryCheckoutFormSchema,
 	NeonDatabaseError,
+	OnsiteCheckoutFormSchema,
 	type InsertOrder,
 } from "@blazzing-app/validators";
 import { eq, sql } from "drizzle-orm";
@@ -15,8 +16,12 @@ import { cartSubtotal } from "../business";
 
 export namespace CartService {
 	export const completeCart = fn(
-		z.object({ checkoutInfo: CheckoutFormSchema, id: z.string() }),
-		({ checkoutInfo, id }) =>
+		z.object({
+			checkoutInfo: DeliveryCheckoutFormSchema.or(OnsiteCheckoutFormSchema),
+			id: z.string(),
+			type: z.enum(["delivery", "onsite"] as const),
+		}),
+		({ checkoutInfo, id, type }) =>
 			Effect.gen(function* () {
 				const { manager } = yield* Database;
 				const { env } = yield* Cloudflare;
@@ -44,24 +49,36 @@ export namespace CartService {
 												}),
 											),
 
-											Effect.tryPromise(() =>
-												transaction.query.customers.findFirst({
-													where: (customers, { eq }) =>
-														eq(customers.email, checkoutInfo.email),
-													columns: {
-														id: true,
-													},
-												}),
-											),
-											Effect.tryPromise(() =>
-												transaction.query.users.findFirst({
-													where: (users, { eq }) =>
-														eq(users.email, checkoutInfo.email),
-													columns: {
-														id: true,
-													},
-												}),
-											),
+											!!checkoutInfo.email || !!checkoutInfo.phone
+												? Effect.tryPromise(() =>
+														transaction.query.customers.findFirst({
+															where: (customers, { eq }) =>
+																checkoutInfo.email
+																	? eq(customers.email, checkoutInfo.email)
+																	: checkoutInfo.phone
+																		? eq(customers.phone, checkoutInfo.phone)
+																		: eq(customers.id, "not found"),
+															columns: {
+																id: true,
+															},
+														}),
+													)
+												: Effect.succeed(undefined),
+											!!checkoutInfo.email || !!checkoutInfo.phone
+												? Effect.tryPromise(() =>
+														transaction.query.users.findFirst({
+															where: (users, { eq }) =>
+																checkoutInfo.email
+																	? eq(users.email, checkoutInfo.email)
+																	: checkoutInfo.phone
+																		? eq(users.phone, checkoutInfo.phone)
+																		: eq(users.id, "not found"),
+															columns: {
+																id: true,
+															},
+														}),
+													)
+												: Effect.succeed(undefined),
 										],
 										{ concurrency: 3 },
 									);
@@ -83,25 +100,37 @@ export namespace CartService {
 								/* create new user if not found */
 								if (!existingCustomer) {
 									yield* Effect.all([
-										!existingCustomer
+										!existingCustomer &&
+										(!!checkoutInfo.email || !!checkoutInfo.phone)
 											? Effect.tryPromise(() =>
 													transaction.insert(schema.customers).values({
 														id: newCustomerID,
 														createdAt: new Date().toISOString(),
 														version: 0,
-														email: checkoutInfo.email,
+														...(checkoutInfo.email && {
+															email: checkoutInfo.email,
+														}),
+														...(checkoutInfo.phone && {
+															phone: checkoutInfo.phone,
+														}),
 														userID: existingUser ? existingUser.id : newUserID,
 													}),
 												)
 											: Effect.succeed({}),
-										!existingUser
+										!existingUser &&
+										(!!checkoutInfo.email || !!checkoutInfo.phone)
 											? Effect.tryPromise(() =>
 													transaction.insert(schema.users).values({
 														id: newUserID,
 														createdAt: new Date().toISOString(),
 														version: 0,
 														fullName: checkoutInfo.fullName,
-														email: checkoutInfo.email,
+														...(checkoutInfo.email && {
+															email: checkoutInfo.email,
+														}),
+														...(checkoutInfo.phone && {
+															phone: checkoutInfo.phone,
+														}),
 													}),
 												)
 											: Effect.succeed({}),
@@ -109,7 +138,10 @@ export namespace CartService {
 								}
 
 								/* create new address*/
-								if (!cart.shippingAddressID) {
+								if (
+									!cart.shippingAddressID &&
+									"shippingAddress" in checkoutInfo
+								) {
 									yield* Effect.tryPromise(() =>
 										transaction.insert(schema.addresses).values({
 											id: newShippingAddressID,
@@ -148,16 +180,24 @@ export namespace CartService {
 											const subtotal = yield* cartSubtotal(lineItems, cart);
 											const newOrder: InsertOrder = {
 												id: generateID({ prefix: "order" }),
-												countryCode: cart.countryCode ?? "AU",
+												countryCode: cart.countryCode ?? "BY",
 												currencyCode: "BYN",
 												createdAt: new Date().toISOString(),
-												email: checkoutInfo.email ?? "email not provided",
-												//TODO
-												billingAddressID:
-													cart.shippingAddressID ?? newShippingAddressID,
-												shippingAddressID:
-													cart.shippingAddressID ?? newShippingAddressID,
-												phone: checkoutInfo.phone,
+												...(checkoutInfo.email && {
+													email: checkoutInfo.email,
+												}),
+												...("shippingAddress" in checkoutInfo && {
+													shippingAddressID:
+														cart.shippingAddressID ?? newShippingAddressID,
+												}),
+												type,
+												...("tableNumber" in checkoutInfo &&
+													checkoutInfo.tableNumber && {
+														tableNumber: checkoutInfo.tableNumber,
+													}),
+												...(checkoutInfo.phone && {
+													phone: checkoutInfo.phone,
+												}),
 												fullName: checkoutInfo.fullName,
 												customerID: existingCustomer
 													? existingCustomer.id
@@ -178,72 +218,77 @@ export namespace CartService {
 										.values(Array.from(storeIDToOrder.values()))
 										.returning({ id: schema.orders.id }),
 								);
-								yield* Effect.all([
-									/* for each line item, update the orderID, so that order will include those items */
-									/* for each line item, remove the cartID, so that cart will not include items that were successfully ordered */
-									Effect.forEach(
-										Array.from(storeIDToLineItem.entries()),
-										([storeID, items]) =>
-											Effect.gen(function* () {
-												const effect = Effect.forEach(
-													items,
-													(item) => {
-														return Effect.tryPromise(() =>
-															transaction
-																.update(schema.lineItems)
-																.set({
-																	cartID: null,
-																	orderID: storeIDToOrder.get(storeID)!.id,
-																})
-																.where(eq(schema.lineItems.id, item.id)),
-														);
-													},
-													{ concurrency: "unbounded" },
-												);
-												return yield* effect;
-											}),
-										{ concurrency: "unbounded" },
-									),
-
-									/* save user info for the cart */
-									Effect.tryPromise(() =>
-										transaction
-											.update(schema.carts)
-											.set({
-												fullName: cart.fullName,
-												email: cart.email,
-												phone: cart.phone,
-												version: sql`${schema.carts.version} + 1`,
-												userID: existingUser ? existingUser.id : newUserID,
-												...(!cart.shippingAddressID && {
-													shippingAddressID: newShippingAddressID,
+								yield* Effect.all(
+									[
+										/* for each line item, update the orderID, so that order will include those items */
+										/* for each line item, remove the cartID, so that cart will not include items that were successfully ordered */
+										Effect.forEach(
+											Array.from(storeIDToLineItem.entries()),
+											([storeID, items]) =>
+												Effect.gen(function* () {
+													const effect = Effect.forEach(
+														items,
+														(item) => {
+															return Effect.tryPromise(() =>
+																transaction
+																	.update(schema.lineItems)
+																	.set({
+																		cartID: null,
+																		orderID: storeIDToOrder.get(storeID)!.id,
+																		version: sql`${schema.lineItems.version} + 1`,
+																	})
+																	.where(eq(schema.lineItems.id, item.id)),
+															);
+														},
+														{ concurrency: "unbounded" },
+													);
+													return yield* effect;
 												}),
-											})
+											{ concurrency: "unbounded" },
+										),
 
-											.where(eq(schema.carts.id, id)),
-									),
+										/* save user info for the cart */
+										Effect.tryPromise(() =>
+											transaction
+												.update(schema.carts)
+												.set({
+													fullName: cart.fullName,
+													email: cart.email,
+													phone: cart.phone,
+													version: sql`${schema.carts.version} + 1`,
+													userID: existingUser ? existingUser.id : newUserID,
+													...(!cart.shippingAddressID &&
+														"shippingAddress" in checkoutInfo && {
+															shippingAddressID: newShippingAddressID,
+														}),
+												})
 
-									Effect.tryPromise(() =>
-										transaction.insert(schema.notifications).values([
-											{
-												id: generateID({ prefix: "notification" }),
-												createdAt: new Date().toISOString(),
-												type: "ORDER_PLACED" as const,
-												entityID: existingUser ? existingUser.id : newUserID,
-												description: "Order has been placed",
-												title: "Order Placed",
-											},
-											...Array.from(storeIDToOrder.keys()).map((storeID) => ({
-												id: generateID({ prefix: "notification" }),
-												createdAt: new Date().toISOString(),
-												type: "ORDER_PLACED" as const,
-												entityID: storeID,
-												description: "Order has been placed",
-												title: "Order Placed",
-											})),
-										]),
-									),
-								]);
+												.where(eq(schema.carts.id, id)),
+										),
+
+										Effect.tryPromise(() =>
+											transaction.insert(schema.notifications).values([
+												{
+													id: generateID({ prefix: "notification" }),
+													createdAt: new Date().toISOString(),
+													type: "ORDER_PLACED" as const,
+													entityID: existingUser ? existingUser.id : newUserID,
+													description: "Order has been placed",
+													title: "Order Placed",
+												},
+												...Array.from(storeIDToOrder.keys()).map((storeID) => ({
+													id: generateID({ prefix: "notification" }),
+													createdAt: new Date().toISOString(),
+													type: "ORDER_PLACED" as const,
+													entityID: storeID,
+													description: "Order has been placed",
+													title: "Order Placed",
+												})),
+											]),
+										),
+									],
+									{ concurrency: 3 },
+								);
 								return orderIDs.map((order) => order.id);
 							}).pipe(
 								Effect.catchTags({
@@ -290,20 +335,29 @@ export namespace CartService {
 
 					Effect.retry({ times: 2 }),
 					Effect.zipLeft(
-						Effect.all([
-							Effect.tryPromise(() =>
-								fetch(`${env.PARTYKIT_ORIGIN}/parties/main/dashboard`, {
-									method: "POST",
-									body: JSON.stringify(["store"]),
-								}),
-							),
-							Effect.tryPromise(() =>
-								fetch(`${env.PARTYKIT_ORIGIN}/parties/main/global`, {
-									method: "POST",
-									body: JSON.stringify(["user"]),
-								}),
-							),
-						]),
+						Effect.all(
+							[
+								Effect.tryPromise(() =>
+									fetch(`${env.PARTYKIT_ORIGIN}/parties/main/dashboard`, {
+										method: "POST",
+										body: JSON.stringify(["store"]),
+									}),
+								),
+								Effect.tryPromise(() =>
+									fetch(`${env.PARTYKIT_ORIGIN}/parties/main/global`, {
+										method: "POST",
+										body: JSON.stringify(["user", "cart"]),
+									}),
+								),
+								Effect.tryPromise(() =>
+									fetch(`${env.PARTYKIT_ORIGIN}/parties/main/storefront`, {
+										method: "POST",
+										body: JSON.stringify(["cart"]),
+									}),
+								),
+							],
+							{ concurrency: 3 },
+						),
 					),
 
 					Effect.orDie,

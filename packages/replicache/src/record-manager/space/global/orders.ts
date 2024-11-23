@@ -16,23 +16,31 @@ export const ordersCVD: GetRowsWTableName = ({ fullRows }) => {
 					where: (users, { eq }) => eq(users.authID, authUser.id),
 					columns: {
 						email: true,
+						phone: true,
 					},
 				}),
 			),
-			Effect.flatMap((userEmail) =>
+			Effect.flatMap((user) =>
 				Effect.gen(function* () {
-					if (!userEmail)
+					if (!user)
 						return yield* Effect.fail(
 							new NotFound({ message: "User not found" }),
 						);
-					return yield* Effect.succeed(userEmail.email);
+					return yield* Effect.succeed({
+						email: user.email,
+						phone: user.phone,
+					});
 				}),
 			),
-			Effect.flatMap((email) =>
+			Effect.flatMap(({ email, phone }) =>
 				Effect.tryPromise(() =>
 					fullRows
 						? manager.query.orders.findMany({
-								where: (orders, { eq }) => eq(orders.email, email),
+								where: (orders, { eq, or }) =>
+									or(
+										eq(orders.email, email ?? "no email"),
+										eq(orders.phone, phone ?? "no phone"),
+									),
 								with: {
 									shippingAddress: true,
 									billingAddress: true,
@@ -79,7 +87,11 @@ export const ordersCVD: GetRowsWTableName = ({ fullRows }) => {
 									id: true,
 									version: true,
 								},
-								where: (orders, { eq }) => eq(orders.email, email),
+								where: (orders, { eq, or }) =>
+									or(
+										eq(orders.email, email ?? "no email"),
+										eq(orders.phone, phone ?? "no phone"),
+									),
 								with: {
 									items: {
 										columns: {

@@ -19,7 +19,7 @@ export const users = pgTable(
 	{
 		id: varchar("id").notNull().primaryKey(),
 		authID: varchar("auth_id").references(() => authUsers.id),
-		email: varchar("email").notNull(),
+		email: varchar("email"),
 		phone: varchar("phone"),
 		username: varchar("username"),
 		fullName: varchar("full_name"),
