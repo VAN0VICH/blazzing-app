@@ -13,7 +13,7 @@ import {
 } from "@blazzing-app/validators";
 
 import { schema } from "@blazzing-app/db";
-import { Database } from "@blazzing-app/shared";
+import { Cloudflare, Database } from "@blazzing-app/shared";
 import { toUrlFriendly } from "@blazzing-app/utils";
 import type {
 	Price,
@@ -92,6 +92,7 @@ const publishProduct = fn(z.object({ id: z.string() }), (input) =>
 	Effect.gen(function* () {
 		const tableMutator = yield* TableMutator;
 		const { manager } = yield* Database;
+		const { bindings } = yield* Cloudflare;
 		const { id } = input;
 		const product = yield* Effect.tryPromise(() =>
 			manager.query.products.findFirst({
@@ -151,7 +152,17 @@ const publishProduct = fn(z.object({ id: z.string() }), (input) =>
 				"products",
 			),
 		);
-		return yield* Effect.all(effects, { concurrency: "unbounded" });
+		yield* Effect.all(effects, { concurrency: "unbounded" });
+		yield* Effect.all([
+			Effect.tryPromise(() => bindings.KV.delete(`product_${product.id}`)),
+			Effect.tryPromise(() =>
+				bindings.KV.delete(`product_${product.baseVariant.handle}`),
+			),
+		]).pipe(
+			Effect.catchTags({
+				UnknownException: () => Effect.succeed({}),
+			}),
+		);
 	}),
 );
 const copyProduct = fn(DuplicateProductSchema, (input) =>
