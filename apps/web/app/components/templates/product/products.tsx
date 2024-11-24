@@ -118,7 +118,7 @@ const ProductComponent = ({
 				>
 					{!isAuction ? (
 						<Price
-							amount={12}
+							amount={product.baseVariant?.prices?.[0]?.amount ?? -1}
 							currencyCode="BYN"
 							className="border rounded-[5px] font-bold max-h-[30px] flex items-center justify-center text-sm p-1 bg-accent-3 border-accent-9 text-accent-11"
 						/>
