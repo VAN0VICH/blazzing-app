@@ -6,7 +6,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@blazzing-app/ui/table";
-import type { Variant } from "@blazzing-app/validators/client";
+import type { Variant } from "../../../../../../../packages/validators/src/store-entities";
 import { flexRender, type ColumnDef, type Row } from "@tanstack/react-table";
 import React, { useMemo, type KeyboardEvent } from "react";
 import { useDataTable } from "~/components/templates/table/use-data-table";

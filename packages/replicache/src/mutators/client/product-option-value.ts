@@ -5,9 +5,9 @@ import type {
 } from "@blazzing-app/validators";
 import type {
 	Product,
-	ProductOptionValue,
+	StoreProductOptionValue,
 	Variant,
-} from "@blazzing-app/validators/client";
+} from "../../../../validators/src/store-entities";
 import type { WriteTransaction } from "replicache";
 import { productNotFound } from "./product";
 import { variantNotFound } from "./variant";
@@ -23,7 +23,7 @@ async function updateProductOptionValues(
 	if (!product) {
 		return productNotFound(productID);
 	}
-	const valueToOptionValue = new Map<string, ProductOptionValue>();
+	const valueToOptionValue = new Map<string, StoreProductOptionValue>();
 	for (const optionValue of product.options?.find(
 		(option) => option.id === optionID,
 	)?.optionValues ?? []) {
@@ -93,7 +93,7 @@ async function assignOptionValueToVariant(
 	if (!variant) {
 		return variantNotFound(variantID);
 	}
-	let productOptionValue: ProductOptionValue | undefined;
+	let productOptionValue: StoreProductOptionValue | undefined;
 
 	for (const option of product.options || []) {
 		productOptionValue = option.optionValues?.find(
@@ -102,7 +102,7 @@ async function assignOptionValueToVariant(
 		if (productOptionValue) break;
 	}
 
-	const newOptionValues: { optionValue: ProductOptionValue }[] = [];
+	const newOptionValues: { optionValue: StoreProductOptionValue }[] = [];
 	for (const value of variant.optionValues ?? []) {
 		if (value.optionValue.id !== prevOptionValueID) {
 			newOptionValues.push({ optionValue: value.optionValue });

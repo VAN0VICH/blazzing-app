@@ -15,12 +15,12 @@ const items: DashboardSettingsSidebarItem[] = [
 
 		icon: "Store",
 	},
-	{
-		title: "Payment",
-		href: "/dashboard/settings/payment",
+	// {
+	// 	title: "Payment",
+	// 	href: "/dashboard/settings/payment",
 
-		icon: "Payment",
-	},
+	// 	icon: "Payment",
+	// },
 ];
 export const DashboardSettingsSidebar = () => {
 	const { pathname } = useLocation();

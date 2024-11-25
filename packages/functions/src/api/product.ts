@@ -4,7 +4,7 @@ import {
 	PriceSchema,
 	ProductSchema,
 	VariantSchema,
-} from "@blazzing-app/validators/server";
+} from "@blazzing-app/validators";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 
 const FullProductSchema = ProductSchema.extend({

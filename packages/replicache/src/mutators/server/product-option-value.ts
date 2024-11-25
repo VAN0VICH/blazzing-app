@@ -7,7 +7,7 @@ import {
 	NotFound,
 	UpdateProductOptionValuesSchema,
 } from "@blazzing-app/validators";
-import type { ProductOptionValue } from "@blazzing-app/validators/server";
+import type { Server } from "@blazzing-app/validators";
 import { eq } from "drizzle-orm";
 import { Effect } from "effect";
 import { TableMutator } from "../../context/table-mutator";
@@ -40,7 +40,7 @@ const updateProductOptionValues = fn(UpdateProductOptionValuesSchema, (input) =>
 		);
 		const newOptionValuesSet = new Set(newOptionValues.map((val) => val.value));
 
-		const optionValuesToCreate: ProductOptionValue[] = [];
+		const optionValuesToCreate: Server.ProductOptionValue[] = [];
 		const optionValueIDsToDelete: string[] = [];
 
 		yield* Effect.forEach(newOptionValues, (val) =>

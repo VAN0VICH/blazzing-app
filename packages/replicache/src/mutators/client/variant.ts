@@ -9,11 +9,11 @@ import {
 } from "@blazzing-app/validators";
 import type { DeepReadonlyObject, WriteTransaction } from "replicache";
 import type {
-	Price,
+	StorePrice,
 	Product,
-	ProductOptionValue,
+	StoreProductOptionValue,
 	Variant,
-} from "@blazzing-app/validators/client";
+} from "../../../../validators/src/store-entities";
 import { Effect } from "effect";
 import { generateValueCombinations } from "../server/variant";
 
@@ -32,7 +32,7 @@ async function generateVariants(tx: WriteTransaction, input: GenerateVariants) {
 		(value) => value.productID === productID,
 	);
 	const options = product.options ?? [];
-	const valueToOptionValue = new Map<string, ProductOptionValue>();
+	const valueToOptionValue = new Map<string, StoreProductOptionValue>();
 	for (const option of options) {
 		for (const value of option.optionValues ?? []) {
 			valueToOptionValue.set(value.value, value);
@@ -51,8 +51,8 @@ async function generateVariants(tx: WriteTransaction, input: GenerateVariants) {
 		newValueCombinations.map((value, index) => {
 			const variantID = newVariantIDs[index]!;
 			const variant: InsertVariant & {
-				prices: Price[];
-				optionValues: { optionValue: ProductOptionValue }[];
+				prices: StorePrice[];
+				optionValues: { optionValue: StoreProductOptionValue }[];
 			} = {
 				id: variantID,
 				title: newValueCombinations[index]!.join("/"),
@@ -66,7 +66,7 @@ async function generateVariants(tx: WriteTransaction, input: GenerateVariants) {
 							id: newPricesIDs[index]!,
 							variantID,
 							version: 0,
-						}) satisfies Price,
+						}) satisfies StorePrice,
 				),
 				optionValues: value.map((val) => ({
 					optionValue: valueToOptionValue.get(val)!,
@@ -146,7 +146,7 @@ const duplicate = (tx: WriteTransaction, duplicate: VariantDuplicate) =>
 						id: priceIDtoNewPriceID.get(price.id)!,
 						variantID: newVariantID,
 						version: 0,
-					}) satisfies Price,
+					}) satisfies StorePrice,
 			),
 		};
 		yield* Effect.tryPromise(() => tx.set(newVariant.id, newVariant));

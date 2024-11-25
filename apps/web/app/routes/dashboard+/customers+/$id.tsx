@@ -1,9 +1,9 @@
-import type { Customer } from "@blazzing-app/validators/client";
 import { Avatar, Card, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import { OrdersTable } from "../orders+/orders-table/table";
 import { useParams } from "@remix-run/react";
 import { useDashboardStore } from "~/zustand/store";
 import ImagePlaceholder from "~/components/image-placeholder";
+import type { StoreCustomer } from "@blazzing-app/validators";
 
 export default function CustomerRoute() {
 	const params = useParams();
@@ -38,7 +38,7 @@ export default function CustomerRoute() {
 }
 const CustomerInfo = ({
 	customer,
-}: { customer: Customer | undefined | null }) => {
+}: { customer: StoreCustomer | undefined | null }) => {
 	return (
 		<Card className="p-0">
 			<Flex

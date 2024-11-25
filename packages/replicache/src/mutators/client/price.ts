@@ -3,7 +3,10 @@ import type {
 	DeletePrices,
 	UpdatePrice,
 } from "@blazzing-app/validators";
-import type { Price, Variant } from "@blazzing-app/validators/client";
+import type {
+	StorePrice,
+	Variant,
+} from "../../../../validators/src/store-entities";
 import type { WriteTransaction } from "replicache";
 
 export function entityNotFound(id: string) {
@@ -22,7 +25,7 @@ async function createPrices(tx: WriteTransaction, input: CreatePrices) {
 	const entityPrices = entity.prices ? [...entity.prices] : [];
 
 	for (const price of prices) {
-		entityPrices.push(price as Price);
+		entityPrices.push(price as StorePrice);
 	}
 
 	await tx.set(id, {

@@ -2,13 +2,13 @@ import { json, redirect, type LoaderFunction } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
 import { hc } from "hono/client";
 import type { Routes } from "@blazzing-app/functions";
-import type { Order } from "@blazzing-app/validators/client";
 import { SidebarLayoutWrapper } from "~/components/layout/sidebar-wrapper";
 import { Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import { OrderComponent } from "~/components/templates/order/order";
+import type { StoreOrder } from "@blazzing-app/validators";
 
 type LoaderData = {
-	orders: Order[];
+	orders: StoreOrder[];
 };
 export const loader: LoaderFunction = async (args) => {
 	const { context } = args;

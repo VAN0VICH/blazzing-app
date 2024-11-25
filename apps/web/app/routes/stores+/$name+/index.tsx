@@ -1,5 +1,5 @@
 import type { Routes } from "@blazzing-app/functions";
-import type { Store as StoreType } from "@blazzing-app/validators/client";
+import type { Store as StoreType } from "../../../../../../packages/validators/src/store-entities";
 import { type LoaderFunction, json } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
 import { hc } from "hono/client";

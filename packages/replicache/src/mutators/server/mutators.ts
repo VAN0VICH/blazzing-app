@@ -36,7 +36,6 @@ import {
 } from "./variant";
 import { createCart } from "./carts";
 import { deleteImage, updateImagesOrder, uploadImages } from "./image";
-import { createPaymentProfile } from "./payment-profile";
 
 const DashboardMutators = {
 	createProduct,
@@ -65,7 +64,6 @@ const DashboardMutators = {
 	uploadImages,
 	updateImagesOrder,
 	deleteImage,
-	createPaymentProfile,
 };
 
 export const DashboardMutatorsMap = new Map(Object.entries(DashboardMutators));
@@ -246,9 +244,6 @@ export const affectedSpaces: AffectedSpaces = {
 	uploadImages: {
 		dashboard: ["store"],
 		marketplace: ["stores"],
-	},
-	createPaymentProfile: {
-		dashboard: ["store"],
 	},
 	deleteAvatar: {
 		global: ["user"],

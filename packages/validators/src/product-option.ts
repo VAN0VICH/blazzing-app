@@ -8,7 +8,6 @@ export const InsertProductOptionSchema = createInsertSchema(
 	schema.productOptions,
 );
 export const ProductOptionSchema = createSelectSchema(schema.productOptions);
-export type ProductOption = z.infer<typeof ProductOptionSchema>;
 
 export const CreateProductOptionSchema = z.object({
 	option: InsertProductOptionSchema,

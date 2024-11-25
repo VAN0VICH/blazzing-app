@@ -1,10 +1,10 @@
-import type { Order } from "@blazzing-app/validators/client";
+import type { StoreOrder } from "@blazzing-app/validators";
 import { Badge } from "@radix-ui/themes";
 
 export function ShippingStatus({
 	status,
 	size = "2",
-}: { status: Order["shippingStatus"]; size?: "1" | "2" | "3" }) {
+}: { status: StoreOrder["shippingStatus"]; size?: "1" | "2" | "3" }) {
 	return status === "pending" ? (
 		<Badge color="red" size={size}>
 			Pending

@@ -1,5 +1,5 @@
 import { Icons } from "@blazzing-app/ui/icons";
-import type { Variant } from "@blazzing-app/validators/client";
+import type { Variant } from "../../../../../../../packages/validators/src/store-entities";
 import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import { DropdownMenu, IconButton } from "@radix-ui/themes";
 import type { Row } from "@tanstack/react-table";

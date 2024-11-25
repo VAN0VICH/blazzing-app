@@ -1,5 +1,4 @@
 import { Icons } from "@blazzing-app/ui/icons";
-import type { Order } from "@blazzing-app/validators/client";
 import { Box, Flex, Heading } from "@radix-ui/themes";
 import debounce from "lodash.debounce";
 import React, { useState, useTransition } from "react";
@@ -12,10 +11,11 @@ import type {
 import { useDashboardStore } from "~/zustand/store";
 import { OrderPreview, OrderPreviewMobile } from "./order-preview";
 import { OrdersTable } from "./orders-table/table";
+import type { StoreOrder } from "@blazzing-app/validators";
 
 export default function Orders() {
 	const orders = useDashboardStore((state) => state.orders);
-	const [searchResults, setSearchResults] = useState<Order[] | undefined>(
+	const [searchResults, setSearchResults] = useState<StoreOrder[] | undefined>(
 		undefined,
 	);
 	const searchWorker = useDashboardStore((state) => state.searchWorker);
@@ -52,12 +52,12 @@ export default function Orders() {
 				const { type, payload } = event.data as SearchWorkerResponse;
 				if (typeof type === "string" && type === "ORDER_SEARCH") {
 					startTransition(() => {
-						const orders: Order[] = [];
+						const orders: StoreOrder[] = [];
 						const orderIDs = new Set<string>();
 						for (const item of payload) {
 							if (item.id.startsWith("order")) {
 								if (orderIDs.has(item.id)) continue;
-								orders.push(item as Order);
+								orders.push(item as StoreOrder);
 								orderIDs.add(item.id);
 							}
 						}

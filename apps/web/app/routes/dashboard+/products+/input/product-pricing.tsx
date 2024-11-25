@@ -1,6 +1,9 @@
 import { Icons } from "@blazzing-app/ui/icons";
-import type { CreatePrices, UpdatePrice } from "@blazzing-app/validators";
-import type { Price } from "@blazzing-app/validators/client";
+import type {
+	CreatePrices,
+	StorePrice,
+	UpdatePrice,
+} from "@blazzing-app/validators";
 import {
 	Card,
 	Flex,
@@ -15,7 +18,7 @@ import { useReplicache } from "~/zustand/replicache";
 import { Currencies } from "./product-currencies";
 
 interface ProductPricingProps {
-	prices: Price[];
+	prices: StorePrice[];
 	variantID: string | undefined;
 	isPublished: boolean;
 }
@@ -115,7 +118,7 @@ const PriceComponent = ({
 	updatePrice,
 	isPublished,
 }: {
-	price: Price;
+	price: StorePrice;
 	variantID: string | undefined;
 	updatePrice: ({ priceID, updates, id }: UpdatePrice) => Promise<void>;
 	deletePrices: (priceID: string) => Promise<void>;

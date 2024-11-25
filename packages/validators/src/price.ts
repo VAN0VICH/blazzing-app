@@ -1,11 +1,9 @@
 import { schema } from "@blazzing-app/db";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import type { PriceSchema } from "../server/entities";
 
 export const InsertPriceSchema = createInsertSchema(schema.prices);
 export type InsertPrice = z.infer<typeof InsertPriceSchema>;
-export type Price = z.infer<typeof PriceSchema>;
 
 export const CreatePricesSchema = z.object({
 	prices: z.array(InsertPriceSchema),

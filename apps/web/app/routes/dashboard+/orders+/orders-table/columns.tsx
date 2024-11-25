@@ -1,15 +1,14 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
-import type { Order } from "@blazzing-app/validators/client";
 import { DataTableColumnHeader } from "~/components/templates/table/data-table-column-header";
 import type { DataTableFilterableColumn } from "~/types/table";
-import { orderStatuses } from "@blazzing-app/validators";
+import { orderStatuses, type StoreOrder } from "@blazzing-app/validators";
 import { Avatar, Box, Flex, Text } from "@radix-ui/themes";
 import { OrderStatus } from "~/components/badge/order-status";
 import ImagePlaceholder from "~/components/image-placeholder";
 import { formatISODate } from "~/utils/format";
 
-export function getOrdersColumns(): ColumnDef<Order, unknown>[] {
+export function getOrdersColumns(): ColumnDef<StoreOrder, unknown>[] {
 	return [
 		{
 			accessorKey: "customer",
@@ -96,7 +95,7 @@ export function getOrdersColumns(): ColumnDef<Order, unknown>[] {
 		},
 	];
 }
-export const filterableColumns: DataTableFilterableColumn<Order>[] = [
+export const filterableColumns: DataTableFilterableColumn<StoreOrder>[] = [
 	{
 		id: "status",
 		title: "Status",

@@ -1,5 +1,5 @@
 import { Icons } from "@blazzing-app/ui/icons";
-import type { Order } from "@blazzing-app/validators/client";
+import type { StoreOrder } from "@blazzing-app/validators";
 import {
 	Avatar,
 	Box,
@@ -47,7 +47,7 @@ const OrderRoute = () => {
 	);
 };
 export default OrderRoute;
-const CustomerInfo = ({ order }: { order: Order | undefined | null }) => {
+const CustomerInfo = ({ order }: { order: StoreOrder | undefined | null }) => {
 	return (
 		<Card className="p-0">
 			<Flex
@@ -127,7 +127,7 @@ const CustomerNote = () => {
 		</Card>
 	);
 };
-const OrderInfo = ({ order }: { order: Order | undefined }) => {
+const OrderInfo = ({ order }: { order: StoreOrder | undefined }) => {
 	const [editMode, setEditMode] = React.useState(false);
 	const isInitialized = useDashboardStore((state) => state.isInitialized);
 	const items = order?.items ?? [];
@@ -223,7 +223,7 @@ const OrderInfo = ({ order }: { order: Order | undefined }) => {
 };
 const PaymentInfo = ({
 	paymentStatus,
-}: { paymentStatus: Order["paymentStatus"] }) => {
+}: { paymentStatus: StoreOrder["paymentStatus"] }) => {
 	const [editMode, setEditMode] = React.useState(false);
 	return (
 		<Card className="p-0">
@@ -283,7 +283,10 @@ const PaymentInfo = ({
 const ShippingInfo = ({
 	shippingStatus,
 	order,
-}: { shippingStatus: Order["shippingStatus"]; order: Order | undefined }) => {
+}: {
+	shippingStatus: StoreOrder["shippingStatus"];
+	order: StoreOrder | undefined;
+}) => {
 	const [editMode, setEditMode] = React.useState(false);
 	return (
 		<Card className="p-0">

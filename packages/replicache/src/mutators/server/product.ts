@@ -15,12 +15,7 @@ import {
 import { schema } from "@blazzing-app/db";
 import { Cloudflare, Database } from "@blazzing-app/shared";
 import { toUrlFriendly } from "@blazzing-app/utils";
-import type {
-	Price,
-	ProductOption,
-	ProductOptionValue,
-	Variant,
-} from "@blazzing-app/validators/server";
+import type { Server } from "@blazzing-app/validators";
 import { and, eq, isNotNull } from "drizzle-orm";
 import { z } from "zod";
 import { TableMutator } from "../../context/table-mutator";
@@ -315,7 +310,7 @@ const duplicate = fn(ProductDuplicateSchema, (input) =>
 				originCountry: baseVariant.originCountry,
 				width: baseVariant.width,
 				discountable: baseVariant.discountable,
-			} satisfies Variant,
+			} satisfies Server.Variant,
 			"variants",
 		);
 
@@ -330,7 +325,7 @@ const duplicate = fn(ProductDuplicateSchema, (input) =>
 								id: priceIDtoNewPriceID.get(price.id)!,
 								variantID: newBaseVariantID,
 								version: 0,
-							} satisfies Price,
+							} satisfies Server.Price,
 							"prices",
 						);
 					},
@@ -346,7 +341,7 @@ const duplicate = fn(ProductDuplicateSchema, (input) =>
 									name: option.name,
 									productID: newProductID,
 									version: 0,
-								} satisfies ProductOption,
+								} satisfies Server.ProductOption,
 								"productOptions",
 							);
 						}),
@@ -367,7 +362,7 @@ const duplicate = fn(ProductDuplicateSchema, (input) =>
 						id: optionValueIDtoNewOptionValueID.get(optionValue.id)!,
 						optionID: optionIDtoNewOptionID.get(optionValue.optionID)!,
 						version: 0,
-					} satisfies ProductOptionValue,
+					} satisfies Server.ProductOptionValue,
 					"productOptionValues",
 				);
 			},

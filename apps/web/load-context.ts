@@ -1,11 +1,10 @@
 import type {
 	WebEnv,
 	WebBindings,
-	AuthUser,
+	Server,
 	AuthSession,
 } from "@blazzing-app/validators";
 import type { Session, SessionData } from "@remix-run/cloudflare";
-
 
 declare module "@remix-run/cloudflare" {
 	interface AppLoadContext {
@@ -13,7 +12,7 @@ declare module "@remix-run/cloudflare" {
 			env: WebEnv;
 			bindings: WebBindings;
 		};
-		authUser: AuthUser | null;
+		authUser: Server.AuthUser | null;
 		session: Session<SessionData, SessionData>;
 		userSession: AuthSession;
 	}

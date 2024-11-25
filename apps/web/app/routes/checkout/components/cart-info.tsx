@@ -1,7 +1,7 @@
 import type {
-	Cart,
-	LineItem as LineItemType,
-} from "@blazzing-app/validators/client";
+	StoreCart,
+	StoreLineItem as LineItemType,
+} from "../../../../../../packages/validators/src/store-entities";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Box, Grid, Heading, ScrollArea, Separator } from "@radix-ui/themes";
 import { useCallback } from "react";
@@ -12,7 +12,7 @@ import { useReplicache } from "~/zustand/replicache";
 export const CartInfo = ({
 	cart,
 	items,
-}: { cart: Cart | null | undefined; items: LineItemType[] }) => {
+}: { cart: StoreCart | null | undefined; items: LineItemType[] }) => {
 	const rep = useReplicache((state) => state.globalRep);
 	const [parent] = useAutoAnimate(/* optional config */);
 	const deleteItem = useCallback(

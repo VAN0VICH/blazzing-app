@@ -1,10 +1,12 @@
-import type { Auth, AuthSession, AuthUser } from "@blazzing-app/validators";
+import type { Auth, AuthSession, Server } from "@blazzing-app/validators";
 import type { Context } from "hono";
 import { isWithinExpirationDate, TimeSpan } from "oslo";
 import App from "../index";
 
 const sessionExpiresIn = new TimeSpan(30, "d");
-export const getAuthUser = async (c: Context): Promise<AuthUser | null> => {
+export const getAuthUser = async (
+	c: Context,
+): Promise<Server.AuthUser | null> => {
 	const sessionID = readBearerToken(
 		c.req.raw.headers.get("Authorization") ?? "",
 	);

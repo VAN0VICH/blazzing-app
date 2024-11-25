@@ -1,6 +1,6 @@
 import { Drawer, DrawerContent } from "@blazzing-app/ui/drawer";
 import { Icons, strokeWidth } from "@blazzing-app/ui/icons";
-import type { Product } from "@blazzing-app/validators/client";
+import type { Product } from "../../../../../../../packages/validators/src/store-entities";
 import { Flex, IconButton, ScrollArea, Theme } from "@radix-ui/themes";
 import { VariantInput } from "../variant-input";
 import { useReplicache } from "~/zustand/replicache";

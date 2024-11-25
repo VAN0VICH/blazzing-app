@@ -6,8 +6,10 @@ import {
 	useGlobalStore,
 	useMarketplaceStore,
 } from "./store";
-import type { PaymentProfile } from "@blazzing-app/validators/client";
-import type { ActiveStoreID } from "@blazzing-app/validators";
+import type {
+	ActiveStoreID,
+	StorePaymentProfile,
+} from "@blazzing-app/validators";
 import type {} from "@blazzing-app/replicache";
 export const GlobalStoreMutator = ({
 	children,
@@ -125,7 +127,7 @@ export const DashboardStoreMutator = ({
 		async (tx) => {
 			const isInitialized = await tx.get<string>("init");
 			const [paymentProfile] = await tx
-				.scan<PaymentProfile>({ prefix: "payment_profile" })
+				.scan<StorePaymentProfile>({ prefix: "payment_profile" })
 				.values()
 				.toArray();
 			const [activeStoreID] = await tx

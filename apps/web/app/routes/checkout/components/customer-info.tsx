@@ -1,11 +1,10 @@
-import type { DeliveryCheckoutForm } from "@blazzing-app/validators";
-import type { User } from "@blazzing-app/validators/client";
+import type { DeliveryCheckoutForm, StoreUser } from "@blazzing-app/validators";
 import { Box, Grid, Heading, Text, TextField } from "@radix-ui/themes";
 import { useFormContext } from "react-hook-form";
 export const CustomerInfo = ({
 	user,
 }: {
-	user: User | null | undefined;
+	user: StoreUser | null | undefined;
 }) => {
 	const { register, formState, clearErrors } =
 		useFormContext<DeliveryCheckoutForm>();

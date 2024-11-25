@@ -1,4 +1,4 @@
-import type { AuthSession, AuthUser } from "@blazzing-app/validators";
+import type { AuthSession, Server } from "@blazzing-app/validators";
 import type { Session, SessionData } from "@remix-run/cloudflare";
 import type { Context } from "hono";
 import { Authentication } from "~/lib/authentication";
@@ -6,7 +6,7 @@ import { Authentication } from "~/lib/authentication";
 export const getUserAndSession = async (
 	c: Context,
 	honoSession: Session<SessionData, SessionData>,
-): Promise<{ user: AuthUser | null; session: AuthSession | null }> => {
+): Promise<{ user: Server.AuthUser | null; session: AuthSession | null }> => {
 	const auth = Authentication({
 		env: c.env,
 	});

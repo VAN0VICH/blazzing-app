@@ -1,4 +1,3 @@
-import type { Customer } from "@blazzing-app/validators/client";
 import {
 	Avatar,
 	Box,
@@ -19,12 +18,13 @@ import type {
 } from "~/worker/search";
 import { useDashboardStore } from "~/zustand/store";
 import { CustomersTable } from "./customers-table/table";
+import type { StoreCustomer } from "@blazzing-app/validators";
 
 export default function CustomersPage() {
 	const customers = useDashboardStore((state) => state.customers);
 	const searchWorker = useDashboardStore((state) => state.searchWorker);
 	const [searchResults, setSearchResults] = React.useState<
-		Customer[] | undefined
+		StoreCustomer[] | undefined
 	>(undefined);
 	const [_, startTransition] = React.useTransition();
 
@@ -50,12 +50,12 @@ export default function CustomersPage() {
 				const { type, payload } = event.data as SearchWorkerResponse;
 				if (typeof type === "string" && type === "CUSTOMER_SEARCH") {
 					startTransition(() => {
-						const customers: Customer[] = [];
+						const customers: StoreCustomer[] = [];
 						const customerIDs = new Set<string>();
 						for (const item of payload) {
 							if (item.id.startsWith("user")) {
 								if (customerIDs.has(item.id)) continue;
-								customers.push(item as Customer);
+								customers.push(item as StoreCustomer);
 								customerIDs.add(item.id);
 							}
 						}

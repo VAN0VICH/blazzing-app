@@ -1,10 +1,7 @@
 import { Icons } from "@blazzing-app/ui/icons";
 import { ToggleGroup, ToggleGroupItem } from "@blazzing-app/ui/toggle-group";
 import { generateID } from "@blazzing-app/utils";
-import type {
-	PublishedVariant,
-	Variant,
-} from "@blazzing-app/validators/client";
+import type { StoreVariant, Variant } from "@blazzing-app/validators";
 import { Box, Button, Flex, Grid } from "@radix-ui/themes";
 import { useFetcher } from "@remix-run/react";
 import React from "react";
@@ -22,8 +19,8 @@ const Actions = ({
 }: {
 	cartID?: string;
 	baseVariantID: string | undefined;
-	selectedVariant: PublishedVariant | Variant | undefined;
-	variants: (PublishedVariant | Variant)[];
+	selectedVariant: StoreVariant | Variant | undefined;
+	variants: (StoreVariant | Variant)[];
 	isDashboard?: boolean;
 	setIsShaking: (value: boolean) => void;
 }) => {

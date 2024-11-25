@@ -1,16 +1,20 @@
 import React from "react";
-import type { Cart, LineItem, Order } from "@blazzing-app/validators/client";
 import { cn } from "@blazzing-app/ui";
 import { Effect, pipe } from "effect";
 import { toast } from "@blazzing-app/ui/toast";
 import Price from "~/components/price";
 import { Box, Flex, Separator, Text } from "@radix-ui/themes";
 import { cartSubtotal } from "@blazzing-app/core";
+import type {
+	StoreCart,
+	StoreLineItem,
+	StoreOrder,
+} from "@blazzing-app/validators";
 export const Total = React.forwardRef<
 	HTMLDivElement,
 	React.HTMLAttributes<HTMLDivElement> & {
-		cartOrOrder: Cart | Order | null | undefined;
-		lineItems: LineItem[];
+		cartOrOrder: StoreCart | StoreOrder | null | undefined;
+		lineItems: StoreLineItem[];
 	}
 >(({ className, cartOrOrder, lineItems, ...props }, ref) => {
 	const subtotal = React.useMemo(

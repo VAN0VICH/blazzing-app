@@ -3,7 +3,7 @@ import type {
 	UpdateImagesOrder,
 	UploadImages,
 } from "@blazzing-app/validators";
-import type { Variant } from "@blazzing-app/validators/client";
+import type { Variant } from "../../../../validators/src/store-entities";
 import type { WriteTransaction } from "replicache";
 import { entityNotFound } from "./price";
 

@@ -2,7 +2,7 @@ import { UserService } from "@blazzing-app/core";
 import type { Db } from "@blazzing-app/db";
 import { Database } from "@blazzing-app/shared";
 import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
-import { UserSchema } from "@blazzing-app/validators/server";
+import { UserSchema } from "@blazzing-app/validators";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { Console, Effect } from "effect";
 import { getAuthUser } from "../lib/get-user";

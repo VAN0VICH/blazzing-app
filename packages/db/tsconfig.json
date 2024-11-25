@@ -1,5 +1,6 @@
 {
 	"extends": "@blazzing-app/tsconfig/base.json",
+
 	"compilerOptions": {
 		"tsBuildInfoFile": "node_modules/.cache/tsbuildinfo.json",
 		"paths": {

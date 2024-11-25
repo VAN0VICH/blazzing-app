@@ -6,7 +6,7 @@ import {
 	AccordionTrigger,
 } from "@blazzing-app/ui/accordion";
 import { truncateString } from "@blazzing-app/utils";
-import type { Variant } from "@blazzing-app/validators/client";
+import type { Variant } from "../../../../../../packages/validators/src/store-entities";
 import { Avatar, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import { Link } from "@remix-run/react";
 import { useState } from "react";

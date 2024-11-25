@@ -9,11 +9,7 @@ import {
 	VariantDuplicateSchema,
 	type InsertVariant,
 } from "@blazzing-app/validators";
-import type {
-	Price,
-	ProductOptionValue,
-	Variant,
-} from "@blazzing-app/validators/server";
+import type { Server } from "@blazzing-app/validators";
 import { Effect } from "effect";
 import { TableMutator } from "../../context/table-mutator";
 import { fn } from "../../util/fn";
@@ -62,7 +58,7 @@ const generateVariants = fn(GenerateVariantsSchema, (input) =>
 		}
 
 		const options = product.options;
-		const valueToOptionValue = new Map<string, ProductOptionValue>();
+		const valueToOptionValue = new Map<string, Server.ProductOptionValue>();
 		for (const option of options) {
 			for (const value of option.optionValues) {
 				valueToOptionValue.set(value.value, value);
@@ -235,7 +231,7 @@ const duplicate = fn(VariantDuplicateSchema, (input) =>
 				originCountry: variant.originCountry,
 				width: variant.width,
 				discountable: variant.discountable,
-			} satisfies Variant,
+			} satisfies Server.Variant,
 			"variants",
 		);
 		yield* Effect.all(
@@ -249,7 +245,7 @@ const duplicate = fn(VariantDuplicateSchema, (input) =>
 								id: newPriceIDs[index]!,
 								variantID: newVariantID,
 								version: 0,
-							} satisfies Price,
+							} satisfies Server.Price,
 							"prices",
 						);
 					},

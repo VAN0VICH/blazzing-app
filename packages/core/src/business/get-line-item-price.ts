@@ -1,8 +1,12 @@
 import { PriceNotFound } from "@blazzing-app/validators";
-import type { Cart, LineItem, Order } from "@blazzing-app/validators/client";
-import type * as Server from "@blazzing-app/validators/server";
+import type {
+	StoreCart,
+	StoreLineItem,
+	StoreOrder,
+} from "../../../validators/src/store-entities";
+import type { Server } from "@blazzing-app/validators";
 import { Effect, pipe } from "effect";
-type CombinedLineItem = (LineItem | Server.LineItem) & {
+type CombinedLineItem = (StoreLineItem | Server.LineItem) & {
 	variant: Server.Variant & { prices: Server.Price[] };
 };
 export const getLineItemPriceAmount = (
@@ -27,7 +31,7 @@ export const getLineItemPriceAmount = (
 
 export const cartSubtotal = (
 	lineItems: CombinedLineItem[],
-	cartOrOrder: Cart | Order | Server.Cart | Server.Order,
+	cartOrOrder: StoreCart | StoreOrder | Server.Cart | Server.Order,
 ) =>
 	pipe(
 		Effect.try(() => {

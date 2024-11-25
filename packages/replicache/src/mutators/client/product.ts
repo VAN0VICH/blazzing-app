@@ -7,10 +7,12 @@ import {
 	type CreateProduct,
 	type DuplicateProduct,
 	type InsertVariant,
+	type Product,
 	type ProductDuplicate,
+	type StorePrice,
 	type UpdateProduct,
+	type Variant,
 } from "@blazzing-app/validators";
-import type { Price, Product, Variant } from "@blazzing-app/validators/client";
 import { Effect } from "effect";
 
 export function productNotFound(id: string) {
@@ -174,7 +176,7 @@ const duplicate = (tx: WriteTransaction, duplicate: ProductDuplicate) =>
 						id: priceIDtoNewPriceID.get(price.id)!,
 						variantID: newBaseVariantID,
 						version: 0,
-					}) satisfies Price,
+					}) satisfies StorePrice,
 			),
 
 			optionValues: (baseVariant.optionValues ?? []).map((value) => ({

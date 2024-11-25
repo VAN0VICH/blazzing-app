@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { productStatuses } from "@blazzing-app/validators";
-import type { Product } from "@blazzing-app/validators/client";
+import type { Product } from "../../../../../../../packages/validators/src/store-entities";
 import { Avatar, Box, Checkbox, Flex, Heading } from "@radix-ui/themes";
 import { ProductStatus } from "~/components/badge/product-status";
 import { DataTableColumnHeader } from "~/components/templates/table/data-table-column-header";

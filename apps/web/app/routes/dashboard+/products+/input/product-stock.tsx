@@ -3,8 +3,8 @@ import React, { useEffect } from "react";
 import { cn } from "@blazzing-app/ui";
 import { Form, FormControl, FormField, FormItem } from "@blazzing-app/ui/form";
 import { Icons } from "@blazzing-app/ui/icons";
-import type { UpdateVariant } from "@blazzing-app/validators";
-import type { Variant } from "@blazzing-app/validators/client";
+import { VariantSchema, type UpdateVariant } from "@blazzing-app/validators";
+import type { Variant } from "../../../../../../../packages/validators/src/store-entities";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,7 +19,6 @@ import {
 } from "@radix-ui/themes";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { VariantSchema } from "@blazzing-app/validators/server";
 
 interface StockProps {
 	variant: Variant | undefined | null;

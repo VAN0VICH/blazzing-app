@@ -6,9 +6,8 @@ import {
 	DialogTitle,
 } from "@blazzing-app/ui/dialog-vaul";
 import { ToggleGroup, ToggleGroupItem } from "@blazzing-app/ui/toggle-group";
-import type { Price } from "@blazzing-app/validators/client";
 import { Box, Button, ScrollArea, TextField, Theme } from "@radix-ui/themes";
-import type { CreatePrices } from "@blazzing-app/validators";
+import type { CreatePrices, StorePrice } from "@blazzing-app/validators";
 import { generateID } from "@blazzing-app/utils";
 
 function Currencies({
@@ -21,7 +20,7 @@ function Currencies({
 	opened: boolean;
 	setOpened: (value: boolean) => void;
 	id: string | undefined;
-	prices: Price[];
+	prices: StorePrice[];
 	createPrices: (props: CreatePrices) => Promise<void>;
 }) {
 	const setDialogOpened = (value: boolean) => {

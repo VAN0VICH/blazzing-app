@@ -1,4 +1,4 @@
-import type { Variant } from "@blazzing-app/validators/client";
+import type { Variant } from "../../../../../../packages/validators/src/store-entities";
 import { Box } from "@radix-ui/themes";
 import React from "react";
 import { StoreProductOverview } from "~/components/templates/product/store-product-overview";

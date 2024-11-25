@@ -29,7 +29,7 @@ import { getDomainUrl } from "./utils/helpers";
 import type { Preferences, Theme as ThemeType } from "./validators/state";
 import vaulStyles from "./vaul.css?url";
 import { DashboardReplicacheProvider } from "./providers/replicache/dashboard";
-import type { AuthSession, AuthUser } from "@blazzing-app/validators";
+import type { AuthSession, Server } from "@blazzing-app/validators";
 import { ClientOnly } from "remix-utils/client-only";
 import { PartykitProvider } from "./client/partykit.client";
 import { MarketplaceReplicacheProvider } from "./providers/replicache/marketplace";
@@ -60,7 +60,7 @@ export type RootLoaderData = {
 		userPrefs: Preferences;
 		userContext: {
 			cartID?: string;
-			authUser: AuthUser | null;
+			authUser: Server.AuthUser | null;
 			userSession: AuthSession | null;
 		};
 	};

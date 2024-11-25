@@ -9,7 +9,7 @@ import {
 	UploadImagesSchema,
 	type UploadResponse,
 } from "@blazzing-app/validators";
-import type { Variant } from "@blazzing-app/validators/server";
+import type { Server } from "@blazzing-app/validators";
 import * as base64 from "base64-arraybuffer";
 import { Console, Effect, pipe } from "effect";
 import { TableMutator } from "../../context/table-mutator";
@@ -23,7 +23,7 @@ const uploadImages = fn(UploadImagesSchema, (input) =>
 		const { env } = yield* Cloudflare;
 		const { entityID, images } = input;
 
-		let entity: Pick<Variant, "images"> | undefined = undefined;
+		let entity: Pick<Server.Variant, "images"> | undefined = undefined;
 		const isVariant = entityID.startsWith("variant");
 
 		if (images.length === 0) {
@@ -147,7 +147,7 @@ const deleteImage = fn(DeleteImageSchema, (input) => {
 		const { manager } = yield* Database;
 		const { env } = yield* Cloudflare;
 
-		let entity: Variant | undefined = undefined;
+		let entity: Server.Variant | undefined = undefined;
 		const isVariant = entityID.startsWith("variant");
 
 		if (isVariant)
@@ -225,7 +225,7 @@ const updateImagesOrder = fn(UpdateImagesOrderSchema, (input) =>
 		const tableMutator = yield* TableMutator;
 		const { manager } = yield* Database;
 		const { order, entityID } = input;
-		let entity: Variant | undefined = undefined;
+		let entity: Server.Variant | undefined = undefined;
 		const isVariant = entityID.startsWith("variant");
 
 		if (isVariant)

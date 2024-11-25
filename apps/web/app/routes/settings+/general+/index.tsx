@@ -3,8 +3,11 @@ import { Form, FormControl, FormField, FormItem } from "@blazzing-app/ui/form";
 import { Icons } from "@blazzing-app/ui/icons";
 import { toast } from "@blazzing-app/ui/toast";
 import { generateID } from "@blazzing-app/utils";
-import { EmailSchema, type Image as ImageType } from "@blazzing-app/validators";
-import type { User } from "@blazzing-app/validators/client";
+import {
+	EmailSchema,
+	type Image as ImageType,
+	type StoreUser,
+} from "@blazzing-app/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	Avatar,
@@ -426,7 +429,7 @@ export default function General() {
 	);
 }
 
-const ImageUpload = ({ user }: { user: User | undefined }) => {
+const ImageUpload = ({ user }: { user: StoreUser | undefined }) => {
 	const [image, setImage] = React.useState<ImageType | null>(null);
 	const [openCrop, setOpenCrop] = React.useState(false);
 	const imageInputRef = React.useRef<HTMLInputElement>(null);

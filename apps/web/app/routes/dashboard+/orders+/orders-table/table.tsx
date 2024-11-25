@@ -10,7 +10,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "@blazzing-app/ui/table";
-import type { Order } from "@blazzing-app/validators/client";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { DataTablePagination } from "~/components/templates/table/data-table-pagination";
 import { DataTableToolbar } from "~/components/templates/table/data-table-toolbar";
@@ -19,9 +18,10 @@ import type { DebouncedFunc } from "~/types/debounce";
 import { filterableColumns, getOrdersColumns } from "./columns";
 import { useNavigate } from "@remix-run/react";
 import { Flex, Heading, Separator, Text } from "@radix-ui/themes";
+import type { StoreOrder } from "@blazzing-app/validators";
 
 interface OrdersTableProps {
-	orders: Order[];
+	orders: StoreOrder[];
 	setOrderID?: (id: string | undefined) => void;
 	orderID?: string | undefined;
 	toolbar?: boolean;
@@ -37,7 +37,10 @@ function OrdersTable({
 	withNavigation = false,
 	onSearch,
 }: Readonly<OrdersTableProps>) {
-	const columns = useMemo<ColumnDef<Order>[]>(() => getOrdersColumns(), []);
+	const columns = useMemo<ColumnDef<StoreOrder>[]>(
+		() => getOrdersColumns(),
+		[],
+	);
 	const table = useDataTable({
 		columns,
 		data: orders,
@@ -102,7 +105,7 @@ function OrdersTable({
 						<TableBody>
 							{rows.length ? (
 								virtualizer.getVirtualItems().map((virtualRow, index) => {
-									const row = rows[virtualRow.index] as Row<Order>;
+									const row = rows[virtualRow.index] as Row<StoreOrder>;
 									return (
 										<TableRow
 											key={row.id}

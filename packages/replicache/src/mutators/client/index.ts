@@ -37,7 +37,6 @@ import {
 	updateVariant,
 } from "./variant";
 import { updateImagesOrder, deleteImage, uploadImages } from "./image";
-import { createPaymentProfile } from "./payment-profile";
 
 export type DashboardMutatorsType = {
 	[key in keyof Server.DashboardMutatorsType]: (
@@ -72,7 +71,6 @@ export const DashboardMutators: DashboardMutatorsType = {
 	updateImagesOrder,
 	deleteImage,
 	uploadImages,
-	createPaymentProfile,
 };
 export type GlobalMutatorsType = {
 	[key in keyof Server.UserMutatorsType]: (

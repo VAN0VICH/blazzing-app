@@ -2,7 +2,7 @@ import { DotsHorizontalIcon } from "@radix-ui/react-icons";
 import type { Row } from "@tanstack/react-table";
 
 import { Icons } from "@blazzing-app/ui/icons";
-import type { Product } from "@blazzing-app/validators/client";
+import type { Product } from "../../../../../../../packages/validators/src/store-entities";
 import { DropdownMenu, IconButton } from "@radix-ui/themes";
 import { useNavigate } from "@remix-run/react";
 

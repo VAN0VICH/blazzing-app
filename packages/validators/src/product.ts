@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { schema } from "@blazzing-app/db";
 import { createInsertSchema } from "drizzle-zod";
-import { ProductSchema } from "../server/entities";
+import { ProductSchema } from "./entities-schema";
 import { InsertVariantSchema } from "./variant";
 
 const InsertProductSchema = createInsertSchema(schema.products).extend({
@@ -43,3 +43,5 @@ export const DuplicateProductSchema = z.object({
 	duplicates: z.array(ProductDuplicateSchema),
 });
 export type DuplicateProduct = z.infer<typeof DuplicateProductSchema>;
+
+export const productStatuses = schema.productStatus;

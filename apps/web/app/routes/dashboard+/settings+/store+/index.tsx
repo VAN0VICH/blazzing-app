@@ -3,7 +3,7 @@ import { cn } from "@blazzing-app/ui";
 import { Form, FormControl, FormField, FormItem } from "@blazzing-app/ui/form";
 import { Icons } from "@blazzing-app/ui/icons";
 import { toast } from "@blazzing-app/ui/toast";
-import type { Store as StoreType } from "@blazzing-app/validators/server";
+import type { Store as StoreType } from "@blazzing-app/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as base64 from "base64-arraybuffer";
 import {

@@ -20,3 +20,5 @@ export const UpdateOrderSchema = z.object({
 	id: z.string(),
 });
 export type UpdateOrder = z.infer<typeof UpdateOrderSchema>;
+
+export const orderStatuses = schema.orders.status.enumValues;

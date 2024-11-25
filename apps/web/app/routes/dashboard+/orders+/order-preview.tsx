@@ -1,6 +1,6 @@
 import { DialogContent, DialogRoot } from "@blazzing-app/ui/dialog-vaul";
 import { Icons } from "@blazzing-app/ui/icons";
-import type { Order } from "@blazzing-app/validators/client";
+import type { StoreOrder } from "@blazzing-app/validators";
 import {
 	Box,
 	Button,
@@ -35,7 +35,7 @@ export const OrderPreview = ({ orderID }: { orderID: string }) => {
 		</Card>
 	);
 };
-const Preview = ({ order }: { order: Order | undefined }) => {
+const Preview = ({ order }: { order: StoreOrder | undefined }) => {
 	const [_, copyToClipboard] = useCopyToClipboard();
 	const [hasCopiedText, setHasCopiedText] = React.useState(false);
 	return (

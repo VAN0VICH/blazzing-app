@@ -9,7 +9,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "@blazzing-app/ui/table";
-import type { Customer } from "@blazzing-app/validators/client";
 import { useNavigate } from "@remix-run/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { DataTablePagination } from "~/components/templates/table/data-table-pagination";
@@ -18,9 +17,10 @@ import { useDataTable } from "~/components/templates/table/use-data-table";
 import type { DebouncedFunc } from "~/types/debounce";
 import { getCustomersColumns } from "./columns";
 import { Box, Flex, Heading, Text } from "@radix-ui/themes";
+import type { StoreCustomer } from "@blazzing-app/validators";
 
 interface CustomersTableProps {
-	customers: Customer[];
+	customers: StoreCustomer[];
 	onSearch?: DebouncedFunc<(value: string) => void>;
 }
 
@@ -28,7 +28,7 @@ function CustomersTable({
 	customers,
 	onSearch,
 }: Readonly<CustomersTableProps>) {
-	const columns = useMemo<ColumnDef<Customer>[]>(
+	const columns = useMemo<ColumnDef<StoreCustomer>[]>(
 		() => getCustomersColumns(),
 		[],
 	);
@@ -85,7 +85,7 @@ function CustomersTable({
 						<TableBody>
 							{rows.length ? (
 								virtualizer.getVirtualItems().map((virtualRow, index) => {
-									const row = rows[virtualRow.index] as Row<Customer>;
+									const row = rows[virtualRow.index] as Row<StoreCustomer>;
 									return (
 										<TableRow
 											key={row.id}

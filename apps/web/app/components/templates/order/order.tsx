@@ -1,12 +1,12 @@
 import { Icons } from "@blazzing-app/ui/icons";
-import type { Order } from "@blazzing-app/validators/client";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { Avatar, Box, Card, Flex, Grid } from "@radix-ui/themes";
 import React from "react";
 import ImagePlaceholder from "~/components/image-placeholder";
 import { LineItem } from "../line-item/line-item";
+import type { StoreOrder } from "@blazzing-app/validators";
 
-export const OrderComponent = ({ order }: { order: Order }) => {
+export const OrderComponent = ({ order }: { order: StoreOrder }) => {
 	const items = order.items;
 	const [parent] = useAutoAnimate(/* optional config */);
 	const [open, setOpen] = React.useState(false);

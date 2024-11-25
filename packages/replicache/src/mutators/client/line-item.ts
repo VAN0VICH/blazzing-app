@@ -1,7 +1,10 @@
 import type { WriteTransaction } from "replicache";
 
-import type { CreateLineItem, UpdateLineItem } from "@blazzing-app/validators";
-import type { LineItem } from "@blazzing-app/validators/client";
+import type {
+	CreateLineItem,
+	StoreLineItem,
+	UpdateLineItem,
+} from "@blazzing-app/validators";
 import { createCart } from "./cart";
 
 async function createLineItem(tx: WriteTransaction, input: CreateLineItem) {
@@ -22,7 +25,7 @@ async function createLineItem(tx: WriteTransaction, input: CreateLineItem) {
 
 async function updateLineItem(tx: WriteTransaction, input: UpdateLineItem) {
 	const { id, quantity } = input;
-	const lineItem = await tx.get<LineItem>(id);
+	const lineItem = await tx.get<StoreLineItem>(id);
 
 	if (!lineItem) {
 		console.info("Line item  not found");

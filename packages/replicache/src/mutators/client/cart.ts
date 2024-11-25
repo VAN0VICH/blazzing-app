@@ -1,5 +1,5 @@
 import type { CreateCart, UpdateCart } from "@blazzing-app/validators";
-import type { Address } from "@blazzing-app/validators/client";
+import type { StoreAddress } from "../../../../validators/src/store-entities";
 import type { WriteTransaction } from "replicache";
 async function createCart(tx: WriteTransaction, input: CreateCart) {
 	const { cart } = input;
@@ -9,7 +9,7 @@ async function createCart(tx: WriteTransaction, input: CreateCart) {
 
 async function updateCart(tx: WriteTransaction, input: UpdateCart) {
 	const { id, updates } = input;
-	const cart = await tx.get<Address>(id);
+	const cart = await tx.get<StoreAddress>(id);
 
 	if (!cart) {
 		console.info("cart  not found");

@@ -1,24 +1,31 @@
 {
 	"name": "@blazzing-app/functions",
-	"version": "0.1.8",
-	"type": "module",
+	"version": "0.1.10",
 	"publishConfig": {
 		"access": "public"
 	},
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
+	"module": "./dist/index.mjs",
 	"exports": {
-		".": "./src/index.ts",
-		"./*": "./src/*.tsx"
+		".": {
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
 	},
 	"license": "MIT",
 	"scripts": {
-		"build": "tsup src/index.ts --format cjs --dts",
+		"build": "tsup src/index.ts --format cjs,esm --dts",
 		"dev": "wrangler dev src/index.ts",
 		"deploy-prod": "wrangler deploy --minify -e production src/index.ts",
 		"deploy-dev": "wrangler deploy --minify -e dev src/index.ts",
 		"publish-packages": "pnpm changeset version && changeset publish",
-		"changeset-init": "pnpm changeset init"
+		"changeset-init": "pnpm changeset init",
+		"format": "biome format src",
+		"lint": "biome lint src",
+		"beautify": "biome format ./src --write",
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"@blazzing-app/core": "workspace:^",

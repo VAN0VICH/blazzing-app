@@ -1,6 +1,6 @@
 import { cn } from "@blazzing-app/ui";
 import { Icons, strokeWidth } from "@blazzing-app/ui/icons";
-import type { Store } from "@blazzing-app/validators/client";
+import type { Store } from "../../../../../../packages/validators/src/store-entities";
 import {
 	AspectRatio,
 	Avatar,

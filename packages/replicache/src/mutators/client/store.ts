@@ -6,7 +6,7 @@ import type {
 	SetActiveStoreID,
 	UpdateStore,
 } from "@blazzing-app/validators";
-import type { Store } from "@blazzing-app/validators/client";
+import type { Store } from "../../../../validators/src/store-entities";
 
 async function createStore(tx: WriteTransaction, input: CreateStore) {
 	const { store } = input;

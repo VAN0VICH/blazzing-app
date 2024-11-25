@@ -7,8 +7,8 @@ import type {
 	DeleteProductOption,
 	InsertProductOption,
 	InsertProductOptionValue,
+	StoreProductOption,
 } from "@blazzing-app/validators";
-import type { ProductOption } from "@blazzing-app/validators/client";
 import {
 	Badge,
 	Card,
@@ -23,7 +23,7 @@ import { useReplicache } from "~/zustand/replicache";
 
 interface CreateOptionProps {
 	productID: string;
-	options: ProductOption[];
+	options: StoreProductOption[];
 }
 export function ProductOptions({ productID, options }: CreateOptionProps) {
 	const [tempOptions, setTempOptions] = React.useState<InsertProductOption[]>(
@@ -160,7 +160,7 @@ const OptionInput = ({
 	option,
 	fresh,
 }: {
-	option: Omit<ProductOption, "name" | "version"> & {
+	option: Omit<StoreProductOption, "name" | "version"> & {
 		name?: string | null;
 		version?: number;
 	};

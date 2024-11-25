@@ -9,7 +9,6 @@ import {
 	CommandList,
 } from "@blazzing-app/ui/command";
 import { Icons } from "@blazzing-app/ui/icons";
-import type { Customer, Order, Variant } from "@blazzing-app/validators/client";
 import {
 	Avatar,
 	Badge,
@@ -31,6 +30,11 @@ import type {
 	SearchWorkerResponse,
 } from "~/worker/search";
 import { useDashboardStore } from "~/zustand/store";
+import type {
+	StoreCustomer,
+	StoreOrder,
+	Variant,
+} from "@blazzing-app/validators";
 
 export function DashboardSearchCombobox() {
 	const navigate = useNavigate();
@@ -38,7 +42,8 @@ export function DashboardSearchCombobox() {
 	const [query, setQuery] = React.useState("");
 	const debouncedQuery = useDebounce(query, 300);
 	const [searchResults, setSearchResults] = React.useState<
-		{ variants: Variant[]; orders: Order[]; customers: Customer[] } | undefined
+		| { variants: Variant[]; orders: StoreOrder[]; customers: StoreCustomer[] }
+		| undefined
 	>(undefined);
 	const [loading, __] = React.useState(false);
 	const [_, startTransition] = React.useTransition();
@@ -82,8 +87,8 @@ export function DashboardSearchCombobox() {
 			if (typeof type === "string" && type === "DASHBOARD_SEARCH") {
 				startTransition(() => {
 					const variants: Variant[] = [];
-					const customers: Customer[] = [];
-					const orders: Order[] = [];
+					const customers: StoreCustomer[] = [];
+					const orders: StoreOrder[] = [];
 					const variantIDs = new Set<string>();
 					const customerIDs = new Set<string>();
 					const orderIDs = new Set<string>();
@@ -95,12 +100,12 @@ export function DashboardSearchCombobox() {
 							}
 						} else if (p.id.startsWith("user")) {
 							if (!customerIDs.has(p.id)) {
-								customers.push(p as Customer);
+								customers.push(p as StoreCustomer);
 								customerIDs.add(p.id);
 							}
 						} else if (p.id.startsWith("order")) {
 							if (!orderIDs.has(p.id)) {
-								orders.push(p as Order);
+								orders.push(p as StoreOrder);
 								orderIDs.add(p.id);
 							}
 						}

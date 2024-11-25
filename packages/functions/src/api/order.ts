@@ -10,7 +10,7 @@ import {
 	OrderSchema,
 	PriceSchema,
 	VariantSchema,
-} from "@blazzing-app/validators/server";
+} from "@blazzing-app/validators";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { cache } from "hono/cache";
 export namespace OrderApi {

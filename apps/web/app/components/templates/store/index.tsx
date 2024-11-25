@@ -2,12 +2,13 @@ import { cn } from "@blazzing-app/ui";
 import { Icons } from "@blazzing-app/ui/icons";
 import { Noise } from "@blazzing-app/ui/noise";
 import { generateID } from "@blazzing-app/utils";
-import type { Image as ImageType } from "@blazzing-app/validators";
 import type {
+	Image as ImageType,
 	Product,
-	PublishedProduct,
 	Store,
-} from "@blazzing-app/validators/client";
+	StoreProduct,
+} from "@blazzing-app/validators";
+
 import {
 	Box,
 	Button,
@@ -40,7 +41,7 @@ export function StoreComponent({
 }: {
 	store: Store | undefined;
 	isInitialized: boolean;
-	products: (Product | PublishedProduct)[];
+	products: (Product | StoreProduct)[];
 	isDashboard?: boolean;
 	storeURL?: string;
 }) {

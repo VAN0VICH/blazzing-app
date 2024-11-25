@@ -1,4 +1,7 @@
-import type { Product, Variant } from "@blazzing-app/validators/client";
+import type {
+	Product,
+	Variant,
+} from "../../../../../../packages/validators/src/store-entities";
 import { Box, Flex, Heading } from "@radix-ui/themes";
 import { ProductsTable } from "./product-table/table";
 import { useDashboardStore } from "~/zustand/store";

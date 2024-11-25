@@ -1,6 +1,9 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
-import type { Product, Variant } from "@blazzing-app/validators/client";
+import type {
+	Product,
+	Variant,
+} from "../../../../../../../packages/validators/src/store-entities";
 import { Avatar, Box, Checkbox, Flex } from "@radix-ui/themes";
 import { DataTableColumnHeader } from "~/components/templates/table/data-table-column-header";
 import type { DataTableFilterableColumn } from "~/types/table";

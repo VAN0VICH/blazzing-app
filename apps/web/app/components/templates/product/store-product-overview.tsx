@@ -6,11 +6,11 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "@blazzing-app/ui/carousel";
-import type { Image as ImageType } from "@blazzing-app/validators";
 import type {
-	PublishedVariant,
+	Image as ImageType,
+	StoreVariant,
 	Variant,
-} from "@blazzing-app/validators/client";
+} from "@blazzing-app/validators";
 import { Avatar, Box, Button, Flex, Separator } from "@radix-ui/themes";
 import { useState } from "react";
 import Image from "~/components/image";
@@ -22,9 +22,9 @@ import { Pricing, ProductOptions, ProductVariants } from "./product-overview";
 interface StoreProductOverviewProps {
 	baseVariantIDOrHandle: string | undefined;
 	isDashboard?: boolean;
-	variants: (Variant | PublishedVariant)[];
+	variants: (Variant | StoreVariant)[];
 	selectedVariantIDOrHandle: string;
-	selectedVariant: Variant | PublishedVariant | undefined;
+	selectedVariant: Variant | StoreVariant | undefined;
 	setVariantIDOrHandle: (prop: string) => void;
 	cartID?: string | undefined;
 	setView?: (value: "preview" | "input") => void;

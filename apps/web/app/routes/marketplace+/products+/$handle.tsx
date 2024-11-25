@@ -8,7 +8,7 @@ import {
 	type CarouselApi,
 } from "@blazzing-app/ui/carousel";
 import { Icons } from "@blazzing-app/ui/icons";
-import type { Variant } from "@blazzing-app/validators/client";
+import type { Variant } from "../../../../../../packages/validators/src/store-entities";
 import { Flex, Heading, IconButton } from "@radix-ui/themes";
 import { json, type LoaderFunction } from "@remix-run/cloudflare";
 import {

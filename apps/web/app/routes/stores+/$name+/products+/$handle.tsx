@@ -1,5 +1,5 @@
 import type { Routes } from "@blazzing-app/functions";
-import type { Variant } from "@blazzing-app/validators/client";
+import type { Variant } from "../../../../../../../packages/validators/src/store-entities";
 import { Flex, Heading } from "@radix-ui/themes";
 import type { LoaderFunction } from "@remix-run/cloudflare";
 import { json } from "@remix-run/cloudflare";

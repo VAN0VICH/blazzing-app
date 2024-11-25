@@ -1,6 +1,6 @@
 import type { Db } from "@blazzing-app/db";
 import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
-import { StoreSchema } from "@blazzing-app/validators/server";
+import { StoreSchema } from "@blazzing-app/validators";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 export namespace StoreApi {
 	//@ts-ignore

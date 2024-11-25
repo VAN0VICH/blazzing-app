@@ -7,7 +7,6 @@ import {
 } from "@blazzing-app/ui/drawer";
 import { Icons } from "@blazzing-app/ui/icons";
 import { ToggleGroup, ToggleGroupItem } from "@blazzing-app/ui/toggle-group";
-import type { ProductOption, Variant } from "@blazzing-app/validators/client";
 import {
 	Box,
 	Flex,
@@ -25,6 +24,7 @@ import { toImageURL } from "~/utils/helpers";
 import { Actions } from "./actions";
 import { Gallery } from "./gallery";
 import { GeneralInfo } from "./product-info";
+import type { StoreProductOption, Variant } from "@blazzing-app/validators";
 
 interface ProductOverviewProps {
 	baseVariantIDOrHandle: string | undefined;
@@ -276,7 +276,7 @@ export const ProductOptions = ({
 	isDashboard,
 }: {
 	baseVariantIDOrHandle: string | undefined;
-	options: ProductOption[];
+	options: StoreProductOption[];
 	selectedVariant: Variant | undefined;
 	isShaking: boolean;
 	setVariantIDOrHandle: (prop: string) => void;

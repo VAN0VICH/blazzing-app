@@ -2,7 +2,7 @@ import { Form, FormControl, FormField, FormItem } from "@blazzing-app/ui/form";
 import { Icons } from "@blazzing-app/ui/icons";
 import { TagInput } from "@blazzing-app/ui/tag-input";
 import type { UpdateProduct } from "@blazzing-app/validators";
-import type { Product } from "@blazzing-app/validators/client";
+import type { Product } from "../../../../../../../packages/validators/src/store-entities";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {

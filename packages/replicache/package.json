@@ -1,18 +1,22 @@
 {
 	"name": "@blazzing-app/replicache",
-	"version": "0.1.8",
+	"version": "0.1.10",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
+	"module": "./dist/index.mjs",
 	"publishConfig": {
 		"access": "public"
 	},
-
 	"exports": {
-		".": "./src/index.ts"
+		".": {
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
 	},
 	"license": "MIT",
 	"scripts": {
-		"build": "tsup src/index.ts --format cjs --dts",
+		"build": "tsup src/index.ts --format cjs,esm --dts",
 		"beautify": "biome format ./src --write",
 		"clean": "rm -rf .turbo node_modules",
 		"lint": "biome lint src",

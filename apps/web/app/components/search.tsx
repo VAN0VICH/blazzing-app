@@ -9,7 +9,7 @@ import {
 	CommandList,
 } from "@blazzing-app/ui/command";
 import { Icons } from "@blazzing-app/ui/icons";
-import type { Variant } from "@blazzing-app/validators/client";
+import type { Variant } from "../../../../packages/validators/src/store-entities";
 import {
 	Avatar,
 	Badge,

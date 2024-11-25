@@ -326,6 +326,9 @@ importers:
       replicache:
         specifier: 15.0.1
         version: 15.0.1
+      ws:
+        specifier: ^8.18.0
+        version: 8.18.0
       zod:
         specifier: ^3.23.8
         version: 3.23.8
@@ -405,6 +408,9 @@ importers:
       stripe:
         specifier: ^17.1.0
         version: 17.4.0
+      ws:
+        specifier: ^8.18.0
+        version: 8.18.0
       zod:
         specifier: ^3.23.8
         version: 3.23.8

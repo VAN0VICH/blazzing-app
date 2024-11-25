@@ -11,7 +11,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@blazzing-app/ui/table";
-import type { Product } from "@blazzing-app/validators/client";
+import type { Product } from "../../../../../../../packages/validators/src/store-entities";
 import { useNavigate } from "@remix-run/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useHotkeys } from "react-hotkeys-hook";

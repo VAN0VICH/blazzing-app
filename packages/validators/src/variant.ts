@@ -1,7 +1,7 @@
 import { schema } from "@blazzing-app/db";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { PriceSchema, VariantSchema } from "../server/entities";
+import { PriceSchema, VariantSchema } from "./entities-schema";
 import { UpdateImagesOrderSchema } from "./image";
 import { InsertPriceSchema } from "./price";
 

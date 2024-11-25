@@ -1,6 +1,9 @@
 import { cn } from "@blazzing-app/ui";
 import { Ping } from "@blazzing-app/ui/ping";
-import type { Product, Variant } from "@blazzing-app/validators/client";
+import type {
+	Product,
+	Variant,
+} from "../../../../../../packages/validators/src/store-entities";
 import { Badge, Box, Flex, Grid } from "@radix-ui/themes";
 import { Attributes } from "./input/product-attributes";
 import { Media } from "./input/product-media";

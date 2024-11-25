@@ -1,5 +1,8 @@
 import { generateID } from "@blazzing-app/utils";
-import type { Product, Variant } from "@blazzing-app/validators/client";
+import type {
+	Product,
+	Variant,
+} from "../../../../../../../packages/validators/src/store-entities";
 import { Card, Flex, Heading } from "@radix-ui/themes";
 import React, { useCallback } from "react";
 import { useReplicache } from "~/zustand/replicache";

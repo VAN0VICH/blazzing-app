@@ -1,17 +1,17 @@
 import type {
-	Cart,
-	Customer,
-	LineItem,
-	Notification,
-	Order,
-	PaymentProfile,
+	StoreCart,
+	StoreCustomer,
+	StoreLineItem,
+	StoreNotification,
+	StoreOrder,
+	StorePaymentProfile,
 	Product,
-	PublishedProduct,
-	PublishedVariant,
+	StoreProduct,
+	StoreVariant,
 	Store,
-	User,
+	StoreUser,
 	Variant,
-} from "@blazzing-app/validators/client";
+} from "../../../../packages/validators/src/store-entities";
 import React, { useEffect } from "react";
 import type { ExperimentalDiff, ReadonlyJSONValue } from "replicache";
 import { createStore, useStore } from "zustand";
@@ -82,22 +82,22 @@ function commonDiffReducer({
 interface DashboardStore {
 	searchWorker: Worker | undefined;
 	isInitialized: boolean;
-	paymentProfile: PaymentProfile | null;
+	paymentProfile: StorePaymentProfile | null;
 	activeStoreID: string | null;
 	products: Product[];
 	stores: Store[];
-	orders: Order[];
-	customers: Customer[];
+	orders: StoreOrder[];
+	customers: StoreCustomer[];
 	variants: Variant[];
 	productMap: Map<string, Product>;
 	storeMap: Map<string, Store>;
-	orderMap: Map<string, Order>;
-	customerMap: Map<string, Customer>;
+	orderMap: Map<string, StoreOrder>;
+	customerMap: Map<string, StoreCustomer>;
 	variantMap: Map<string, Variant>;
 	terminateSearchWorker(): void;
 	setActiveStoreID(newValue: string | null): void;
 	setIsInitialized(newValue: boolean): void;
-	setPaymentProfile(newValue: PaymentProfile | null): void;
+	setPaymentProfile(newValue: StorePaymentProfile | null): void;
 	diffProducts(diff: ExperimentalDiff): void;
 	diffOrders(diff: ExperimentalDiff): void;
 	diffCustomers(diff: ExperimentalDiff): void;
@@ -125,7 +125,7 @@ const createDashboardStore = () =>
 		setActiveStoreID(newValue: string | null) {
 			set({ activeStoreID: newValue });
 		},
-		setPaymentProfile(newValue: PaymentProfile | null) {
+		setPaymentProfile(newValue: StorePaymentProfile | null) {
 			set({ paymentProfile: newValue });
 		},
 		setIsInitialized(newValue: boolean) {
@@ -148,8 +148,8 @@ const createDashboardStore = () =>
 				searchWorker: get().searchWorker,
 			});
 			set({
-				orders: newEntities as Order[],
-				orderMap: newMap as Map<string, Order>,
+				orders: newEntities as StoreOrder[],
+				orderMap: newMap as Map<string, StoreOrder>,
 			});
 		},
 		diffCustomers(diff: ExperimentalDiff) {
@@ -159,8 +159,8 @@ const createDashboardStore = () =>
 				searchWorker: get().searchWorker,
 			});
 			set({
-				customers: newEntities as Customer[],
-				customerMap: newMap as Map<string, Customer>,
+				customers: newEntities as StoreCustomer[],
+				customerMap: newMap as Map<string, StoreCustomer>,
 			});
 		},
 		diffVariants(diff: ExperimentalDiff) {
@@ -233,12 +233,12 @@ const useDashboardStore = <_, U>(
 interface MarketplaceStore {
 	globalSearchWorker: Worker | undefined;
 	isInitialized: boolean;
-	products: PublishedProduct[];
+	products: StoreProduct[];
 	stores: Store[];
-	variants: PublishedVariant[];
-	productMap: Map<string, PublishedProduct>;
+	variants: StoreVariant[];
+	productMap: Map<string, StoreProduct>;
 	storeMap: Map<string, Store>;
-	variantMap: Map<string, PublishedVariant>;
+	variantMap: Map<string, StoreVariant>;
 	setIsInitialized(newValue: boolean): void;
 	diffProducts(diff: ExperimentalDiff): void;
 	diffVariants(diff: ExperimentalDiff): void;
@@ -266,8 +266,8 @@ const createMarketplaceStore = () =>
 				map: get().productMap,
 			});
 			set({
-				products: newEntities as PublishedProduct[],
-				productMap: newMap as Map<string, PublishedProduct>,
+				products: newEntities as StoreProduct[],
+				productMap: newMap as Map<string, StoreProduct>,
 			});
 		},
 		diffVariants(diff: ExperimentalDiff) {
@@ -277,8 +277,8 @@ const createMarketplaceStore = () =>
 				searchWorker: get().globalSearchWorker,
 			});
 			set({
-				variants: newEntities as PublishedVariant[],
-				variantMap: newMap as Map<string, PublishedVariant>,
+				variants: newEntities as StoreVariant[],
+				variantMap: newMap as Map<string, StoreVariant>,
 			});
 		},
 		diffStores(diff: ExperimentalDiff) {
@@ -326,16 +326,16 @@ const useMarketplaceStore = <_, U>(
 
 interface GlobalStore {
 	isInitialized: boolean;
-	users: User[];
-	orders: Order[];
-	carts: Cart[];
-	notifications: Notification[];
-	lineItems: LineItem[];
-	userMap: Map<string, User>;
-	cartMap: Map<string, Cart>;
-	orderMap: Map<string, Order>;
-	lineItemMap: Map<string, LineItem>;
-	notificationMap: Map<string, Notification>;
+	users: StoreUser[];
+	orders: StoreOrder[];
+	carts: StoreCart[];
+	notifications: StoreNotification[];
+	lineItems: StoreLineItem[];
+	userMap: Map<string, StoreUser>;
+	cartMap: Map<string, StoreCart>;
+	orderMap: Map<string, StoreOrder>;
+	lineItemMap: Map<string, StoreLineItem>;
+	notificationMap: Map<string, StoreNotification>;
 	setIsInitialized(newValue: boolean): void;
 	diffUsers(diff: ExperimentalDiff): void;
 	diffCarts(diff: ExperimentalDiff): void;
@@ -367,8 +367,8 @@ const createGlobalStore = () =>
 				map: get().cartMap,
 			});
 			set({
-				carts: newEntities as Cart[],
-				cartMap: newMap as Map<string, Cart>,
+				carts: newEntities as StoreCart[],
+				cartMap: newMap as Map<string, StoreCart>,
 			});
 		},
 		diffUsers(diff: ExperimentalDiff) {
@@ -377,8 +377,8 @@ const createGlobalStore = () =>
 				map: get().userMap,
 			});
 			set({
-				users: newEntities as User[],
-				userMap: newMap as Map<string, User>,
+				users: newEntities as StoreUser[],
+				userMap: newMap as Map<string, StoreUser>,
 			});
 		},
 		diffOrders(diff: ExperimentalDiff) {
@@ -387,8 +387,8 @@ const createGlobalStore = () =>
 				map: get().orderMap,
 			});
 			set({
-				orders: newEntities as Order[],
-				orderMap: newMap as Map<string, Order>,
+				orders: newEntities as StoreOrder[],
+				orderMap: newMap as Map<string, StoreOrder>,
 			});
 		},
 		diffLineItems(diff: ExperimentalDiff) {
@@ -397,8 +397,8 @@ const createGlobalStore = () =>
 				map: get().lineItemMap,
 			});
 			set({
-				lineItems: newEntities as LineItem[],
-				lineItemMap: newMap as Map<string, LineItem>,
+				lineItems: newEntities as StoreLineItem[],
+				lineItemMap: newMap as Map<string, StoreLineItem>,
 			});
 		},
 
@@ -408,8 +408,8 @@ const createGlobalStore = () =>
 				map: get().notificationMap,
 			});
 			set({
-				notifications: newEntities as Notification[],
-				notificationMap: newMap as Map<string, Notification>,
+				notifications: newEntities as StoreNotification[],
+				notificationMap: newMap as Map<string, StoreNotification>,
 			});
 		},
 	}));

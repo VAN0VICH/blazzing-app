@@ -1,11 +1,14 @@
 import type { WriteTransaction } from "replicache";
 
-import type { DeleteAvatar, UpdateUser } from "@blazzing-app/validators";
-import type { User } from "@blazzing-app/validators/client";
+import type {
+	DeleteAvatar,
+	StoreUser,
+	UpdateUser,
+} from "@blazzing-app/validators";
 
 async function updateUser(tx: WriteTransaction, input: UpdateUser) {
 	const { id, updates } = input;
-	const user = await tx.get<User>(id);
+	const user = await tx.get<StoreUser>(id);
 	if (!user) {
 		console.info("User  not found");
 		throw new Error("User not found");
@@ -40,7 +43,7 @@ async function updateUser(tx: WriteTransaction, input: UpdateUser) {
 async function deleteAvatar(tx: WriteTransaction, input: DeleteAvatar) {
 	const { userID } = input;
 
-	const user = await tx.get<User>(userID);
+	const user = await tx.get<StoreUser>(userID);
 
 	if (!user) {
 		console.info("User  not found");

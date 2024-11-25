@@ -3,7 +3,7 @@ import type {
 	DeleteProductOption,
 	UpdateProductOption,
 } from "@blazzing-app/validators";
-import type { Product } from "@blazzing-app/validators/client";
+import type { Product } from "../../../../validators/src/store-entities";
 import type { WriteTransaction } from "replicache";
 import { productNotFound } from "./product";
 

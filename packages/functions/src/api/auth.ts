@@ -5,10 +5,11 @@ import { generateID } from "@blazzing-app/utils";
 import type {
 	GoogleProfile,
 	InsertAuth,
+	Server,
 	WorkerBindings,
 	WorkerEnv,
 } from "@blazzing-app/validators";
-import { AuthUserSchema, SessionSchema } from "@blazzing-app/validators/server";
+import { AuthUserSchema, SessionSchema } from "@blazzing-app/validators";
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { generateCodeVerifier, generateState, Google } from "arctic";
 import { eq, lte } from "drizzle-orm";
@@ -386,7 +387,7 @@ export namespace AuthApi {
 								UserService.onboard({
 									countryCode: "BY",
 									username: testID,
-									authUser: testAuthUser,
+									authUser: testAuthUser as Server.AuthUser,
 								})
 									.pipe(
 										Effect.provideService(

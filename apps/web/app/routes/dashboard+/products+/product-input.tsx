@@ -1,7 +1,10 @@
 import { cn } from "@blazzing-app/ui";
 import { Ping } from "@blazzing-app/ui/ping";
 import { toast } from "@blazzing-app/ui/toast";
-import type { Product, Variant } from "@blazzing-app/validators/client";
+import type {
+	Product,
+	Variant,
+} from "../../../../../../packages/validators/src/store-entities";
 import { AlertDialog, Badge, Button, Flex, Grid } from "@radix-ui/themes";
 import { useNavigate } from "@remix-run/react";
 import React from "react";

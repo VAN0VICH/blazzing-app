@@ -1,7 +1,7 @@
 import { cn } from "@blazzing-app/ui";
 import { Icons } from "@blazzing-app/ui/icons";
 import { ToggleGroup, ToggleGroupItem } from "@blazzing-app/ui/toggle-group";
-import type { Product } from "@blazzing-app/validators/client";
+import type { Product } from "../../../../../../packages/validators/src/store-entities";
 import { Avatar, Badge, Box, Flex, Heading, Skeleton } from "@radix-ui/themes";
 import { Link } from "@remix-run/react";
 import Image from "~/components/image";

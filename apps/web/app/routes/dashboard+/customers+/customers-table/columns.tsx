@@ -1,11 +1,11 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
-import type { Customer } from "@blazzing-app/validators/client";
 import { Avatar, Flex, Grid, Text } from "@radix-ui/themes";
 import { DataTableColumnHeader } from "~/components/templates/table/data-table-column-header";
 import ImagePlaceholder from "~/components/image-placeholder";
+import type { StoreCustomer } from "@blazzing-app/validators";
 
-export function getCustomersColumns(): ColumnDef<Customer, unknown>[] {
+export function getCustomersColumns(): ColumnDef<StoreCustomer, unknown>[] {
 	return [
 		{
 			accessorKey: "customer",
