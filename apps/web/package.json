@@ -17,12 +17,12 @@
 		"namespace": "wrangler kv namespace create KV"
 	},
 	"dependencies": {
-		"@blazzing-app/core": "^0.1.11",
-		"@blazzing-app/functions": "^0.1.11",
-		"@blazzing-app/replicache": "^0.1.11",
-		"@blazzing-app/ui": "^0.1.11",
-		"@blazzing-app/utils": "^0.1.11",
-		"@blazzing-app/validators": "^0.1.11",
+		"@blazzing-app/core": "workspace:^",
+		"@blazzing-app/functions": "workspace:^",
+		"@blazzing-app/replicache": "workspace:^",
+		"@blazzing-app/ui": "workspace:^",
+		"@blazzing-app/utils": "workspace:^",
+		"@blazzing-app/validators": "workspace:^",
 		"@conform-to/react": "^1.1.5",
 		"@conform-to/zod": "^1.1.5",
 		"@dnd-kit/core": "^6.1.0",
