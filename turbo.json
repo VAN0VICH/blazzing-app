@@ -9,6 +9,14 @@
 			"dependsOn": ["^build"],
 			"outputs": [".cache/tsbuildinfo.json", "dist/**"]
 		},
+		"web#build": {
+			"dependsOn": [
+				"utils#build",
+				"replicache#build",
+				"core#build",
+				"functions#build"
+			]
+		},
 		"dev": {
 			"cache": false,
 			"persistent": false
