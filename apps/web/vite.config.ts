@@ -13,14 +13,13 @@ export default defineConfig({
 			"tslib",
 			"react-dropzone",
 			"@blazzing-app/utils",
-			"@blazzing-app/validators",
 		],
 		resolve: {
 			externalConditions: ["workerd", "worker"],
 		},
 	},
 	optimizeDeps: {
-		include: ["@blazzing-app/utils", "@blazzing-app/validators"], // Pre-bundle for faster builds
+		entries: ["@blazzing-app/utils"],
 	},
 	plugins: [
 		// remixCloudflareDevProxy({}),
