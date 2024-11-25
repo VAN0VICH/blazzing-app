@@ -8,18 +8,10 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
 	ssr: {
-		noExternal: [
-			"react-easy-crop",
-			"tslib",
-			"react-dropzone",
-			"@blazzing-app/utils",
-		],
+		noExternal: ["react-easy-crop", "tslib", "react-dropzone"],
 		resolve: {
 			externalConditions: ["workerd", "worker"],
 		},
-	},
-	optimizeDeps: {
-		entries: ["@blazzing-app/utils"],
 	},
 	plugins: [
 		// remixCloudflareDevProxy({}),
