@@ -1,13 +1,16 @@
 {
 	"name": "@blazzing-app/core",
-	"version": "0.1.12",
+	"version": "0.1.14",
+
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"module": "./dist/index.mjs",
 	"exports": {
-		"import": "./dist/index.mjs",
-		"require": "./dist/index.js",
-		"types": "./dist/index.d.ts"
+		".": {
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
 	},
 	"publishConfig": {
 		"access": "public"
