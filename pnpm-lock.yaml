@@ -43,22 +43,22 @@ importers:
   apps/web:
     dependencies:
       '@blazzing-app/core':
-        specifier: workspace:^
+        specifier: ^0.1.11
         version: link:../../packages/core
       '@blazzing-app/functions':
-        specifier: workspace:^
+        specifier: ^0.1.11
         version: link:../../packages/functions
       '@blazzing-app/replicache':
-        specifier: workspace:^
+        specifier: ^0.1.11
         version: link:../../packages/replicache
       '@blazzing-app/ui':
         specifier: workspace:^
         version: link:../../packages/ui
       '@blazzing-app/utils':
-        specifier: workspace:^
+        specifier: ^0.1.11
         version: link:../../packages/utils
       '@blazzing-app/validators':
-        specifier: workspace:^
+        specifier: ^0.1.11
         version: link:../../packages/validators
       '@conform-to/react':
         specifier: ^1.1.5
