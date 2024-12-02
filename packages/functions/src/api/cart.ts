@@ -112,9 +112,7 @@ export namespace CartApi {
 						content: {
 							"application/json": {
 								schema: z.object({
-									checkoutInfo: DeliveryCheckoutFormSchema.or(
-										OnsiteCheckoutFormSchema,
-									),
+									checkoutInfo: z.any(),
 									id: z.string(),
 									type: z.enum(["delivery", "onsite"] as const),
 								}),
@@ -141,6 +139,23 @@ export namespace CartApi {
 				const { checkoutInfo, id, type } = c.req.valid("json");
 
 				const db = c.get("db" as never) as Db;
+				if (type === "delivery") {
+					const parseResult =
+						DeliveryCheckoutFormSchema.safeParse(checkoutInfo);
+					if (!parseResult.success) {
+						const zodErrors = parseResult.error.formErrors.fieldErrors;
+						console.log("errors", zodErrors);
+						return c.text("Invalid input", 400);
+					}
+				}
+				if (type === "onsite") {
+					const parseResult = OnsiteCheckoutFormSchema.safeParse(checkoutInfo);
+					if (!parseResult.success) {
+						const zodErrors = parseResult.error.formErrors.fieldErrors;
+						console.log("errors", zodErrors);
+						return c.text("Invalid input", 400);
+					}
+				}
 				const orderIDs = await Effect.runPromise(
 					CartService.completeCart({
 						checkoutInfo,

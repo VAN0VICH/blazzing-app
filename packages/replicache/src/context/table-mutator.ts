@@ -37,6 +37,10 @@ const TableMutatorLive = Effect.gen(function* () {
 							//@ts-ignore
 							.values(isArray(value) ? value : [value])
 							.onConflictDoNothing()
+							.catch((err) => {
+								console.log(err);
+								throw new Error("Error mutator insert");
+							})
 					);
 				}).pipe(
 					Effect.catchTags({
@@ -64,7 +68,11 @@ const TableMutatorLive = Effect.gen(function* () {
 							...value,
 							version: sql`${table.version} + 1`,
 						})
-						.where(eq(table.id, key)),
+						.where(eq(table.id, key))
+						.catch((err) => {
+							console.log(err);
+							throw new Error("Error mutator update");
+						}),
 				).pipe(
 					Effect.catchTags({
 						UnknownException: (error) =>
@@ -86,8 +94,20 @@ const TableMutatorLive = Effect.gen(function* () {
 
 				return yield* Effect.tryPromise(() =>
 					isString(key)
-						? manager.delete(table).where(eq(table.id, key))
-						: manager.delete(table).where(inArray(table.id, key)),
+						? manager
+								.delete(table)
+								.where(eq(table.id, key))
+								.catch((err) => {
+									console.log(err);
+									throw new Error("Error mutator delete");
+								})
+						: manager
+								.delete(table)
+								.where(inArray(table.id, key))
+								.catch((err) => {
+									console.log(err);
+									throw new Error("Error mutator delete");
+								}),
 				).pipe(
 					Effect.catchTags({
 						UnknownException: (error) =>

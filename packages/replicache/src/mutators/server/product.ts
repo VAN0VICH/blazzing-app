@@ -42,6 +42,65 @@ const deleteProduct = fn(
 	(input) =>
 		Effect.gen(function* () {
 			const tableMutator = yield* TableMutator;
+			const { manager } = yield* Database;
+			const { bindings } = yield* Cloudflare;
+
+			const products = yield* Effect.tryPromise(() =>
+				manager.query.products.findMany({
+					where: (prod, { inArray }) => inArray(prod.id, keys),
+					columns: {
+						id: true,
+						collectionHandle: true,
+						status: true,
+						storeID: true,
+					},
+					with: {
+						baseVariant: {
+							columns: {
+								handle: true,
+							},
+						},
+					},
+				}),
+			).pipe(
+				Effect.catchTags({
+					UnknownException: () =>
+						new NeonDatabaseError({
+							message: "error getting products",
+						}),
+				}),
+			);
+			yield* Effect.forEach(products, (product) =>
+				Effect.gen(function* () {
+					if (product.status === "published") {
+						yield* Effect.all(
+							[
+								Effect.tryPromise(() =>
+									bindings.KV.delete(`product_${product.id}`),
+								),
+								Effect.tryPromise(() =>
+									bindings.KV.delete(`product_${product.baseVariant.handle}`),
+								),
+								Effect.tryPromise(() =>
+									bindings.KV.delete(`product_list_${product.storeID}`),
+								),
+								Effect.tryPromise(() =>
+									bindings.KV.delete(
+										`collection_handle_${product.collectionHandle}`,
+									),
+								),
+							],
+							{
+								concurrency: 4,
+							},
+						).pipe(
+							Effect.catchTags({
+								UnknownException: () => Effect.succeed({}),
+							}),
+						);
+					}
+				}),
+			);
 			const { keys } = input;
 
 			return yield* tableMutator.delete(keys, "products");
@@ -52,7 +111,33 @@ const updateProduct = fn(UpdateProductSchema, (input) =>
 	Effect.gen(function* () {
 		const tableMutator = yield* TableMutator;
 		const { manager } = yield* Database;
+		const { bindings } = yield* Cloudflare;
 		const { updates, id, storeID } = input;
+
+		const product = yield* Effect.tryPromise(() =>
+			manager.query.products.findFirst({
+				columns: {
+					id: true,
+					collectionHandle: true,
+					storeID: true,
+				},
+				with: {
+					baseVariant: {
+						columns: {
+							handle: true,
+						},
+					},
+				},
+				where: (products, { eq }) => eq(products.id, id),
+			}),
+		).pipe(
+			Effect.catchTags({
+				UnknownException: () =>
+					new NeonDatabaseError({ message: "error getting product" }),
+			}),
+		);
+		if (!product) return;
+
 		yield* Effect.all(
 			[
 				tableMutator.update(id, updates, "products"),
@@ -62,7 +147,8 @@ const updateProduct = fn(UpdateProductSchema, (input) =>
 			],
 			{ concurrency: 2 },
 		);
-		if (updates.status) {
+
+		if (updates.status || updates.available) {
 			/* delete all the existing line items in the cart so that the user doesn't accidentally buy a product with a modified price */
 			yield* Effect.tryPromise(() =>
 				manager
@@ -77,6 +163,27 @@ const updateProduct = fn(UpdateProductSchema, (input) =>
 				Effect.catchTags({
 					UnknownException: (error) =>
 						new NeonDatabaseError({ message: error.message }),
+				}),
+			);
+			yield* Effect.all(
+				[
+					Effect.tryPromise(() => bindings.KV.delete(`product_${product.id}`)),
+					Effect.tryPromise(() =>
+						bindings.KV.delete(`product_${product.baseVariant.handle}`),
+					),
+					Effect.tryPromise(() =>
+						bindings.KV.delete(`product_list_${product.storeID}`),
+					),
+					Effect.tryPromise(() =>
+						bindings.KV.delete(`collection_handle_${product.collectionHandle}`),
+					),
+				],
+				{
+					concurrency: 4,
+				},
+			).pipe(
+				Effect.catchTags({
+					UnknownException: () => Effect.succeed({}),
 				}),
 			);
 		}
@@ -148,12 +255,23 @@ const publishProduct = fn(z.object({ id: z.string() }), (input) =>
 			),
 		);
 		yield* Effect.all(effects, { concurrency: "unbounded" });
-		yield* Effect.all([
-			Effect.tryPromise(() => bindings.KV.delete(`product_${product.id}`)),
-			Effect.tryPromise(() =>
-				bindings.KV.delete(`product_${product.baseVariant.handle}`),
-			),
-		]).pipe(
+		yield* Effect.all(
+			[
+				Effect.tryPromise(() => bindings.KV.delete(`product_${product.id}`)),
+				Effect.tryPromise(() =>
+					bindings.KV.delete(`product_${product.baseVariant.handle}`),
+				),
+				Effect.tryPromise(() =>
+					bindings.KV.delete(`product_list_${product.storeID}`),
+				),
+				Effect.tryPromise(() =>
+					bindings.KV.delete(`collection_handle_${product.collectionHandle}`),
+				),
+			],
+			{
+				concurrency: 4,
+			},
+		).pipe(
 			Effect.catchTags({
 				UnknownException: () => Effect.succeed({}),
 			}),
@@ -288,6 +406,7 @@ const duplicate = fn(ProductDuplicateSchema, (input) =>
 			{
 				id: newBaseVariantID,
 				productID: newProductID,
+				available: true,
 				createdAt: new Date().toISOString(),
 				updatedAt: new Date().toISOString(),
 				version: 0,

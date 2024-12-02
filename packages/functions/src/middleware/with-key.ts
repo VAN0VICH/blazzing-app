@@ -10,6 +10,7 @@ const withKey = async (
 	// Make sure to return a Response here
 	// Extract the API key from the Authorization header
 	const key = c.req.raw.headers.get("x-publishable-key");
+
 	const db = getDB({ connectionString: c.env.DATABASE_URL });
 	console.log("key<----", key);
 

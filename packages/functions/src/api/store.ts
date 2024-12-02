@@ -32,6 +32,12 @@ export namespace StoreApi {
 		//@ts-ignore
 		async (c) => {
 			const { name } = c.req.valid("query");
+			const cached = await c.env.KV.get(`store_${JSON.stringify(name)}`);
+			if (cached) {
+				return c.json({
+					result: JSON.parse(cached),
+				});
+			}
 			const db = c.get("db" as never) as Db;
 
 			const store = await db.query.stores.findFirst({
@@ -42,6 +48,10 @@ export namespace StoreApi {
 					products: true,
 				},
 			});
+			await c.env.KV.put(
+				`store_${JSON.stringify(name)}`,
+				JSON.stringify(store),
+			);
 			return c.json({ result: store ?? null });
 		},
 	);

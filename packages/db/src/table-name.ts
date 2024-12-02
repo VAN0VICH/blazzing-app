@@ -64,6 +64,7 @@ type PaymentProfileTable = typeof paymentProfiles;
 type StripeTable = typeof stripe;
 
 type AuthTable = typeof authUsers;
+
 export type JsonTable = typeof jsonTable;
 export type Table =
 	| UserTable

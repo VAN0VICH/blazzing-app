@@ -142,8 +142,6 @@ export default function ProductPage() {
 		() => variants.find((v) => v.handle === selectedVariantHandle) ?? variant,
 		[selectedVariantHandle, variants, variant],
 	);
-	console.log("selected variant", selectedVariant);
-	console.log("variant", variant);
 
 	const [api, setApi] = React.useState<CarouselApi>();
 

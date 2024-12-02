@@ -1,8 +1,8 @@
 {
-	"extends": "@blazzing-app/tsconfig/internal-package.json",
+	"extends": "@blazzing-app/tsconfig/base.json",
 	"compilerOptions": {
 		"types": ["@cloudflare/workers-types"]
 	},
-	"include": ["src"],
+	"include": ["."],
 	"exclude": ["node_modules", ".changeset", "dist"]
 }

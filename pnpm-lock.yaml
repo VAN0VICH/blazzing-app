@@ -31,7 +31,7 @@ importers:
         specifier: ^1.8.3
         version: 1.9.4
       '@blazzing-app/tsconfig':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../tooling/typescript
       partykit:
         specifier: ^0.0.110
@@ -188,10 +188,10 @@ importers:
         specifier: ^1.8.3
         version: 1.9.4
       '@blazzing-app/tailwind-config':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../tooling/tailwind
       '@blazzing-app/tsconfig':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../tooling/typescript
       '@cloudflare/workers-types':
         specifier: ^4.20240529.0
@@ -236,19 +236,19 @@ importers:
   packages/core:
     dependencies:
       '@blazzing-app/db':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../db
       '@blazzing-app/replicache':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../replicache
       '@blazzing-app/shared':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../shared
       '@blazzing-app/utils':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../utils
       '@blazzing-app/validators':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../validators
       '@effect/platform':
         specifier: ^0.66.2
@@ -282,7 +282,7 @@ importers:
         specifier: ^1.8.3
         version: 1.9.4
       '@blazzing-app/tsconfig':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../tooling/typescript
       '@changesets/cli':
         specifier: ^2.27.9
@@ -364,16 +364,16 @@ importers:
         specifier: workspace:^
         version: link:../db
       '@blazzing-app/replicache':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../replicache
       '@blazzing-app/shared':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../shared
       '@blazzing-app/utils':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../utils
       '@blazzing-app/validators':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../validators
       '@cloudflare/workers-types':
         specifier: ^4.20240529.0
@@ -413,7 +413,7 @@ importers:
         specifier: ^1.8.3
         version: 1.9.4
       '@blazzing-app/tsconfig':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../tooling/typescript
       '@changesets/cli':
         specifier: ^2.27.9
@@ -431,16 +431,16 @@ importers:
   packages/replicache:
     dependencies:
       '@blazzing-app/db':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../db
       '@blazzing-app/shared':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../shared
       '@blazzing-app/utils':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../utils
       '@blazzing-app/validators':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../validators
       '@effect/platform':
         specifier: ^0.66.2
@@ -471,7 +471,7 @@ importers:
         specifier: ^1.8.3
         version: 1.9.4
       '@blazzing-app/tsconfig':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../tooling/typescript
       '@changesets/cli':
         specifier: ^2.27.9
@@ -486,13 +486,13 @@ importers:
   packages/shared:
     dependencies:
       '@blazzing-app/db':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../db
       '@blazzing-app/utils':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../utils
       '@blazzing-app/validators':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../validators
       drizzle-orm:
         specifier: ^0.36.4
@@ -517,7 +517,7 @@ importers:
         specifier: ^1.8.3
         version: 1.9.4
       '@blazzing-app/tsconfig':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../tooling/typescript
       '@changesets/cli':
         specifier: ^2.27.9
@@ -599,7 +599,7 @@ importers:
         specifier: ^1.8.3
         version: 1.9.4
       '@blazzing-app/tsconfig':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../tooling/typescript
       '@cloudflare/workers-types':
         specifier: ^4.20240529.0
@@ -614,7 +614,7 @@ importers:
   packages/utils:
     dependencies:
       '@blazzing-app/validators':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../validators
       dayjs:
         specifier: ^1.11.13
@@ -630,7 +630,7 @@ importers:
         specifier: ^1.8.3
         version: 1.9.4
       '@blazzing-app/tsconfig':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../tooling/typescript
       '@changesets/cli':
         specifier: ^2.27.9
@@ -655,10 +655,10 @@ importers:
         version: 3.23.8
     devDependencies:
       '@blazzing-app/db':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../db
       '@blazzing-app/tsconfig':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../tooling/typescript
       '@changesets/cli':
         specifier: ^2.27.9
@@ -691,7 +691,7 @@ importers:
         version: 1.0.7(tailwindcss@3.4.15(ts-node@10.9.2(@types/node@22.9.1)(typescript@5.6.3)))
     devDependencies:
       '@blazzing-app/tsconfig':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../typescript
       typescript:
         specifier: ^5.5.4

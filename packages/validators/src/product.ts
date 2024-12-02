@@ -5,6 +5,9 @@ import { createInsertSchema } from "drizzle-zod";
 import { ProductSchema } from "./entities-schema";
 import { InsertVariantSchema } from "./variant";
 
+export const productStatuses = schema.productStatus;
+export const productTypes = schema.productType;
+
 const InsertProductSchema = createInsertSchema(schema.products).extend({
 	baseVariant: InsertVariantSchema.optional(),
 });
@@ -19,6 +22,11 @@ const ProductUpdatesSchema = InsertProductSchema.pick({
 	collectionID: true,
 	status: true,
 	collectionHandle: true,
+	available: true,
+	type: true,
+}).extend({
+	type: z.enum(productStatuses).optional(),
+	available: z.boolean().optional(),
 });
 
 export const UpdateProductSchema = z.object({
@@ -43,5 +51,3 @@ export const DuplicateProductSchema = z.object({
 	duplicates: z.array(ProductDuplicateSchema),
 });
 export type DuplicateProduct = z.infer<typeof DuplicateProductSchema>;
-
-export const productStatuses = schema.productStatus;

@@ -16,9 +16,19 @@ export const UpdateOrderSchema = z.object({
 		email: true,
 		phone: true,
 		fullName: true,
+		status: true,
+		paymentStatus: true,
+		type: true,
+		tableNumber: true,
+		id: true,
+	}).extend({
+		type: z.enum(["delivery", "onsite", "takeout"] as const).optional(),
+		id: z.string().optional(),
 	}),
 	id: z.string(),
 });
 export type UpdateOrder = z.infer<typeof UpdateOrderSchema>;
 
 export const orderStatuses = schema.orders.status.enumValues;
+export const orderPaymentStatuses = schema.orders.paymentStatus.enumValues;
+export const orderTypes = schema.orders.type.enumValues;

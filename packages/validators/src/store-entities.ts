@@ -38,6 +38,11 @@ export type Store = Server.Store & {
 	products?: (Product | StoreProduct)[];
 	owner?: Server.User;
 	paymentProfiles?: StorePaymentProfile[];
+	admins?: {
+		admin: {
+			email: string;
+		};
+	}[];
 };
 export type StorePrice = Server.Price;
 export type StoreProductOptionValue = Server.ProductOptionValue & {

@@ -26,12 +26,13 @@ export const LineItem = ({
 	deleteItem,
 	updateItem,
 	currencyCode,
+
 	readonly = false,
 }: {
 	lineItem: LineItemType;
+	currencyCode: string;
 	deleteItem?: (id: string) => Promise<void>;
 	updateItem?: (id: string, quantity: number) => Promise<void>;
-	currencyCode: string;
 	readonly?: boolean;
 }) => {
 	const amount = React.useMemo(
@@ -49,15 +50,14 @@ export const LineItem = ({
 		[currencyCode, deleteItem, lineItem],
 	);
 
-	const reduceQuantity = async () => {
+	const reduceQuantity = React.useCallback(async () => {
 		if (lineItem.quantity === 1) return await deleteItem?.(lineItem.id);
 		await updateItem?.(lineItem.id, lineItem.quantity - 1);
-	};
+	}, [lineItem, deleteItem, updateItem]);
 
-	const increaseQuantity = async () => {
+	const increaseQuantity = React.useCallback(async () => {
 		await updateItem?.(lineItem.id, lineItem.quantity + 1);
-	};
-
+	}, [lineItem, updateItem]);
 	return (
 		<Card className="gap-2 flex w-full items-center p-2 rounded-[7px]">
 			<Avatar

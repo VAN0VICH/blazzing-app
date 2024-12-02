@@ -19,7 +19,7 @@
 		"tailwindcss-animate": "^1.0.7"
 	},
 	"devDependencies": {
-		"@blazzing-app/tsconfig": "workspace:*",
+		"@blazzing-app/tsconfig": "workspace:^",
 		"typescript": "^5.5.4"
 	}
 }

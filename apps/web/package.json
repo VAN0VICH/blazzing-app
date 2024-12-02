@@ -67,8 +67,8 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
-		"@blazzing-app/tailwind-config": "workspace:*",
-		"@blazzing-app/tsconfig": "workspace:*",
+		"@blazzing-app/tailwind-config": "workspace:^",
+		"@blazzing-app/tsconfig": "workspace:^",
 		"@cloudflare/workers-types": "^4.20240529.0",
 		"@remix-run/dev": "^2.14.0",
 		"@types/jsonwebtoken": "^9.0.6",

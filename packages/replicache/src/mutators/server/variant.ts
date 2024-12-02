@@ -231,6 +231,7 @@ const duplicate = fn(VariantDuplicateSchema, (input) =>
 				originCountry: variant.originCountry,
 				width: variant.width,
 				discountable: variant.discountable,
+				available: true,
 			} satisfies Server.Variant,
 			"variants",
 		);

@@ -27,7 +27,13 @@ export namespace ReplicacheApi {
 				path: "/pull",
 				request: {
 					query: z.object({
-						spaceID: z.enum(["dashboard", "marketplace", "global"] as const),
+						spaceID: z.enum([
+							"dashboard",
+							"marketplace",
+							"global",
+							"storefront",
+							"storefront-dashboard",
+						] as const),
 						subspaces: z.optional(z.array(z.string()).or(z.string())),
 					}),
 					body: {
@@ -55,6 +61,8 @@ export namespace ReplicacheApi {
 				console.log("--------->SPACE ID<-------", spaceID);
 				const body = c.req.valid("json");
 				const authUser = await getAuthUser(c);
+				const tempUserID = c.req.raw.headers.get("x-temp-user-id");
+				c.set("temp-user-id" as never, tempUserID);
 				console.log("USER FROM PULL", authUser);
 				console.log("subspaceIDs", subspaces);
 
@@ -158,7 +166,13 @@ export namespace ReplicacheApi {
 				path: "/push",
 				request: {
 					query: z.object({
-						spaceID: z.enum(["dashboard", "marketplace", "global"] as const),
+						spaceID: z.enum([
+							"dashboard",
+							"marketplace",
+							"global",
+							"storefront",
+							"storefront-dashboard",
+						] as const),
 					}),
 					body: {
 						content: {
@@ -185,6 +199,8 @@ export namespace ReplicacheApi {
 				const db = c.get("db" as never) as Db;
 				const { spaceID } = c.req.valid("query");
 				const body = c.req.valid("json");
+				const tempUserID = c.req.raw.headers.get("x-temp-user-id");
+				c.set("temp-user-id" as never, tempUserID);
 
 				const pushEffect = push({
 					body,

@@ -28,7 +28,10 @@ const Actions = ({
 	const rep = useReplicache((state) => state.globalRep);
 	const items = useGlobalStore((state) => state.lineItems);
 
-	const itemsIDs = new Map(items.map((i) => [i.variantID, i]));
+	const itemsIDs = React.useMemo(
+		() => new Map(items.map((i) => [i.variantID, i])),
+		[items],
+	);
 	const { setOpened } = useCartState();
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	const addToCart = React.useCallback(
@@ -73,7 +76,7 @@ const Actions = ({
 						title: selectedVariant.title ?? "",
 						quantity: 1,
 						createdAt: new Date().toISOString(),
-						variant: selectedVariant,
+						variant: selectedVariant as StoreVariant,
 						variantID: selectedVariant.id,
 						productID: selectedVariant.productID,
 						product: selectedVariant.product,

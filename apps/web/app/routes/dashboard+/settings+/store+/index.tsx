@@ -1,11 +1,13 @@
 import type { Routes } from "@blazzing-app/functions";
+import type { DashboardMutatorsType } from "@blazzing-app/replicache";
 import { cn } from "@blazzing-app/ui";
 import { Form, FormControl, FormField, FormItem } from "@blazzing-app/ui/form";
 import { Icons } from "@blazzing-app/ui/icons";
 import { toast } from "@blazzing-app/ui/toast";
-import type { Store as StoreType } from "@blazzing-app/validators";
+import { generateID } from "@blazzing-app/utils";
+import type { Image as ImageType } from "@blazzing-app/validators";
+import { EmailSchema, type Store as StoreType } from "@blazzing-app/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as base64 from "base64-arraybuffer";
 import {
 	Avatar,
 	Box,
@@ -21,18 +23,18 @@ import {
 	TextArea,
 	TextField,
 } from "@radix-ui/themes";
+import * as base64 from "base64-arraybuffer";
 import { hc } from "hono/client";
 import React from "react";
 import type { Area, Point } from "react-easy-crop";
 import Cropper from "react-easy-crop";
 import { useForm } from "react-hook-form";
+import type { Replicache } from "replicache";
 import { z } from "zod";
 import getCroppedImg from "~/utils/crop";
 import { toImageURL } from "~/utils/helpers";
 import { useReplicache } from "~/zustand/replicache";
 import { useDashboardStore } from "~/zustand/store";
-import type { Image as ImageType } from "@blazzing-app/validators";
-import { generateID } from "@blazzing-app/utils";
 const schema = z.object({
 	name: z.string(),
 	description: z.string(),
@@ -106,11 +108,7 @@ export default function Store() {
 	return (
 		<Form {...methods}>
 			<Grid>
-				<Flex
-					direction={{ initial: "column", xs: "row" }}
-					pb="6"
-					className="border-b"
-				>
+				<Flex direction={{ initial: "column", xs: "row" }} pb="6">
 					<Box width="30%" className="hidden lg:block">
 						<Heading as="h2" size="5" className="font-freeman text-accent-11">
 							General
@@ -211,10 +209,127 @@ export default function Store() {
 						</Card>
 					</Box>
 				</Flex>
+				<Admins store={store} />
 			</Grid>
 		</Form>
 	);
 }
+
+const Admins = ({ store }: { store: StoreType | undefined }) => {
+	const rep = useReplicache((state) => state.dashboardRep);
+	const removeAdmin = React.useCallback(
+		async ({ email }: { email: string }) => {
+			store?.id &&
+				(await rep?.mutate.removeAdmin({
+					storeID: store.id,
+					email,
+				}));
+		},
+		[rep, store?.id],
+	);
+
+	return (
+		<Flex
+			direction={{ initial: "column", xs: "row" }}
+			pb="6"
+			className="border-t"
+		>
+			<Box width="30%" className="hidden lg:block">
+				<Heading as="h2" size="5" className="font-freeman pt-4 text-accent-11">
+					Admins
+				</Heading>
+			</Box>
+
+			<Box width="100%" pt="4">
+				<AddAdminDialog storeID={store?.id} rep={rep} />
+				<Flex wrap={"wrap"} pt="4">
+					{(store?.admins ?? []).map((a) => (
+						<Card className="p-2 gap-2 flex max-w-xl" key={a.admin.email}>
+							{a.admin.email}
+							<IconButton
+								variant="ghost"
+								onClick={async () =>
+									await removeAdmin({ email: a.admin.email })
+								}
+							>
+								<Icons.Close />
+							</IconButton>
+						</Card>
+					))}
+				</Flex>
+			</Box>
+		</Flex>
+	);
+};
+const AddAdminDialog = ({
+	storeID,
+	rep,
+}: {
+	storeID: string | undefined;
+	rep: Replicache<DashboardMutatorsType> | null;
+}) => {
+	const [open, setOpen] = React.useState(false);
+	const methods = useForm<{ email: string }>({
+		resolver: zodResolver(z.object({ email: EmailSchema })),
+		defaultValues: {
+			email: "",
+		},
+	});
+	const onSubmit = React.useCallback(
+		async (data: { email: string }) => {
+			console.log("submitting...", storeID);
+			if (storeID) {
+				await rep?.mutate.addAdmin({
+					email: data.email,
+					storeID,
+				});
+				setOpen(false);
+			}
+		},
+		[rep, storeID],
+	);
+	return (
+		<Dialog.Root open={open} onOpenChange={setOpen}>
+			<Dialog.Trigger>
+				<Button variant="classic">
+					<Icons.Plus /> Add Admin
+				</Button>
+			</Dialog.Trigger>
+
+			<Dialog.Content maxWidth="450px">
+				<form onSubmit={methods.handleSubmit(onSubmit)}>
+					<Dialog.Title>Add admin</Dialog.Title>
+					<Dialog.Description size="2" mb="4">
+						Admin will be able to modify products and orders.
+					</Dialog.Description>
+
+					<Flex direction="column" gap="3">
+						{/* biome-ignore lint/a11y/noLabelWithoutControl: <explanation> */}
+						<label>
+							<Text as="div" size="2" mb="1" weight="bold">
+								Email
+							</Text>
+							<TextField.Root
+								defaultValue="freja@example.com"
+								placeholder="Enter email"
+								{...methods.register("email")}
+							/>
+						</label>
+					</Flex>
+
+					<Flex gap="3" mt="4" justify="end">
+						<Dialog.Close>
+							<Button variant="soft" color="gray">
+								Cancel
+							</Button>
+						</Dialog.Close>
+						<Button type="submit">Save</Button>
+					</Flex>
+				</form>
+			</Dialog.Content>
+		</Dialog.Root>
+	);
+};
 
 const ImageUpload = ({ store }: { store: StoreType | undefined }) => {
 	const [image, setImage] = React.useState<ImageType | null>(null);

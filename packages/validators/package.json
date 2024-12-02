@@ -1,6 +1,6 @@
 {
 	"name": "@blazzing-app/validators",
-	"version": "0.1.15",
+	"version": "0.1.60",
 
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -10,7 +10,9 @@
 	},
 	"exports": {
 		".": {
-			"import": "./src/index.ts"
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js",
+			"types": "./dist/index.d.ts"
 		}
 	},
 
@@ -32,8 +34,8 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
-		"@blazzing-app/db": "workspace:*",
-		"@blazzing-app/tsconfig": "workspace:*",
+		"@blazzing-app/db": "workspace:^",
+		"@blazzing-app/tsconfig": "workspace:^",
 		"@changesets/cli": "^2.27.9",
 		"@cloudflare/workers-types": "^4.20240529.0",
 		"add": "^2.0.6",

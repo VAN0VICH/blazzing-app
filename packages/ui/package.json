@@ -40,7 +40,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
-		"@blazzing-app/tsconfig": "workspace:*",
+		"@blazzing-app/tsconfig": "workspace:^",
 		"@cloudflare/workers-types": "^4.20240529.0",
 		"@types/react": "^18.3.4",
 		"typescript": "^5.5.4"

@@ -63,6 +63,7 @@ export namespace ProductApi {
 				const { id, storeID } = c.req.valid("query");
 				const cached = await c.env.KV.get(`product_${JSON.stringify(id)}`);
 				if (cached) {
+					console.log(`Cache hit for product with id:${id}!`);
 					return c.json({
 						result: JSON.parse(cached),
 					});
@@ -145,6 +146,7 @@ export namespace ProductApi {
 				const { handle, storeID } = c.req.valid("query");
 				const cached = await c.env.KV.get(`product_${JSON.stringify(handle)}`);
 				if (cached) {
+					console.log(`Cache hit for product with handle:${handle}!`);
 					return c.json({
 						result: JSON.parse(cached),
 					});
@@ -243,8 +245,9 @@ export namespace ProductApi {
 			}),
 			async (c) => {
 				const { storeID } = c.req.valid("query");
-				const cached = await c.env.KV.get("product_list");
+				const cached = await c.env.KV.get(`product_list_${storeID}`);
 				if (cached) {
+					console.log("Cache hit for product list!");
 					return c.json({
 						result: JSON.parse(cached),
 					});
@@ -276,7 +279,7 @@ export namespace ProductApi {
 					},
 				});
 
-				await c.env.KV.put("product_list", JSON.stringify(products));
+				await c.env.KV.put(`product_list_${storeID}`, JSON.stringify(products));
 
 				return c.json({
 					result: products,
@@ -315,8 +318,9 @@ export namespace ProductApi {
 			}),
 			async (c) => {
 				const { handle, storeID } = c.req.valid("query");
-				const cached = await c.env.KV.get(`collection_${handle}`);
+				const cached = await c.env.KV.get(`collection_handle_${handle}`);
 				if (cached) {
+					console.log(`Cache hit for collection handle: ${handle}!`);
 					return c.json({
 						result: JSON.parse(cached),
 					});
@@ -338,7 +342,10 @@ export namespace ProductApi {
 					},
 				});
 
-				await c.env.KV.put(`collection_${handle}`, JSON.stringify(products));
+				await c.env.KV.put(
+					`collection_handle_${handle}`,
+					JSON.stringify(products),
+				);
 				return c.json({
 					result: products,
 				});

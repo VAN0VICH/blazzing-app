@@ -19,6 +19,7 @@ export const variants = pgTable(
 	"variants",
 	{
 		id: varchar("id").notNull().primaryKey(),
+		available: boolean("available").default(true),
 		title: varchar("title"),
 		description: text("description"),
 		handle: varchar("handle"),

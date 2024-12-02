@@ -1,8 +1,8 @@
-import { Clock, Effect, Layer } from "effect";
+import { Clock, Console, Effect, Layer } from "effect";
 import type { PatchOperation, PullResponseOKV1 } from "replicache";
 
 import type { Db } from "@blazzing-app/db";
-import { AuthContext, Database, type Cloudflare } from "@blazzing-app/shared";
+import { AuthContext, Cloudflare, Database } from "@blazzing-app/shared";
 import {
 	NeonDatabaseError,
 	type Cookie,
@@ -27,6 +27,7 @@ export const pull = ({
 	Effect.gen(function* (_) {
 		const { spaceID } = yield* ReplicacheContext;
 		const { authUser } = yield* AuthContext;
+		const { bindings, get } = yield* Cloudflare;
 		const requestCookie = pull.cookie;
 		yield* _(Effect.log(`SPACE ID ${spaceID}`));
 
@@ -126,6 +127,25 @@ export const pull = ({
 									op: "put",
 									value: "true",
 								} satisfies PatchOperation);
+
+								// ADD ORDER DISPLAY ID
+								const storeID = get("storeID");
+								const displayID = yield* Effect.tryPromise(() =>
+									bindings.KV.get(`order_display_id_${storeID}`),
+								).pipe(Effect.orDie);
+								yield* Console.log("display id 1", displayID);
+
+								spacePatch.push({
+									key: "display_id",
+									op: "put",
+									value: displayID ? JSON.parse(displayID) : 0,
+								} satisfies PatchOperation);
+								if (!displayID)
+									yield* Effect.tryPromise(() =>
+										bindings.KV.put(`order_display_id_${storeID}`, "0", {
+											expirationTtl: 12 * 60 * 60, // 12 hours in seconds
+										}),
+									).pipe(Effect.orDie);
 
 								// 6: PREPARE UPDATES
 								const oldSpaceRecordVersion = Math.max(

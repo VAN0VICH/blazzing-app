@@ -20,6 +20,7 @@ const prefixes = [
 	"space",
 	"line_item",
 	"order",
+	"draft_order",
 	"notification",
 	"verification",
 	"session",

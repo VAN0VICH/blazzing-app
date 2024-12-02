@@ -16,7 +16,7 @@ import { deleteAvatar, updateUser } from "./user";
 import { createLineItem, deleteLineItem, updateLineItem } from "./line-item";
 import { updateAddress } from "./address";
 import { updateCart } from "./cart";
-import { createOrder } from "./order";
+import { createOrder, deleteOrder, updateOrder } from "./order";
 import {
 	assignOptionValueToVariant,
 	deleteProductOptionValue,
@@ -36,6 +36,7 @@ import {
 } from "./variant";
 import { createCart } from "./carts";
 import { deleteImage, updateImagesOrder, uploadImages } from "./image";
+import { addAdmin, removeAdmin } from "./admin";
 
 const DashboardMutators = {
 	createProduct,
@@ -64,6 +65,8 @@ const DashboardMutators = {
 	uploadImages,
 	updateImagesOrder,
 	deleteImage,
+	addAdmin,
+	removeAdmin,
 };
 
 export const DashboardMutatorsMap = new Map(Object.entries(DashboardMutators));
@@ -98,10 +101,30 @@ export const StorefrontMutatorsMap = new Map(
 export type StorefrontMutatorsType = typeof StorefrontMutators;
 export type StorefrontMutatorsMapType = typeof StorefrontMutatorsMap;
 
+export const StorefrontDashboardMutators = {
+	createLineItem,
+	updateLineItem,
+	deleteLineItem,
+	updateAddress,
+	createOrder,
+	updateOrder,
+	deleteOrder,
+	updateProduct,
+};
+
+export const StorefrontDashboardMutatorsMap = new Map(
+	Object.entries(StorefrontDashboardMutators),
+);
+export type StorefrontDashboardMutatorsType =
+	typeof StorefrontDashboardMutators;
+export type StorefrontDashboardMutatorsMapType =
+	typeof StorefrontDashboardMutatorsMap;
+
 type MutatorKeys =
 	| keyof DashboardMutatorsType
 	| keyof UserMutatorsType
-	| keyof StorefrontMutatorsType;
+	| keyof StorefrontMutatorsType
+	| keyof StorefrontDashboardMutatorsType;
 //affected spaces and its subspaces
 export type AffectedSpaces = Record<
 	MutatorKeys,
@@ -127,12 +150,14 @@ export const affectedSpaces: AffectedSpaces = {
 		dashboard: ["store"],
 		marketplace: ["stores"],
 		global: ["cart"],
+		storefront: ["products"],
 	},
 	publishProduct: {
 		dashboard: ["store"],
 		marketplace: ["stores"],
 		global: ["cart"],
 		storefront: ["products"],
+		"storefront-dashboard": ["store"],
 	},
 	copyProduct: {
 		dashboard: ["store"],
@@ -164,7 +189,8 @@ export const affectedSpaces: AffectedSpaces = {
 		dashboard: ["store"],
 		marketplace: ["stores"],
 		global: ["cart"],
-		storefront: ["products"],
+		storefront: ["products", "cart"],
+		"storefront-dashboard": ["store"],
 	},
 	updateProductOption: {
 		dashboard: ["store"],
@@ -199,6 +225,7 @@ export const affectedSpaces: AffectedSpaces = {
 	},
 	createOrder: {
 		dashboard: ["store"],
+		"storefront-dashboard": ["orders"],
 	},
 	updateUser: {
 		global: ["user"],
@@ -209,14 +236,17 @@ export const affectedSpaces: AffectedSpaces = {
 	createLineItem: {
 		global: ["cart"],
 		storefront: ["cart"],
+		"storefront-dashboard": ["orders"],
 	},
 	updateLineItem: {
 		global: ["cart"],
 		storefront: ["cart"],
+		"storefront-dashboard": ["orders"],
 	},
 	deleteLineItem: {
 		global: ["cart"],
 		storefront: ["cart"],
+		"storefront-dashboard": ["orders"],
 	},
 	updateAddress: {
 		global: ["cart"],
@@ -248,5 +278,18 @@ export const affectedSpaces: AffectedSpaces = {
 	deleteAvatar: {
 		global: ["user"],
 		marketplace: ["stores"],
+	},
+	addAdmin: {
+		dashboard: ["store"],
+	},
+	removeAdmin: {
+		dashboard: ["store"],
+	},
+	updateOrder: {
+		"storefront-dashboard": ["orders"],
+		storefront: ["orders"],
+	},
+	deleteOrder: {
+		"storefront-dashboard": ["orders"],
 	},
 };

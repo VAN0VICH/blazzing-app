@@ -86,7 +86,7 @@ function GeneralInfo({ variant, isDashboard }: GeneralInfoProps) {
 			{/* <Price
 				className="text-xl py-4 font-black"
 				amount={baseVariant?.prices?.[0]?.amount ?? 0}
-				currencyCode={baseVariant?.prices?.[0]?.currencyCode ?? "USD"}
+				currencyCode={baseVariant?.prices?.[0]?.currencyCode ?? "BYN"}
 			/> */}
 		</Grid>
 	);

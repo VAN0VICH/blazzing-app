@@ -1,6 +1,6 @@
 {
 	"name": "@blazzing-app/utils",
-	"version": "0.1.15",
+	"version": "0.1.60",
 
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -10,7 +10,9 @@
 	},
 	"exports": {
 		".": {
-			"import": "./src/index.ts"
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js",
+			"types": "./dist/index.d.ts"
 		}
 	},
 
@@ -27,14 +29,14 @@
 		"changeset-init": "pnpm changeset init"
 	},
 	"dependencies": {
-		"@blazzing-app/validators": "workspace:*",
+		"@blazzing-app/validators": "workspace:^",
 		"dayjs": "^1.11.13",
 		"effect": "^3.10.15",
 		"ulidx": "^2.4.1"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
-		"@blazzing-app/tsconfig": "workspace:*",
+		"@blazzing-app/tsconfig": "workspace:^",
 		"@changesets/cli": "^2.27.9",
 		"@cloudflare/workers-types": "^4.20240529.0",
 		"tsup": "^8.3.5",

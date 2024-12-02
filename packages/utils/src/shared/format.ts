@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 export function formatPrice(price: number | string) {
 	return new Intl.NumberFormat("en-US", {
 		style: "currency",
-		currency: "USD",
+		currency: "BYN",
 	}).format(Number(price));
 }
 
@@ -67,7 +67,7 @@ export type Money = {
 };
 const noDivisionCurrencies = ["krw", "jpy", "vnd"];
 
-export const convertToDecimal = (amount: number, currencyCode = "USD") => {
+export const convertToDecimal = (amount: number, currencyCode = "BYN") => {
 	const divisor = noDivisionCurrencies.includes(currencyCode.toLowerCase())
 		? 1
 		: 100;

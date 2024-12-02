@@ -16,7 +16,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
-		"@blazzing-app/tsconfig": "workspace:*",
+		"@blazzing-app/tsconfig": "workspace:^",
 		"partykit": "^0.0.110",
 		"typescript": "^5.5.4"
 	}

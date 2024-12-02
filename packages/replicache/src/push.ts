@@ -17,12 +17,14 @@ import { ReplicacheContext } from "./context";
 import { TableMutator } from "./context/table-mutator";
 import {
 	DashboardMutatorsMap,
+	StorefrontDashboardMutatorsMap,
 	StorefrontMutatorsMap,
 	UserMutators,
 	UserMutatorsMap,
 	affectedSpaces,
 	type AffectedSpaces,
 	type DashboardMutatorsMapType,
+	type StorefrontDashboardMutatorsMapType,
 	type StorefrontMutatorsMapType,
 	type UserMutatorsMapType,
 } from "./mutators/server";
@@ -51,7 +53,9 @@ export const push = ({
 				? DashboardMutatorsMap
 				: spaceID === "global"
 					? UserMutatorsMap
-					: StorefrontMutatorsMap;
+					: spaceID === "storefront-dashboard"
+						? StorefrontDashboardMutatorsMap
+						: StorefrontMutatorsMap;
 
 		const affectedSpacesMap = new Map<
 			SpaceID,
@@ -187,7 +191,8 @@ const processMutation = ({
 	mutators:
 		| DashboardMutatorsMapType
 		| UserMutatorsMapType
-		| StorefrontMutatorsMapType;
+		| StorefrontMutatorsMapType
+		| StorefrontDashboardMutatorsMapType;
 	affectedSpacesMap: Map<SpaceID, Set<SpaceRecord[SpaceID][number]>>;
 }) =>
 	Effect.gen(function* () {

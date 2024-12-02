@@ -24,7 +24,8 @@ export namespace CartService {
 		({ checkoutInfo, id, type }) =>
 			Effect.gen(function* () {
 				const { manager } = yield* Database;
-				const { env } = yield* Cloudflare;
+				const { env, bindings, request } = yield* Cloudflare;
+				const tempUserID = request.headers.get("x-temp-user-id");
 				const orderIDs = yield* Effect.tryPromise(() =>
 					manager.transaction(
 						async (transaction) =>
@@ -97,41 +98,62 @@ export namespace CartService {
 								const newUserID = generateID({ prefix: "user" });
 								const newShippingAddressID = generateID({ prefix: "address" });
 
-								/* create new user if not found */
-								if (!existingCustomer) {
+								if (!existingCustomer || !existingUser) {
+									yield* Console.log(
+										"no existing user... Creating a new one",
+										existingUser,
+										checkoutInfo.email,
+										checkoutInfo.phone,
+										!existingUser &&
+											(!!checkoutInfo.email || !!checkoutInfo.phone),
+									);
 									yield* Effect.all([
-										!existingCustomer &&
-										(!!checkoutInfo.email || !!checkoutInfo.phone)
-											? Effect.tryPromise(() =>
-													transaction.insert(schema.customers).values({
-														id: newCustomerID,
-														createdAt: new Date().toISOString(),
-														version: 0,
-														...(checkoutInfo.email && {
-															email: checkoutInfo.email,
-														}),
-														...(checkoutInfo.phone && {
-															phone: checkoutInfo.phone,
-														}),
-														userID: existingUser ? existingUser.id : newUserID,
-													}),
-												)
-											: Effect.succeed({}),
 										!existingUser &&
 										(!!checkoutInfo.email || !!checkoutInfo.phone)
 											? Effect.tryPromise(() =>
-													transaction.insert(schema.users).values({
-														id: newUserID,
-														createdAt: new Date().toISOString(),
-														version: 0,
-														fullName: checkoutInfo.fullName,
-														...(checkoutInfo.email && {
-															email: checkoutInfo.email,
+													transaction
+														.insert(schema.users)
+														.values({
+															id: newUserID,
+															createdAt: new Date().toISOString(),
+															version: 0,
+															fullName: checkoutInfo.fullName,
+															...(checkoutInfo.email && {
+																email: checkoutInfo.email,
+															}),
+															...(checkoutInfo.phone && {
+																phone: checkoutInfo.phone,
+															}),
+														})
+														.catch((err) => {
+															console.error(err);
+															throw new Error("error inserting users");
 														}),
-														...(checkoutInfo.phone && {
-															phone: checkoutInfo.phone,
+												)
+											: Effect.succeed({}),
+										!existingCustomer &&
+										(!!checkoutInfo.email || !!checkoutInfo.phone)
+											? Effect.tryPromise(() =>
+													transaction
+														.insert(schema.customers)
+														.values({
+															id: newCustomerID,
+															createdAt: new Date().toISOString(),
+															version: 0,
+															...(checkoutInfo.email && {
+																email: checkoutInfo.email,
+															}),
+															...(checkoutInfo.phone && {
+																phone: checkoutInfo.phone,
+															}),
+															userID: existingUser
+																? existingUser.id
+																: newUserID,
+														})
+														.catch((err) => {
+															console.error(err);
+															throw new Error("error inserting customers");
 														}),
-													}),
 												)
 											: Effect.succeed({}),
 									]);
@@ -178,10 +200,17 @@ export namespace CartService {
 										Effect.gen(function* () {
 											//TODO: DO ACTUAL MATH ON TOTAL AND SUBTOTAL
 											const subtotal = yield* cartSubtotal(lineItems, cart);
+											const kvResult = yield* Effect.tryPromise(() =>
+												bindings.KV.get(`order_display_id_${storeID}`),
+											).pipe(Effect.orDie);
+											const orderDisplayID = kvResult
+												? (JSON.parse(kvResult) as number) + 1
+												: 1;
 											const newOrder: InsertOrder = {
 												id: generateID({ prefix: "order" }),
 												countryCode: cart.countryCode ?? "BY",
 												currencyCode: "BYN",
+												displayId: JSON.stringify(orderDisplayID),
 												createdAt: new Date().toISOString(),
 												...(checkoutInfo.email && {
 													email: checkoutInfo.email,
@@ -199,14 +228,29 @@ export namespace CartService {
 													phone: checkoutInfo.phone,
 												}),
 												fullName: checkoutInfo.fullName,
-												customerID: existingCustomer
-													? existingCustomer.id
-													: newCustomerID,
+												...((existingCustomer ||
+													!!checkoutInfo.email ||
+													!!checkoutInfo.phone) && {
+													customerID: existingCustomer
+														? existingCustomer.id
+														: newCustomerID,
+												}),
+												...(tempUserID && { tempUserID }),
 												storeID,
+												subtotal: subtotal,
 												total: subtotal,
 												status: "pending",
 											};
 											storeIDToOrder.set(storeID, newOrder);
+											yield* Effect.tryPromise(() =>
+												bindings.KV.put(
+													`order_display_id_${storeID}`,
+													JSON.stringify(orderDisplayID),
+													{
+														expirationTtl: 12 * 60 * 60, // 12 hours in seconds
+													},
+												),
+											).pipe(Effect.orDie);
 										}),
 								);
 
@@ -216,7 +260,11 @@ export namespace CartService {
 										.insert(schema.orders)
 										//@ts-ignore
 										.values(Array.from(storeIDToOrder.values()))
-										.returning({ id: schema.orders.id }),
+										.returning({ id: schema.orders.id })
+										.catch((err) => {
+											console.error(err);
+											throw new Error("error getting orders");
+										}),
 								);
 								yield* Effect.all(
 									[
@@ -237,7 +285,11 @@ export namespace CartService {
 																		orderID: storeIDToOrder.get(storeID)!.id,
 																		version: sql`${schema.lineItems.version} + 1`,
 																	})
-																	.where(eq(schema.lineItems.id, item.id)),
+																	.where(eq(schema.lineItems.id, item.id))
+																	.catch((err) => {
+																		console.error(err);
+																		throw new Error("error updating line item");
+																	}),
 															);
 														},
 														{ concurrency: "unbounded" },
@@ -256,36 +308,61 @@ export namespace CartService {
 													email: cart.email,
 													phone: cart.phone,
 													version: sql`${schema.carts.version} + 1`,
-													userID: existingUser ? existingUser.id : newUserID,
+													...((existingUser ||
+														!!checkoutInfo.email ||
+														!!checkoutInfo.phone) && {
+														userID: existingUser ? existingUser.id : newUserID,
+													}),
 													...(!cart.shippingAddressID &&
 														"shippingAddress" in checkoutInfo && {
 															shippingAddressID: newShippingAddressID,
 														}),
 												})
 
-												.where(eq(schema.carts.id, id)),
+												.where(eq(schema.carts.id, id))
+												.catch((err) => {
+													console.error(err);
+													throw new Error("error updating cart");
+												}),
 										),
 
-										Effect.tryPromise(() =>
-											transaction.insert(schema.notifications).values([
-												{
-													id: generateID({ prefix: "notification" }),
-													createdAt: new Date().toISOString(),
-													type: "ORDER_PLACED" as const,
-													entityID: existingUser ? existingUser.id : newUserID,
-													description: "Order has been placed",
-													title: "Order Placed",
-												},
-												...Array.from(storeIDToOrder.keys()).map((storeID) => ({
-													id: generateID({ prefix: "notification" }),
-													createdAt: new Date().toISOString(),
-													type: "ORDER_PLACED" as const,
-													entityID: storeID,
-													description: "Order has been placed",
-													title: "Order Placed",
-												})),
-											]),
-										),
+										(existingUser ||
+											!!checkoutInfo.email ||
+											!!checkoutInfo.phone) && {
+											userID: existingUser ? existingUser.id : newUserID,
+										}
+											? Effect.tryPromise(() =>
+													transaction
+														.insert(schema.notifications)
+														.values([
+															{
+																id: generateID({ prefix: "notification" }),
+																createdAt: new Date().toISOString(),
+																type: "ORDER_PLACED" as const,
+
+																entityID: existingUser
+																	? existingUser.id
+																	: newUserID,
+																description: "Order has been placed",
+																title: "Order Placed",
+															},
+															...Array.from(storeIDToOrder.keys()).map(
+																(storeID) => ({
+																	id: generateID({ prefix: "notification" }),
+																	createdAt: new Date().toISOString(),
+																	type: "ORDER_PLACED" as const,
+																	entityID: storeID,
+																	description: "Order has been placed",
+																	title: "Order Placed",
+																}),
+															),
+														])
+														.catch((err) => {
+															console.error(err);
+															throw new Error("error generating notification");
+														}),
+												)
+											: Effect.succeed({}),
 									],
 									{ concurrency: 3 },
 								);
@@ -352,11 +429,20 @@ export namespace CartService {
 								Effect.tryPromise(() =>
 									fetch(`${env.PARTYKIT_ORIGIN}/parties/main/storefront`, {
 										method: "POST",
-										body: JSON.stringify(["cart"]),
+										body: JSON.stringify(["cart", "orders"]),
 									}),
 								),
+								Effect.tryPromise(() =>
+									fetch(
+										`${env.PARTYKIT_ORIGIN}/parties/main/storefront-dashboard`,
+										{
+											method: "POST",
+											body: JSON.stringify(["orders"]),
+										},
+									),
+								),
 							],
-							{ concurrency: 3 },
+							{ concurrency: 4 },
 						),
 					),
 

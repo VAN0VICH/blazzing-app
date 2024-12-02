@@ -1,19 +1,20 @@
 {
 	"name": "@blazzing-app/replicache",
-	"version": "0.1.15",
-
+	"version": "0.1.60",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"module": "./dist/index.mjs",
-	"exports": {
-		".": {
-			"import": "./src/index.ts"
-		}
-	},
-
 	"publishConfig": {
 		"access": "public"
 	},
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js",
+			"types": "./dist/index.d.ts"
+		}
+	},
+
 	"license": "MIT",
 	"scripts": {
 		"build": "tsup src/index.ts --format cjs,esm --dts --out-dir dist",
@@ -27,10 +28,10 @@
 		"changeset-init": "pnpm changeset init"
 	},
 	"dependencies": {
-		"@blazzing-app/db": "workspace:*",
-		"@blazzing-app/shared": "workspace:*",
-		"@blazzing-app/utils": "workspace:*",
-		"@blazzing-app/validators": "workspace:*",
+		"@blazzing-app/db": "workspace:^",
+		"@blazzing-app/shared": "workspace:^",
+		"@blazzing-app/utils": "workspace:^",
+		"@blazzing-app/validators": "workspace:^",
 		"@effect/platform": "^0.66.2",
 		"base64-arraybuffer": "^1.0.2",
 		"drizzle-orm": "^0.36.4",
@@ -42,7 +43,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
-		"@blazzing-app/tsconfig": "workspace:*",
+		"@blazzing-app/tsconfig": "workspace:^",
 		"@changesets/cli": "^2.27.9",
 		"tsup": "^8.3.5",
 		"typescript": "^5.5.4"

@@ -8,6 +8,7 @@ import { storeCVD } from "./dashboard";
 import { userCVD } from "./global/user";
 import type { GetRowsWTableName } from "./types";
 import { cartCVD } from "./global/cart";
+import { storeCVD as storefrontDashboardStoreCVD } from "./storefront-dashboard/store";
 import { cartCVD as storefrontCartCVD } from "./storefront/cart";
 import { ordersCVD } from "./global/orders";
 import { tableNameToTableMap, type TableName } from "@blazzing-app/db";
@@ -19,6 +20,8 @@ import { notificationsCVD } from "./global/notifications";
 import { storesCVD } from "./marketplace/stores";
 import { paymentCVD } from "./global/payment";
 import { productsAndVariantsCVD } from "./storefront/products";
+import { storefrontDashboardOrderCVD } from "./storefront-dashboard/orders";
+import { storefrontOrderCVD } from "./storefront/orders";
 
 export type SpaceRecordGetterType = {
 	[K in SpaceID]: Record<SpaceRecord[K][number], GetRowsWTableName>;
@@ -41,6 +44,11 @@ export const SpaceRecordGetter: SpaceRecordGetterType = {
 	storefront: {
 		cart: storefrontCartCVD,
 		products: productsAndVariantsCVD,
+		orders: storefrontOrderCVD,
+	},
+	"storefront-dashboard": {
+		store: storefrontDashboardStoreCVD,
+		orders: storefrontDashboardOrderCVD,
 	},
 };
 export const fullRowsGetter = (tableName: TableName, keys: string[]) =>
@@ -60,20 +68,24 @@ export const fullRowsGetter = (tableName: TableName, keys: string[]) =>
 							baseVariant: {
 								with: {
 									prices: true,
-									product: {
-										with: {
-											options: {
-												with: {
-													optionValues: true,
-												},
-											},
-											baseVariant: true,
-											store: true,
-										},
-									},
+									product: true,
 								},
 							},
 							store: true,
+							variants: {
+								with: {
+									optionValues: {
+										with: {
+											optionValue: {
+												with: {
+													option: true,
+												},
+											},
+										},
+									},
+									prices: true,
+								},
+							},
 						},
 					}),
 				),
@@ -95,6 +107,15 @@ export const fullRowsGetter = (tableName: TableName, keys: string[]) =>
 						where: (stores, { inArray }) => inArray(stores.id, keys),
 						with: {
 							owner: true,
+							admins: {
+								with: {
+									admin: {
+										columns: {
+											email: true,
+										},
+									},
+								},
+							},
 							paymentProfiles: {
 								with: {
 									paymentProfile: {

@@ -12,7 +12,7 @@ export const orders = pgTable(
 		id: varchar("id").notNull().primaryKey(),
 		displayId: varchar("display_id"),
 		paymentStatus: text("payment_status", {
-			enum: ["paid", "refunded", "not_paid"],
+			enum: ["paid", "refunded", "not_paid", "partially_refunded"],
 		}).default("paid"),
 		status: text("status", {
 			enum: ["pending", "processing", "completed", "cancelled"],
@@ -20,7 +20,7 @@ export const orders = pgTable(
 
 			.notNull()
 			.default("pending"),
-		type: text("type", { enum: ["delivery", "onsite"] }).notNull(),
+		type: text("type", { enum: ["delivery", "onsite", "takeout"] }).notNull(),
 		tableNumber: integer("tableNumber"),
 		shippingStatus: text("shipping_status", {
 			enum: ["pending", "shipped", "delivered", "cancelled"],
@@ -30,12 +30,11 @@ export const orders = pgTable(
 		currencyCode: varchar("currency_code", { length: 3 })
 
 			.notNull()
-			.default("USD"),
-		customerID: varchar("customer_id")
-			.notNull()
-			.references(() => customers.id),
-		subtotal: integer("subtotal"),
-		total: integer("total"),
+			.default("BYN"),
+		customerID: varchar("customer_id").references(() => customers.id),
+		subtotal: integer("subtotal").notNull(),
+		shippingTotal: integer("shippingTotal"),
+		total: integer("total").notNull(),
 		shippingAddressID: varchar("shipping_address_id").references(
 			() => addresses.id,
 		),
@@ -45,6 +44,7 @@ export const orders = pgTable(
 		fullName: varchar("full_name"),
 		email: varchar("email"),
 		phone: varchar("phone"),
+		tempUserID: varchar("temp_user_id"),
 		storeID: varchar("store_id")
 			.notNull()
 			.references(() => stores.id),
@@ -63,6 +63,7 @@ export const orders = pgTable(
 			orders.billingAddressID,
 		),
 		storeIDIndex: index("store_id_index_3").on(orders.storeID),
+		tempUserIDIndex: index("temp_user_id_index").on(orders.tempUserID),
 	}),
 );
 export const ordersRelations = relations(orders, ({ one, many }) => ({

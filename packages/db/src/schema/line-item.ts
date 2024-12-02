@@ -10,9 +10,14 @@ export const lineItems = pgTable(
 	"line_items",
 	{
 		id: varchar("id").notNull().primaryKey(),
-
-		cartID: varchar("cart_id").references(() => carts.id),
-		orderID: varchar("order_id").references(() => orders.id),
+		cartID: varchar("cart_id").references(() => carts.id, {
+			onUpdate: "cascade",
+			onDelete: "cascade",
+		}),
+		orderID: varchar("order_id").references(() => orders.id, {
+			onUpdate: "cascade",
+			onDelete: "cascade",
+		}),
 		title: varchar("title").notNull(),
 		variantID: varchar("variant_id").notNull(),
 		productID: varchar("product_id").notNull(),
@@ -20,7 +25,6 @@ export const lineItems = pgTable(
 		updatedAt: varchar("updated_at").$onUpdate(() => new Date().toISOString()),
 		storeID: varchar("store_id").notNull(),
 		quantity: integer("quantity").notNull().default(1),
-		total: integer("total"),
 		version: integer("version").notNull().default(0),
 	},
 	(lineItems) => ({

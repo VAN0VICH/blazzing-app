@@ -14,9 +14,10 @@ export const productsAndVariantsCVD: GetRowsWTableName = ({ fullRows }) => {
 		const { get } = yield* Cloudflare;
 		const storeID = get("storeID");
 		if (!storeID) {
-			yield* Console.warn("No store ID provided");
+			yield* Console.warn("No store ID provided", storeID);
 			return [];
 		}
+
 		const storeCVD = yield* Effect.tryPromise(() =>
 			fullRows
 				? manager.query.stores.findFirst({
@@ -36,17 +37,6 @@ export const productsAndVariantsCVD: GetRowsWTableName = ({ fullRows }) => {
 													},
 												},
 											},
-											product: {
-												with: {
-													options: {
-														with: {
-															optionValues: true,
-														},
-													},
-													store: true,
-													baseVariant: true,
-												},
-											},
 											prices: true,
 										},
 									},
@@ -60,17 +50,6 @@ export const productsAndVariantsCVD: GetRowsWTableName = ({ fullRows }) => {
 															option: true,
 														},
 													},
-												},
-											},
-											product: {
-												with: {
-													options: {
-														with: {
-															optionValues: true,
-														},
-													},
-													baseVariant: true,
-													store: true,
 												},
 											},
 										},
@@ -98,11 +77,6 @@ export const productsAndVariantsCVD: GetRowsWTableName = ({ fullRows }) => {
 									version: true,
 									score: true,
 								},
-								with: {
-									variants: {
-										columns: { id: true, version: true },
-									},
-								},
 							},
 						},
 					}),
@@ -113,27 +87,12 @@ export const productsAndVariantsCVD: GetRowsWTableName = ({ fullRows }) => {
 			}),
 		);
 
-		yield* Effect.all(
-			[
-				//push variants before products, as products.variants = [] modifies variants property
-				Effect.sync(() =>
-					rowsWTableName.push({
-						tableName: "variants" as const,
-						rows: !storeCVD
-							? []
-							: storeCVD.products.flatMap((product) => product.variants),
-					}),
-				),
-				Effect.sync(() =>
-					rowsWTableName.push({
-						tableName: "products" as const,
-						rows: storeCVD?.products ?? [],
-					}),
-				),
-			],
-			{ concurrency: 2 },
+		yield* Effect.sync(() =>
+			rowsWTableName.push({
+				tableName: "products" as const,
+				rows: storeCVD?.products ?? [],
+			}),
 		);
-		yield* Effect.log(`PRODUCTS CVD ${JSON.stringify(rowsWTableName)}`);
 
 		return rowsWTableName;
 	});

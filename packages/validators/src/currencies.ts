@@ -17,7 +17,7 @@ export const currencies: CurrenciesType = {
 		symbol_native: "$",
 		decimal_digits: 2,
 		rounding: 0,
-		code: "USD",
+		code: "BYN",
 		name_plural: "US dollars",
 	},
 	CAD: {

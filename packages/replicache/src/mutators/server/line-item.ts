@@ -1,15 +1,17 @@
 import { Effect } from "effect";
 
+import { Database } from "@blazzing-app/shared";
 import {
 	CreateLineItemSchema,
 	NeonDatabaseError,
 	UpdateLineItemSchema,
+	type StoreLineItem,
 } from "@blazzing-app/validators";
 import { z } from "zod";
-import { fn } from "../../util/fn";
 import { TableMutator } from "../../context/table-mutator";
+import { fn } from "../../util/fn";
+import { cartSubtotal } from "../../util/get-line-item-price";
 import { createCart } from "./carts";
-import { Database } from "@blazzing-app/shared";
 
 const createLineItem = fn(CreateLineItemSchema, (input) =>
 	Effect.gen(function* () {
@@ -18,13 +20,16 @@ const createLineItem = fn(CreateLineItemSchema, (input) =>
 		const { lineItem, newCartID } = input;
 		const product = yield* Effect.tryPromise(() =>
 			manager.query.products.findFirst({
+				columns: {
+					status: true,
+				},
 				where: (products, { eq }) => eq(products.id, lineItem.productID),
 			}),
 		).pipe(
 			Effect.catchTags({
-				UnknownException: (error) =>
+				UnknownException: () =>
 					new NeonDatabaseError({
-						message: error.message,
+						message: "error getting product",
 					}),
 			}),
 		);
@@ -45,6 +50,52 @@ const createLineItem = fn(CreateLineItemSchema, (input) =>
 				},
 			});
 		}
+		if (lineItem.orderID) {
+			const order = yield* Effect.tryPromise(() =>
+				manager.query.orders.findFirst({
+					where: (orders, { eq }) => eq(orders.id, lineItem.orderID!),
+					with: {
+						items: {
+							columns: {
+								id: true,
+								quantity: true,
+							},
+							with: {
+								variant: {
+									columns: {
+										id: true,
+									},
+									with: {
+										prices: true,
+									},
+								},
+							},
+						},
+					},
+				}),
+			).pipe(
+				Effect.catchTags({
+					UnknownException: () =>
+						new NeonDatabaseError({
+							message: "Error getting order",
+						}),
+				}),
+			);
+			if (!order) return;
+
+			const newItems = [...(order?.items ?? []), lineItem];
+
+			const subtotal = yield* cartSubtotal(
+				(newItems as StoreLineItem[]) ?? [],
+				order,
+			).pipe(Effect.orDie);
+			yield* tableMutator.update(
+				order.id,
+				{ subtotal, total: subtotal },
+				"orders",
+			);
+		}
+
 		return yield* tableMutator.set(lineItem, "lineItems");
 	}),
 );
@@ -52,15 +103,137 @@ const createLineItem = fn(CreateLineItemSchema, (input) =>
 const updateLineItem = fn(UpdateLineItemSchema, (input) =>
 	Effect.gen(function* () {
 		const tableMutator = yield* TableMutator;
+		const { manager } = yield* Database;
 		const { quantity, id } = input;
+		const lineItem = yield* Effect.tryPromise(() =>
+			manager.query.lineItems.findFirst({
+				where: (items, { eq }) => eq(items.id, id),
+			}),
+		).pipe(
+			Effect.catchTags({
+				UnknownException: () =>
+					new NeonDatabaseError({
+						message: "error updating line item",
+					}),
+			}),
+		);
+		if (lineItem?.orderID) {
+			const order = yield* Effect.tryPromise(() =>
+				manager.query.orders.findFirst({
+					where: (orders, { eq }) => eq(orders.id, lineItem.orderID!),
+					with: {
+						items: {
+							columns: {
+								id: true,
+								quantity: true,
+							},
+							with: {
+								variant: {
+									columns: {
+										id: true,
+									},
+									with: {
+										prices: true,
+									},
+								},
+							},
+						},
+					},
+				}),
+			).pipe(
+				Effect.catchTags({
+					UnknownException: () =>
+						new NeonDatabaseError({
+							message: "error getting order",
+						}),
+				}),
+			);
+			if (!order) return;
+
+			const newItems = (order.items ?? []).map((item) => {
+				if (item.id === id) return { ...item, quantity };
+				return item;
+			});
+
+			const subtotal = yield* cartSubtotal(
+				(newItems as StoreLineItem[]) ?? [],
+				order,
+			).pipe(Effect.orDie);
+			yield* tableMutator.update(
+				order.id,
+				{ subtotal, total: subtotal },
+				"orders",
+			);
+		}
 		return yield* tableMutator.update(id, { quantity }, "lineItems");
 	}),
 );
-const deleteLineItem = fn(z.object({ id: z.string() }), (input) =>
-	Effect.gen(function* () {
-		const tableMutator = yield* TableMutator;
-		const { id } = input;
-		return yield* tableMutator.delete(id, "lineItems");
-	}),
+const deleteLineItem = fn(
+	z.object({ id: z.string(), orderID: z.string().optional() }),
+	(input) =>
+		Effect.gen(function* () {
+			const tableMutator = yield* TableMutator;
+			const { manager } = yield* Database;
+			const { id } = input;
+
+			const lineItem = yield* Effect.tryPromise(() =>
+				manager.query.lineItems.findFirst({
+					where: (items, { eq }) => eq(items.id, id),
+				}),
+			).pipe(
+				Effect.catchTags({
+					UnknownException: () =>
+						new NeonDatabaseError({
+							message: "Error getting line item",
+						}),
+				}),
+			);
+			if (lineItem?.orderID) {
+				const order = yield* Effect.tryPromise(() =>
+					manager.query.orders.findFirst({
+						where: (orders, { eq }) => eq(orders.id, lineItem.orderID!),
+						with: {
+							items: {
+								columns: {
+									id: true,
+									quantity: true,
+								},
+								with: {
+									variant: {
+										columns: {
+											id: true,
+										},
+										with: {
+											prices: true,
+										},
+									},
+								},
+							},
+						},
+					}),
+				).pipe(
+					Effect.catchTags({
+						UnknownException: () =>
+							new NeonDatabaseError({
+								message: "Error getting order",
+							}),
+					}),
+				);
+				if (!order) return;
+
+				const newItems = (order.items ?? []).filter((item) => item.id !== id);
+
+				const subtotal = yield* cartSubtotal(
+					(newItems as StoreLineItem[]) ?? [],
+					order,
+				).pipe(Effect.orDie);
+				yield* tableMutator.update(
+					order.id,
+					{ subtotal, total: subtotal },
+					"orders",
+				);
+			}
+			return yield* tableMutator.delete(id, "lineItems");
+		}),
 );
-export { createLineItem, updateLineItem, deleteLineItem };
+export { createLineItem, deleteLineItem, updateLineItem };

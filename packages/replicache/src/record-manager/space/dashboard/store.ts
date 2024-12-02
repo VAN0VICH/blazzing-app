@@ -42,6 +42,15 @@ export const storeCVD: GetRowsWTableName = ({ fullRows }) => {
 						with: {
 							stores: {
 								with: {
+									admins: {
+										with: {
+											admin: {
+												columns: {
+													email: true,
+												},
+											},
+										},
+									},
 									products: {
 										with: {
 											variants: {
@@ -230,7 +239,12 @@ export const storeCVD: GetRowsWTableName = ({ fullRows }) => {
 							Effect.sync(() =>
 								rowsWTableName.push({
 									tableName: "variants" as const,
-									rows: store.products.flatMap((value) => value.variants),
+									rows: store.products.flatMap((value) =>
+										value.variants.flatMap((v) => ({
+											...v,
+											prices: v,
+										})),
+									),
 								}),
 							),
 							Effect.sync(() =>
@@ -250,7 +264,7 @@ export const storeCVD: GetRowsWTableName = ({ fullRows }) => {
 
 								rowsWTableName.push({
 									tableName: "customers" as const,
-									rows: customers,
+									rows: customers.filter((c) => !!c),
 								});
 							}),
 

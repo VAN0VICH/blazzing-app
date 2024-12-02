@@ -2,9 +2,11 @@ import type { WriteTransaction } from "replicache";
 
 import type { Server } from "..";
 import { updateAddress } from "./address";
+import { addAdmin, removeAdmin } from "./admin";
 import { createCart, updateCart } from "./cart";
+import { deleteImage, updateImagesOrder, uploadImages } from "./image";
 import { createLineItem, deleteLineItem, updateLineItem } from "./line-item";
-import { createOrder } from "./order";
+import { createOrder, deleteOrder, updateOrder } from "./order";
 import { createPrices, deletePrices, updatePrice } from "./price";
 import {
 	copyProduct,
@@ -36,7 +38,6 @@ import {
 	generateVariants,
 	updateVariant,
 } from "./variant";
-import { updateImagesOrder, deleteImage, uploadImages } from "./image";
 
 export type DashboardMutatorsType = {
 	[key in keyof Server.DashboardMutatorsType]: (
@@ -71,6 +72,8 @@ export const DashboardMutators: DashboardMutatorsType = {
 	updateImagesOrder,
 	deleteImage,
 	uploadImages,
+	addAdmin,
+	removeAdmin,
 };
 export type GlobalMutatorsType = {
 	[key in keyof Server.UserMutatorsType]: (
@@ -102,4 +105,21 @@ export const StorefrontMutators: StorefrontMutatorsType = {
 	updateAddress,
 	updateCart,
 	createCart,
+};
+
+export type StorefrontDashboardMutatorsType = {
+	[key in keyof Server.StorefrontDashboardMutatorsType]: (
+		ctx: WriteTransaction,
+		args: Parameters<Server.StorefrontDashboardMutatorsType[key]>[0],
+	) => Promise<void>;
+};
+export const StorefrontDashboardMutators: StorefrontDashboardMutatorsType = {
+	createLineItem,
+	createOrder,
+	deleteLineItem,
+	updateAddress,
+	updateLineItem,
+	updateOrder,
+	deleteOrder,
+	updateProduct,
 };

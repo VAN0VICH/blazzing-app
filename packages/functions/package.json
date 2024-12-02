@@ -1,7 +1,9 @@
 {
 	"name": "@blazzing-app/functions",
-	"version": "0.1.15",
-
+	"version": "0.1.60",
+	"main": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"module": "./dist/index.mjs",
 	"publishConfig": {
 		"access": "public"
 	},
@@ -11,13 +13,9 @@
 		}
 	},
 
-	"main": "./dist/index.js",
-	"types": "./dist/index.d.ts",
-	"module": "./dist/index.mjs",
 	"license": "MIT",
 	"scripts": {
 		"build": "tsup src/index.ts --format cjs,esm --dts --out-dir dist",
-
 		"dev": "wrangler dev src/index.ts",
 		"deploy-prod": "wrangler deploy --minify -e production src/index.ts",
 		"deploy-dev": "wrangler deploy --minify -e dev src/index.ts",
@@ -31,10 +29,10 @@
 	"dependencies": {
 		"@blazzing-app/core": "workspace:^",
 		"@blazzing-app/db": "workspace:^",
-		"@blazzing-app/replicache": "workspace:*",
-		"@blazzing-app/shared": "workspace:*",
-		"@blazzing-app/utils": "workspace:*",
-		"@blazzing-app/validators": "workspace:*",
+		"@blazzing-app/replicache": "workspace:^",
+		"@blazzing-app/shared": "workspace:^",
+		"@blazzing-app/utils": "workspace:^",
+		"@blazzing-app/validators": "workspace:^",
 		"@cloudflare/workers-types": "^4.20240529.0",
 		"@effect/platform": "^0.66.2",
 		"@hono/zod-openapi": "^0.16.2",
@@ -49,7 +47,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.8.3",
-		"@blazzing-app/tsconfig": "workspace:*",
+		"@blazzing-app/tsconfig": "workspace:^",
 		"@changesets/cli": "^2.27.9",
 		"@cloudflare/workers-types": "^4.20240529.0",
 		"@types/ws": "^8.5.12",

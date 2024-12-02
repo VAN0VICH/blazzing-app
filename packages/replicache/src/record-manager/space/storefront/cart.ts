@@ -32,7 +32,11 @@ export const cartCVD: GetRowsWTableName = ({ fullRows }) => {
 												prices: true,
 											},
 										},
-										product: true,
+										product: {
+											with: {
+												baseVariant: true,
+											},
+										},
 									},
 								},
 								shippingAddress: true,

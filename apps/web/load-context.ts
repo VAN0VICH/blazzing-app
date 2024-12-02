@@ -12,8 +12,8 @@ declare module "@remix-run/cloudflare" {
 			env: WebEnv;
 			bindings: WebBindings;
 		};
-		authUser: Server.AuthUser | null;
 		session: Session<SessionData, SessionData>;
+		authUser: Server.AuthUser | null;
 		userSession: AuthSession;
 	}
 }

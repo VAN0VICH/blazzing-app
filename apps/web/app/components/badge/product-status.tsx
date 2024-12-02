@@ -1,4 +1,4 @@
-import type { Product } from "../../../../../packages/validators/src/store-entities";
+import type { Product } from "@blazzing-app/validators";
 import { Badge } from "@radix-ui/themes";
 
 export function ProductStatus({

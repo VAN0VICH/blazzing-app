@@ -1,5 +1,4 @@
 import { PriceNotFound } from "@blazzing-app/validators";
-
 import type {
 	Server,
 	StoreCart,
