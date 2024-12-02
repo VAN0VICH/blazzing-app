@@ -24,6 +24,7 @@ export function GlobalReplicacheProvider({
 				return;
 			}
 
+			//@ts-ignore
 			const client = hc<Routes>(window.ENV.WORKER_URL);
 
 			const r = new Replicache({
