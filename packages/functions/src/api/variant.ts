@@ -67,6 +67,7 @@ export namespace VariantApi {
 									},
 								},
 								store: true,
+								baseVariant: true,
 							},
 						},
 						prices: true,

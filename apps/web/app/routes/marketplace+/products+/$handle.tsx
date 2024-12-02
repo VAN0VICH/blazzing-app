@@ -8,6 +8,7 @@ import {
 	type CarouselApi,
 } from "@blazzing-app/ui/carousel";
 import { Icons } from "@blazzing-app/ui/icons";
+import type { Variant } from "@blazzing-app/validators";
 import { Flex, Heading, IconButton } from "@radix-ui/themes";
 import type { LoaderFunction } from "@remix-run/cloudflare";
 import {
@@ -23,7 +24,6 @@ import { ProductOverview } from "~/components/templates/product/product-overview
 import { useRequestInfo } from "~/hooks/use-request-info";
 import { useReplicache } from "~/zustand/replicache";
 import { useMarketplaceStore } from "~/zustand/store";
-import type { Variant } from "../../../../../../packages/validators/src/store-entities";
 type LoaderData = {
 	variant: Variant;
 };
@@ -44,6 +44,7 @@ export const loader: LoaderFunction = async ({ context, params, request }) => {
 			statusText: "Not Found",
 		});
 	}
+	//@ts-ignore
 	const client = hc<Routes>(context.cloudflare.env.WORKER_URL);
 	const variantResponse = await client.variant.handle.$get(
 		{
@@ -84,7 +85,7 @@ export default function ProductPage() {
 	const params = useParams();
 	const [searchParams] = useSearchParams();
 	const { variant: serverVariant } = useLoaderData<LoaderData>();
-	const cartID = userContext?.cartID;
+	const { cartID, tempUserID } = userContext;
 	const navigate = useNavigate();
 	const isInitialized = useMarketplaceStore((state) => state.isInitialized);
 	const rep = useReplicache((state) => state.marketplaceRep);
@@ -94,6 +95,7 @@ export default function ProductPage() {
 	const variant = useSubscribe(
 		rep,
 		async (tx) => {
+			console.log("params handle", params.handle);
 			if (!params.handle) return undefined;
 			const result = await tx
 				.scan({
@@ -105,13 +107,15 @@ export default function ProductPage() {
 				})
 				.entries()
 				.toArray();
+			console.log("result", result);
 
 			const [item] = result;
 			return item?.[1] as Variant | undefined;
 		},
-		{ dependencies: [], default: undefined },
+		{ dependencies: [params.handle], default: undefined },
 	);
 
+	console.log("variant", variant);
 	const variants = useMarketplaceStore((state) =>
 		state.variants.filter((v) => v.productID === variant?.productID),
 	);
@@ -231,6 +235,7 @@ export default function ProductPage() {
 									setVariantIDOrHandle={setSelectedVariantHandle}
 									selectedVariantIDOrHandle={selectedVariantHandle}
 									cartID={cartID}
+									tempUserID={tempUserID}
 								/>
 							)}
 						</CarouselItem>

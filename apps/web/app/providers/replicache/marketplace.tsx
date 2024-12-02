@@ -5,7 +5,7 @@ import { useReplicache } from "~/zustand/replicache";
 import { DashboardMutators } from "@blazzing-app/replicache";
 import { hc } from "hono/client";
 import type { Routes } from "@blazzing-app/functions";
-import { useSession } from "~/hooks/use-session";
+import { useAuth } from "@clerk/remix";
 
 function MarketplaceReplicacheProvider({
 	children,
@@ -14,79 +14,87 @@ function MarketplaceReplicacheProvider({
 }>) {
 	const marketplaceRep = useReplicache((state) => state.marketplaceRep);
 	const setMarketplaceRep = useReplicache((state) => state.setMarketplaceRep);
-	const session = useSession();
+	const { getToken } = useAuth();
 
 	useEffect(() => {
-		if (marketplaceRep) {
-			return;
-		}
+		const setupReplicache = async () => {
+			if (marketplaceRep) {
+				return;
+			}
 
-		const client = hc<Routes>(window.ENV.WORKER_URL);
-
-		const r = new Replicache({
-			name: "marketplace",
-			licenseKey: window.ENV.REPLICACHE_KEY,
-			mutators: DashboardMutators,
-			pullInterval: null,
-			indexes: {
-				handle: {
-					allowEmpty: true,
-					jsonPointer: "/handle",
-				},
-			},
 			//@ts-ignore
-			puller: async (req) => {
-				console.log("request", req);
-				const response = await client.replicache.pull.$post(
-					{
-						//@ts-ignore
-						json: req,
-						query: {
-							spaceID: "marketplace" as const,
-						},
-					},
-					{
-						headers: {
-							...(session && { Authorization: `Bearer ${session.id}` }),
-							"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
-						},
-					},
-				);
+			const client = hc<Routes>(window.ENV.WORKER_URL);
 
-				return {
-					response: response.status === 200 ? await response.json() : undefined,
-					httpRequestInfo: {
-						httpStatusCode: response.status,
-						errorMessage: response.status === 200 ? "" : response.statusText,
+			const r = new Replicache({
+				name: "marketplace",
+				licenseKey: window.ENV.REPLICACHE_KEY,
+				mutators: DashboardMutators,
+				pullInterval: null,
+				indexes: {
+					handle: {
+						allowEmpty: true,
+						jsonPointer: "/handle",
 					},
-				};
-			},
-			pusher: async (req) => {
-				const response = await client.replicache.push.$post(
-					{
-						//@ts-ignore
-						json: req,
-						query: {
-							spaceID: "marketplace" as const,
+				},
+				//@ts-ignore
+				puller: async (req) => {
+					const token = await getToken();
+					const response = await client.replicache.pull.$post(
+						{
+							//@ts-ignore
+							json: req,
+							query: {
+								spaceID: "marketplace" as const,
+							},
 						},
-					},
-					{
-						headers: {
-							...(session && { Authorization: `Bearer ${session.id}` }),
-							"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+						{
+							headers: {
+								...(token && { Authorization: `Bearer ${token}` }),
+								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+							},
 						},
-					},
-				);
-				return {
-					httpRequestInfo: {
-						httpStatusCode: response.status,
-						errorMessage: response.status === 200 ? "" : response.statusText,
-					},
-				};
-			},
-		});
-		setMarketplaceRep(r);
-	}, [marketplaceRep, setMarketplaceRep, session]);
+					);
+
+					return {
+						response:
+							response.status === 200 ? await response.json() : undefined,
+						httpRequestInfo: {
+							httpStatusCode: response.status,
+							errorMessage: response.status === 200 ? "" : response.statusText,
+						},
+					};
+				},
+				pusher: async (req) => {
+					const token = await getToken();
+					const response = await client.replicache.push.$post(
+						{
+							//@ts-ignore
+							json: req,
+							query: {
+								spaceID: "marketplace" as const,
+							},
+						},
+						{
+							headers: {
+								...(token && { Authorization: `Bearer ${token}` }),
+								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+							},
+						},
+					);
+					return {
+						httpRequestInfo: {
+							httpStatusCode: response.status,
+							errorMessage: response.status === 200 ? "" : response.statusText,
+						},
+					};
+				},
+			});
+			setMarketplaceRep(r);
+		};
+
+		setupReplicache();
+	}, [marketplaceRep, setMarketplaceRep, getToken]);
+
 	return <>{children}</>;
 }
 

@@ -2,12 +2,12 @@ import { schema } from "@blazzing-app/db";
 import { Database } from "@blazzing-app/shared";
 import { generateID } from "@blazzing-app/utils";
 import {
-	AuthUserSchema,
+	EmailSchema,
 	NeonDatabaseError,
 	type InsertStore,
 	type InsertUser,
 } from "@blazzing-app/validators";
-import { eq, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { Effect } from "effect";
 import { z } from "zod";
 import { fn } from "../util/fn";
@@ -17,7 +17,12 @@ export namespace UserService {
 		z.object({
 			countryCode: z.string(),
 			username: z.string(),
-			authUser: AuthUserSchema,
+			authUser: z.object({
+				id: z.string(),
+				email: EmailSchema,
+				avatar: z.string().optional().nullable(),
+				fullName: z.string().optional().nullable(),
+			}),
 		}),
 
 		({ countryCode, username, authUser }) =>
@@ -57,24 +62,11 @@ export namespace UserService {
 							},
 						}),
 				);
-				yield* Effect.all(
-					[
-						Effect.tryPromise(() =>
-							manager
-								.update(schema.authUsers)
-								.set({
-									username,
-									userID: user.id,
-								})
-								.where(eq(schema.authUsers.id, authUser.id)),
-						),
-						Effect.tryPromise(
-							//@ts-ignore
-							() => manager.insert(schema.stores).values(store),
-						),
-					],
-					{ concurrency: 2 },
+				yield* Effect.tryPromise(
+					//@ts-ignore
+					() => manager.insert(schema.stores).values(store),
 				);
+
 				yield* Effect.tryPromise(() =>
 					manager
 						.insert(schema.jsonTable)

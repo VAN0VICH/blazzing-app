@@ -53,12 +53,17 @@ export namespace CartService {
 											!!checkoutInfo.email || !!checkoutInfo.phone
 												? Effect.tryPromise(() =>
 														transaction.query.customers.findFirst({
-															where: (customers, { eq }) =>
-																checkoutInfo.email
-																	? eq(customers.email, checkoutInfo.email)
-																	: checkoutInfo.phone
-																		? eq(customers.phone, checkoutInfo.phone)
-																		: eq(customers.id, "not found"),
+															where: (customers, { or, eq }) =>
+																or(
+																	eq(
+																		customers.email,
+																		checkoutInfo.email ?? "no email",
+																	),
+																	eq(
+																		customers.phone,
+																		checkoutInfo.phone ?? "no phone",
+																	),
+																),
 															columns: {
 																id: true,
 															},
@@ -68,12 +73,17 @@ export namespace CartService {
 											!!checkoutInfo.email || !!checkoutInfo.phone
 												? Effect.tryPromise(() =>
 														transaction.query.users.findFirst({
-															where: (users, { eq }) =>
-																checkoutInfo.email
-																	? eq(users.email, checkoutInfo.email)
-																	: checkoutInfo.phone
-																		? eq(users.phone, checkoutInfo.phone)
-																		: eq(users.id, "not found"),
+															where: (customers, { or, eq }) =>
+																or(
+																	eq(
+																		customers.email,
+																		checkoutInfo.email ?? "no email",
+																	),
+																	eq(
+																		customers.phone,
+																		checkoutInfo.phone ?? "no phone",
+																	),
+																),
 															columns: {
 																id: true,
 															},
@@ -100,8 +110,9 @@ export namespace CartService {
 
 								if (!existingCustomer || !existingUser) {
 									yield* Console.log(
-										"no existing user... Creating a new one",
+										"no existing user or customer... Creating a new one",
 										existingUser,
+										existingCustomer,
 										checkoutInfo.email,
 										checkoutInfo.phone,
 										!existingUser &&
@@ -125,6 +136,7 @@ export namespace CartService {
 																phone: checkoutInfo.phone,
 															}),
 														})
+														.onConflictDoNothing()
 														.catch((err) => {
 															console.error(err);
 															throw new Error("error inserting users");
@@ -150,6 +162,7 @@ export namespace CartService {
 																? existingUser.id
 																: newUserID,
 														})
+														.onConflictDoNothing()
 														.catch((err) => {
 															console.error(err);
 															throw new Error("error inserting customers");
@@ -326,11 +339,10 @@ export namespace CartService {
 												}),
 										),
 
-										(existingUser ||
-											!!checkoutInfo.email ||
-											!!checkoutInfo.phone) && {
-											userID: existingUser ? existingUser.id : newUserID,
-										}
+										tempUserID ||
+										existingUser ||
+										!!checkoutInfo.email ||
+										!!checkoutInfo.phone
 											? Effect.tryPromise(() =>
 													transaction
 														.insert(schema.notifications)
@@ -342,7 +354,9 @@ export namespace CartService {
 
 																entityID: existingUser
 																	? existingUser.id
-																	: newUserID,
+																	: !!checkoutInfo.email || !!checkoutInfo.phone
+																		? newUserID
+																		: (tempUserID ?? ""),
 																description: "Order has been placed",
 																title: "Order Placed",
 															},

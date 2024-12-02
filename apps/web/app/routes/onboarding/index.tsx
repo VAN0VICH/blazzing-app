@@ -1,22 +1,51 @@
 import type { Routes } from "@blazzing-app/functions";
+import { getAuth } from "@clerk/remix/ssr.server";
 import { parseWithZod } from "@conform-to/zod";
-import { redirect, type ActionFunctionArgs } from "@remix-run/cloudflare";
+import {
+	redirect,
+	type ActionFunctionArgs,
+	type LoaderFunction,
+} from "@remix-run/cloudflare";
 import { useSearchParams } from "@remix-run/react";
 import { AnimatePresence } from "framer-motion";
 import { hc } from "hono/client";
-import { SESSION_KEY } from "~/constants";
 import { Onboard, UserOnboardSchema } from "./onboard";
 
-//
+export const loader: LoaderFunction = async (args) => {
+	const { userId, getToken } = await getAuth(args);
+	const token = await getToken();
+	if (!userId || !token) return redirect("/sign-up");
+	const honoClient = hc<Routes>(args.context.cloudflare.env.WORKER_URL);
+	const userResponse_ = await honoClient.user["auth-id"].$get(
+		{
+			query: {
+				authID: userId,
+			},
+		},
+		{
+			headers: {
+				"x-publishable-key":
+					args.context.cloudflare.env.BLAZZING_PUBLISHABLE_KEY,
+			},
+		},
+	);
+	if (userResponse_.ok) {
+		const { result } = await userResponse_.json();
 
-export async function action({
-	request,
-	context: {
-		cloudflare: { env },
-		session,
-		authUser,
-	},
-}: ActionFunctionArgs) {
+		if (result) {
+			return redirect("/dashboard/store");
+		}
+	}
+	return Response.json({});
+};
+
+export async function action(args: ActionFunctionArgs) {
+	const {
+		context: {
+			cloudflare: { env },
+		},
+		request,
+	} = args;
 	const formData = await request.formData();
 	const submission = parseWithZod(formData, {
 		schema: UserOnboardSchema,
@@ -24,17 +53,11 @@ export async function action({
 	if (submission.status !== "success") {
 		return Response.json({ result: submission.reply() });
 	}
-	if (!authUser)
-		return Response.json({
-			result: submission.reply({
-				fieldErrors: {
-					username: ["Unauthorized."],
-				},
-			}),
-		});
+	const honoClient = hc<Routes>(args.context.cloudflare.env.WORKER_URL);
 	const url = new URL(request.url);
 	const redirectTo = url.searchParams.get("redirectTo");
-	const honoClient = hc<Routes>(env.WORKER_URL);
+	const { getToken } = await getAuth(args);
+	const token = await getToken();
 	const userResponse = await honoClient.user.username.$get(
 		{
 			query: {
@@ -48,7 +71,6 @@ export async function action({
 			},
 		},
 	);
-	const sessionID = session.get(SESSION_KEY);
 	if (userResponse.ok) {
 		const { result } = await userResponse.json();
 		if (result?.username) {
@@ -70,7 +92,7 @@ export async function action({
 		},
 		{
 			headers: {
-				Authorization: `Bearer ${sessionID}`,
+				Authorization: `Bearer ${token}`,
 				"x-publishable-key": env.BLAZZING_PUBLISHABLE_KEY,
 			},
 		},

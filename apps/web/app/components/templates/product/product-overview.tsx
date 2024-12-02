@@ -34,6 +34,7 @@ interface ProductOverviewProps {
 	selectedVariant: Variant | undefined;
 	setVariantIDOrHandle: (prop: string) => void;
 	cartID?: string | undefined;
+	tempUserID?: string | undefined;
 	setView?: (value: "preview" | "input") => void;
 }
 
@@ -93,6 +94,7 @@ const ProductInformation = (props: ProductOverviewProps) => {
 		cartID,
 		setView,
 		baseVariantIDOrHandle,
+		tempUserID,
 	} = props;
 
 	const [isShaking, setIsShaking] = React.useState(false);
@@ -102,6 +104,7 @@ const ProductInformation = (props: ProductOverviewProps) => {
 			<Pricing variant={selectedVariant} />
 			<Actions
 				{...(cartID && { cartID })}
+				{...(tempUserID && { tempUserID })}
 				selectedVariant={selectedVariant}
 				setIsShaking={setIsShaking}
 				variants={variants}

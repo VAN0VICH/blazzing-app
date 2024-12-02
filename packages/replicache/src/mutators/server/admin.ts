@@ -17,7 +17,7 @@ const addAdmin = fn(AddAdminSchema, (input) =>
 		const { manager } = yield* Database;
 		const { email, storeID } = input;
 		if (!authUser) return;
-		const [store, user] = yield* Effect.all(
+		const [store, user, owner] = yield* Effect.all(
 			[
 				Effect.tryPromise(() =>
 					manager.query.stores.findFirst({
@@ -37,9 +37,17 @@ const addAdmin = fn(AddAdminSchema, (input) =>
 						},
 					}),
 				),
+				Effect.tryPromise(() =>
+					manager.query.users.findFirst({
+						where: (users, { eq }) => eq(users.authID, authUser.id),
+						columns: {
+							id: true,
+						},
+					}),
+				),
 			],
 			{
-				concurrency: 2,
+				concurrency: 3,
 			},
 		).pipe(
 			Effect.catchTags({
@@ -47,7 +55,7 @@ const addAdmin = fn(AddAdminSchema, (input) =>
 					new NeonDatabaseError({ message: "Error adding admins" }),
 			}),
 		);
-		if (store?.ownerID !== authUser?.userID || !user) {
+		if (!owner || store?.ownerID !== owner.id || !user) {
 			yield* Console.log("Not an owner or email does not exist");
 			return;
 		}
@@ -82,7 +90,7 @@ const removeAdmin = fn(RemoveAdminSchema, (input) => {
 		const { email, storeID } = input;
 		if (!authUser) return;
 
-		const [store, user] = yield* Effect.all(
+		const [store, user, owner] = yield* Effect.all(
 			[
 				Effect.tryPromise(() =>
 					manager.query.stores.findFirst({
@@ -102,15 +110,23 @@ const removeAdmin = fn(RemoveAdminSchema, (input) => {
 						},
 					}),
 				),
+				Effect.tryPromise(() =>
+					manager.query.users.findFirst({
+						where: (users, { eq }) => eq(users.authID, authUser.id),
+						columns: {
+							id: true,
+						},
+					}),
+				),
 			],
-			{ concurrency: 2 },
+			{ concurrency: 3 },
 		).pipe(
 			Effect.catchTags({
 				UnknownException: () =>
 					new NeonDatabaseError({ message: "Error removing admins" }),
 			}),
 		);
-		if (store?.ownerID !== authUser?.userID || !user) {
+		if (!owner || store?.ownerID !== owner.id || !user) {
 			yield* Console.log("Not an owner or email does not exist");
 			return;
 		}

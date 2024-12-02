@@ -16,7 +16,10 @@ import { CartInfo } from "./cart-info";
 import { CustomerInfo } from "./customer-info";
 import { ShippingAddressInfo } from "./shipping-address-info";
 
-export const DesktopCheckout = ({ cartID }: { cartID: string }) => {
+export const DesktopCheckout = ({
+	cartID,
+	tempUserID,
+}: { cartID: string; tempUserID: string | undefined }) => {
 	const users = useGlobalStore((state) => state.users);
 	const cartMap = useGlobalStore((state) => state.cartMap);
 	const cart = cartMap.get(cartID);
@@ -81,6 +84,7 @@ export const DesktopCheckout = ({ cartID }: { cartID: string }) => {
 			{
 				headers: {
 					"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+					...(tempUserID && { "x-temp-user-id": tempUserID }),
 				},
 			},
 		);

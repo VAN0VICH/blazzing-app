@@ -2,12 +2,7 @@ type WorkerBindings = {
 	KV: KVNamespace;
 };
 type WorkerEnv = {
-	LIVEKIT_SERVER_URL: string;
-	LIVEKIT_API_KEY: string;
-	LIVEKIT_SECRET_KEY: string;
 	WORKER_URL: string;
-	GOOGLE_CLIENT_ID: string;
-	GOOGLE_CLIENT_SECRET: string;
 	WEB_URL: string;
 	DATABASE_URL: string;
 	PARTYKIT_ORIGIN: string;

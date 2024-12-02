@@ -9,16 +9,15 @@ import {
 	varchar,
 } from "drizzle-orm/pg-core";
 
+import type { Image } from "../types";
 import { addresses } from "./address";
 import { stores } from "./store";
-import { authUsers } from "./auth";
-import type { Image } from "../types";
 
 export const users = pgTable(
 	"users",
 	{
 		id: varchar("id").notNull().primaryKey(),
-		authID: varchar("auth_id").references(() => authUsers.id),
+		authID: varchar("auth_id"),
 		email: varchar("email"),
 		phone: varchar("phone"),
 		username: varchar("username"),
@@ -41,14 +40,9 @@ export const users = pgTable(
 		authIDIndex: uniqueIndex("auth_id_index").on(users.authID),
 	}),
 );
-export const userRelations = relations(users, ({ many, one }) => ({
+export const userRelations = relations(users, ({ many }) => ({
 	stores: many(stores, { relationName: "owner.stores" }),
 	addresses: many(addresses),
-	authUser: one(authUsers, {
-		fields: [users.authID],
-		references: [authUsers.id],
-		relationName: "auth.user",
-	}),
 }));
 export const adminsToStores = pgTable(
 	"admins_to_stores",

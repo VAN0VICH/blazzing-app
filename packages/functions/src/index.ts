@@ -3,7 +3,8 @@ import { OpenAPIHono } from "@hono/zod-openapi";
 import { cors } from "hono/cors";
 import { csrf } from "hono/csrf";
 import { logger } from "hono/logger";
-import { AuthApi } from "./api/auth";
+import { clerkMiddleware } from "@hono/clerk-auth";
+
 import { CartApi } from "./api/cart";
 import { HelloApi } from "./api/hello";
 import { OrderApi } from "./api/order";
@@ -52,12 +53,12 @@ app
 		});
 		return wrapped(c, next);
 	})
+	.use("*", clerkMiddleware())
 	//@ts-ignore
 	.use("*", withKey);
 
 const routes = app
 	.route("/hello", HelloApi.route)
-	.route("/auth", AuthApi.route)
 	.route("/user", UserApi.route)
 	.route("/replicache", ReplicacheApi.route)
 	.route("/store", StoreApi.route)

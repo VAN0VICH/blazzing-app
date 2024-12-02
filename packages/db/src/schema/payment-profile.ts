@@ -1,16 +1,13 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, uniqueIndex, varchar } from "drizzle-orm/pg-core";
 
-import { authUsers } from "./auth";
 import { stripe } from "./stripe";
 
 export const paymentProfiles = pgTable(
 	"payment_profiles",
 	{
 		id: varchar("id").notNull().primaryKey(),
-		authID: varchar("auth_id")
-			.references(() => authUsers.id)
-			.notNull(),
+		authID: varchar("auth_id").notNull(),
 		stripeAccountID: varchar("stripe_account_id"),
 		createdAt: varchar("created_at").notNull(),
 		updatedAt: varchar("updated_at").$onUpdate(() => new Date().toISOString()),
@@ -26,10 +23,6 @@ export const paymentProfiles = pgTable(
 export const paymentProfileRelations = relations(
 	paymentProfiles,
 	({ one }) => ({
-		authUser: one(authUsers, {
-			fields: [paymentProfiles.authID],
-			references: [authUsers.id],
-		}),
 		stripe: one(stripe, {
 			fields: [paymentProfiles.stripeAccountID],
 			references: [stripe.id],

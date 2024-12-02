@@ -32,6 +32,8 @@ export function Onboard() {
 		id: "onboard-form",
 		constraint: getZodConstraint(UserOnboardSchema),
 		defaultValue: { username: "", countryCode: "", redirectTo },
+		//@ts-ignore
+		lastResult: actionData?.result,
 		onValidate({ formData }) {
 			const result = parseWithZod(formData, {
 				schema: UserOnboardSchema,

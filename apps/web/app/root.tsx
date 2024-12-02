@@ -12,7 +12,8 @@ import { Header } from "./components/layout/header";
 import { Toploader } from "./components/top-loader";
 // import { MobileSidebar, Sidebar } from "./components/layout/sidebar";
 import { Toaster } from "@blazzing-app/ui/toaster";
-import type { AuthSession, Server } from "@blazzing-app/validators";
+import { ClerkApp } from "@clerk/remix";
+import { rootAuthLoader } from "@clerk/remix/ssr.server";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
 import { ClientOnly } from "remix-utils/client-only";
@@ -56,53 +57,48 @@ export type RootLoaderData = {
 		userPrefs: Preferences;
 		userContext?: {
 			cartID?: string;
-			authUser: Server.AuthUser | null;
-			userSession: AuthSession | null;
+			tempUserID?: string;
 		};
 	};
 };
-
-export const loader: LoaderFunction = async (args) => {
-	const {
-		request,
-		context: { authUser, cloudflare, userSession },
-	} = args;
-	const {
-		REPLICACHE_KEY,
-		PARTYKIT_HOST,
-		WORKER_URL,
-		BLAZZING_PUBLISHABLE_KEY,
-	} = cloudflare.env;
-
-	const cookieHeader = request.headers.get("Cookie");
-	const prefsCookie = (await prefs.parse(cookieHeader)) || {};
-	const userContextCookie = (await userContext?.parse(cookieHeader)) || {};
-	console.log("user context cookie", userContextCookie);
-	return Response.json({
-		ENV: {
+export const loader: LoaderFunction = (args) => {
+	return rootAuthLoader(args, async ({ request, context: { cloudflare } }) => {
+		// Add logic to fetch data
+		const {
 			REPLICACHE_KEY,
 			PARTYKIT_HOST,
 			WORKER_URL,
 			BLAZZING_PUBLISHABLE_KEY,
-		},
+		} = cloudflare.env;
 
-		requestInfo: {
-			hints: getHints(request),
-			origin: getDomainUrl(request),
-			path: new URL(request.url).pathname,
-			userPrefs: {
-				theme: prefsCookie.theme,
-				sidebarState: prefsCookie.sidebarState,
-				accentColor: prefsCookie.accentColor,
-				scaling: prefsCookie.scaling,
-				grayColor: prefsCookie.grayColor,
+		const cookieHeader = request.headers.get("Cookie");
+		const prefsCookie = (await prefs.parse(cookieHeader)) || {};
+		const userContextCookie = (await userContext?.parse(cookieHeader)) || {};
+		return {
+			ENV: {
+				REPLICACHE_KEY,
+				PARTYKIT_HOST,
+				WORKER_URL,
+				BLAZZING_PUBLISHABLE_KEY,
 			},
-			userContext: {
-				cartID: userContextCookie.cartID,
-				authUser: userContextCookie.authUser ?? authUser,
-				userSession: userContextCookie.userSession ?? userSession,
+
+			requestInfo: {
+				hints: getHints(request),
+				origin: getDomainUrl(request),
+				path: new URL(request.url).pathname,
+				userPrefs: {
+					theme: prefsCookie.theme,
+					sidebarState: prefsCookie.sidebarState,
+					accentColor: prefsCookie.accentColor,
+					scaling: prefsCookie.scaling,
+					grayColor: prefsCookie.grayColor,
+				},
+				userContext: {
+					cartID: userContextCookie.cartID,
+					tempUserID: userContextCookie.tempUserID,
+				},
 			},
-		},
+		};
 	});
 };
 
@@ -149,7 +145,7 @@ function App() {
 	);
 }
 
-export default App;
+export default ClerkApp(App);
 
 function Document({
 	children,

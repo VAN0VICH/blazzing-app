@@ -439,7 +439,7 @@ const getFullRows = ({
 }: {
 	tableName: TableName;
 	keys: string[];
-}): Effect.Effect<Array<{ id: string | null }>, NeonDatabaseError, Database> =>
+}) =>
 	Effect.gen(function* () {
 		if (keys.length === 0) {
 			return yield* Effect.succeed([]);

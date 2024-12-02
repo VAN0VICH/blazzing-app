@@ -16,6 +16,7 @@ import {
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { Effect, Layer } from "effect";
 import { getAuthUser } from "../lib/get-user";
+import { getDB } from "../lib/db";
 
 export namespace ReplicacheApi {
 	export const route = new OpenAPIHono<{
@@ -56,14 +57,15 @@ export namespace ReplicacheApi {
 				},
 			}),
 			async (c) => {
-				const db = c.get("db" as never) as Db;
+				// 1: PARSE INPUT
+				const db = getDB({ connectionString: c.env.DATABASE_URL });
 				const { spaceID, subspaces } = c.req.valid("query");
 				console.log("--------->SPACE ID<-------", spaceID);
 				const body = c.req.valid("json");
 				const authUser = await getAuthUser(c);
 				const tempUserID = c.req.raw.headers.get("x-temp-user-id");
 				c.set("temp-user-id" as never, tempUserID);
-				console.log("USER FROM PULL", authUser);
+				console.log("AUTH FROM PULL", authUser);
 				console.log("subspaceIDs", subspaces);
 
 				const CloudflareLive = Layer.succeed(

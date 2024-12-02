@@ -193,60 +193,41 @@ const updateUser = fn(UpdateUserSchema, (input) =>
 				return object;
 			}),
 			Effect.flatMap(({ avatar, croppedAvatar }) =>
-				Effect.all(
-					[
-						Effect.log(
-							`Updating user<-------------, ${JSON.stringify(updates)}`,
-						),
-						tableMutator.update(
-							user.id,
-							{
-								...(updates.fullName && { fullName: updates.fullName }),
-								...(updates.description && {
-									description: updates.description,
-								}),
-								...(updates.username && { username: updates.username }),
-								...(updates.email && { email: updates.email }),
-								...(updates.phone && { phone: updates.phone }),
+				tableMutator.update(
+					user.id,
+					{
+						...(updates.fullName && { fullName: updates.fullName }),
+						...(updates.description && {
+							description: updates.description,
+						}),
+						...(updates.username && { username: updates.username }),
+						...(updates.email && { email: updates.email }),
+						...(updates.phone && { phone: updates.phone }),
 
-								...(avatar && croppedAvatar
-									? {
-											avatar: {
-												...avatar,
-												cropped: {
-													url: croppedAvatar.url,
-												},
-											},
-										}
-									: croppedAvatar
-										? {
-												avatar:
-													typeof user.avatar === "object"
-														? {
-																...user.avatar,
-																cropped: {
-																	url: croppedAvatar.url,
-																},
-															}
-														: user.avatar,
-											}
-										: {}),
-							},
-							"users",
-						),
-						(updates.email || updates.phone || updates.fullName) && user.authID
-							? tableMutator.update(
-									user.authID,
-									{
-										...(updates.email && { email: updates.email }),
-										...(updates.phone && { phone: updates.phone }),
-										...(updates.fullName && { phone: updates.fullName }),
+						...(avatar && croppedAvatar
+							? {
+									avatar: {
+										...avatar,
+										cropped: {
+											url: croppedAvatar.url,
+										},
 									},
-									"auth",
-								)
-							: Effect.succeed({}),
-					],
-					{ concurrency: 2 },
+								}
+							: croppedAvatar
+								? {
+										avatar:
+											typeof user.avatar === "object"
+												? {
+														...user.avatar,
+														cropped: {
+															url: croppedAvatar.url,
+														},
+													}
+												: user.avatar,
+									}
+								: {}),
+					},
+					"users",
 				),
 			),
 		);

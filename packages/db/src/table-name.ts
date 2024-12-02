@@ -22,7 +22,6 @@ import {
 	customers,
 	paymentProfiles,
 	stripe,
-	authUsers,
 } from "./schema";
 
 type UserTable = typeof users;
@@ -63,8 +62,6 @@ type PaymentProfileTable = typeof paymentProfiles;
 
 type StripeTable = typeof stripe;
 
-type AuthTable = typeof authUsers;
-
 export type JsonTable = typeof jsonTable;
 export type Table =
 	| UserTable
@@ -86,8 +83,7 @@ export type Table =
 	| NotificationTable
 	| CustomerTable
 	| PaymentProfileTable
-	| StripeTable
-	| AuthTable;
+	| StripeTable;
 export const tableNameToTableMap: Record<TableName, Table> = {
 	users,
 	products,
@@ -109,6 +105,5 @@ export const tableNameToTableMap: Record<TableName, Table> = {
 	customers,
 	paymentProfiles,
 	stripe,
-	auth: authUsers,
 };
 export type TableNameToTableMap = typeof tableNameToTableMap;

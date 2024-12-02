@@ -14,6 +14,50 @@ export namespace UserApi {
 		.openapi(
 			createRoute({
 				method: "get",
+				path: "/auth-id",
+				request: {
+					query: z.object({
+						authID: z.string(),
+					}),
+				},
+				responses: {
+					200: {
+						content: {
+							"application/json": {
+								schema: z.object({
+									result: z.nullable(UserSchema),
+								}),
+							},
+						},
+						description: "Returns user by id.",
+					},
+				},
+			}),
+			async (c) => {
+				const { authID } = c.req.valid("query");
+				const cached = await c.env.KV.get(`auth_user_${authID}`);
+				if (cached) {
+					console.log(`Cache hit for auth user: ${authID}!`);
+					return c.json({
+						result: JSON.parse(cached),
+					});
+				}
+				const db = c.get("db" as never) as Db;
+
+				const user = await db.query.users.findFirst({
+					where: (users, { eq }) => eq(users.authID, authID),
+					with: {
+						stores: true,
+						addresses: true,
+					},
+				});
+				if (user) c.env.KV.put(`auth_user_${authID}`, JSON.stringify(user));
+				return c.json({ result: user ?? null });
+			},
+		)
+		.openapi(
+			createRoute({
+				method: "get",
 				path: "/id",
 				request: {
 					query: z.object({
@@ -37,6 +81,13 @@ export namespace UserApi {
 				const { id } = c.req.valid("query");
 				const db = c.get("db" as never) as Db;
 
+				const cached = await c.env.KV.get(`user_${id}`);
+				if (cached) {
+					console.log(`Cache hit for user: ${id}!`);
+					return c.json({
+						result: JSON.parse(cached),
+					});
+				}
 				const user = await db.query.users.findFirst({
 					where: (users, { eq }) => eq(users.id, id),
 					with: {
@@ -44,6 +95,7 @@ export namespace UserApi {
 						addresses: true,
 					},
 				});
+				if (user) c.env.KV.put(`user_${id}`, JSON.stringify(user));
 				return c.json({ result: user ?? null });
 			},
 		)
@@ -73,6 +125,13 @@ export namespace UserApi {
 				const { username } = c.req.valid("query");
 
 				const db = c.get("db" as never) as Db;
+				const cached = await c.env.KV.get(`user_${username}`);
+				if (cached) {
+					console.log(`Cache hit for user with username: ${username}!`);
+					return c.json({
+						result: JSON.parse(cached),
+					});
+				}
 				const user = await db.query.users.findFirst({
 					where: (users, { eq }) => eq(users.username, username),
 					with: {
@@ -80,6 +139,7 @@ export namespace UserApi {
 						addresses: true,
 					},
 				});
+				if (user) c.env.KV.put(`user_${username}`, JSON.stringify(user));
 				return c.json({ result: user ?? null });
 			},
 		)

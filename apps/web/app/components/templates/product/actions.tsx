@@ -11,6 +11,7 @@ import { useGlobalStore } from "~/zustand/store";
 
 const Actions = ({
 	cartID,
+	tempUserID,
 	variants,
 	baseVariantID,
 	selectedVariant,
@@ -18,6 +19,7 @@ const Actions = ({
 	setIsShaking,
 }: {
 	cartID?: string;
+	tempUserID?: string;
 	baseVariantID: string | undefined;
 	selectedVariant: StoreVariant | Variant | undefined;
 	variants: (StoreVariant | Variant)[];
@@ -65,6 +67,13 @@ const Actions = ({
 				fetcher.submit(
 					{ cartID: newCartID },
 					{ method: "POST", action: "/action/set-cart-id" },
+				);
+			}
+			if (!tempUserID) {
+				const newUserID = generateID({ prefix: "user" });
+				fetcher.submit(
+					{ tempUserID: newUserID },
+					{ method: "POST", action: "/action/set-temp-user-id" },
 				);
 			}
 

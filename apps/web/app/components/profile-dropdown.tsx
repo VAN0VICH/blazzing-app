@@ -1,8 +1,8 @@
 import { Icons } from "@blazzing-app/ui/icons";
+import { useAuth } from "@clerk/remix";
 import { Avatar, DropdownMenu, Spinner } from "@radix-ui/themes";
-import { Link, useFetcher } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import React from "react";
-import type { action } from "~/routes/action+/logout";
 
 type DropdownItem = {
 	name: string;
@@ -31,17 +31,17 @@ const dropdownItems: DropdownItem[] = [
 	},
 ];
 const ProfileDropdown = () => {
-	const fetcher = useFetcher<typeof action>();
-	const logout = React.useCallback(() => {
-		return fetcher.submit(
-			{},
-			{
-				method: "POST",
-				action: "/action/logout",
-			},
-		);
-	}, [fetcher]);
-	const isLoggingOut = fetcher.state === "submitting";
+	const { signOut } = useAuth();
+	const [isLoggingOut, setIsLoggingOut] = React.useState(false);
+	const logout = React.useCallback(async () => {
+		setIsLoggingOut(true);
+		try {
+			await signOut({ redirectUrl: "/" }); // Redirects to the home page after logout
+		} catch (error) {
+			console.error("Failed to log out:", error);
+		}
+		setIsLoggingOut(false);
+	}, [signOut]);
 	return (
 		<DropdownMenu.Root>
 			<DropdownMenu.Trigger>

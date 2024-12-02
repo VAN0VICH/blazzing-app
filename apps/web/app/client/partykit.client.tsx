@@ -1,8 +1,8 @@
 import type { Routes } from "@blazzing-app/functions";
+import { useAuth } from "@clerk/remix";
 import { hc } from "hono/client";
 import usePartySocket from "partysocket/react";
 import { useRequestInfo } from "~/hooks/use-request-info";
-import { useSession } from "~/hooks/use-session";
 
 import { useReplicache } from "~/zustand/replicache";
 
@@ -11,9 +11,9 @@ function PartykitProvider() {
 	const globalRep = useReplicache((state) => state.globalRep);
 	const marketplaceRep = useReplicache((state) => state.marketplaceRep);
 	const { userContext } = useRequestInfo();
-	const { cartID, authUser } = userContext;
+	const { cartID, tempUserID } = userContext;
 	const client = hc<Routes>(window.ENV.WORKER_URL);
-	const session = useSession();
+	const { getToken } = useAuth();
 
 	usePartySocket({
 		// usePartySocket takes the same arguments as PartySocket.
@@ -25,8 +25,9 @@ function PartykitProvider() {
 		onOpen() {
 			console.log("connected");
 		},
-		onMessage(e) {
+		async onMessage(e) {
 			const subspaces = JSON.parse(e.data) as string[];
+			const token = await getToken();
 			console.log("message", subspaces);
 			if (globalRep) {
 				//@ts-ignore
@@ -42,10 +43,10 @@ function PartykitProvider() {
 						},
 						{
 							headers: {
-								Authorization: `Bearer ${session?.id}`,
+								...(token && { Authorization: `Bearer ${token}` }),
 								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
 								...(cartID && { "x-cart-id": cartID }),
-								...(authUser?.userID && { "x-user-id": authUser.userID }),
+								...(tempUserID && { "x-temp-user-id": tempUserID }),
 								"Content-Type": "application/json",
 							},
 						},
@@ -80,10 +81,11 @@ function PartykitProvider() {
 		onOpen() {
 			console.log("connected");
 		},
-		onMessage(e) {
+		async onMessage(e) {
 			const subspaces = JSON.parse(e.data) as string[];
+			const token = await getToken();
 			console.log("message", subspaces);
-			if (dashboardRep && session) {
+			if (dashboardRep && token) {
 				//@ts-ignore
 				dashboardRep.puller = async (req) => {
 					const response = await client.replicache.pull.$post(
@@ -97,7 +99,7 @@ function PartykitProvider() {
 						},
 						{
 							headers: {
-								Authorization: `Bearer ${session.id}`,
+								Authorization: `Bearer ${token}`,
 								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
 								"Content-Type": "application/json",
 							},
@@ -134,8 +136,9 @@ function PartykitProvider() {
 		onOpen() {
 			console.log("connected");
 		},
-		onMessage(e) {
+		async onMessage(e) {
 			const subspaces = JSON.parse(e.data) as string[];
+			const token = await getToken();
 			console.log("message", subspaces);
 			if (marketplaceRep) {
 				//@ts-ignore
@@ -151,7 +154,7 @@ function PartykitProvider() {
 						},
 						{
 							headers: {
-								Authorization: `Bearer ${session?.id}`,
+								...(token && { Authorization: `Bearer ${token}` }),
 								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
 								"Content-Type": "application/json",
 							},

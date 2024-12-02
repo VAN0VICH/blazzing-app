@@ -7,6 +7,7 @@ import { userContext } from "~/server/sessions.server";
 
 type LoaderData = {
 	cartID: string | undefined;
+	tempUserID: string | undefined;
 };
 export const loader: LoaderFunction = async (args) => {
 	const cookieHeader = args.request.headers.get("Cookie");
@@ -14,14 +15,19 @@ export const loader: LoaderFunction = async (args) => {
 
 	return Response.json({
 		cartID: userContextCookie.cartID,
+		tempUserID: userContextCookie.tempUserID,
 	});
 };
 
 export default function Checkout() {
-	const { cartID } = useLoaderData<LoaderData>();
+	const { cartID, tempUserID } = useLoaderData<LoaderData>();
 	return (
 		<SidebarLayoutWrapper>
-			<ClientOnly>{() => <DesktopCheckout cartID={cartID ?? ""} />}</ClientOnly>
+			<ClientOnly>
+				{() => (
+					<DesktopCheckout cartID={cartID ?? ""} tempUserID={tempUserID} />
+				)}
+			</ClientOnly>
 		</SidebarLayoutWrapper>
 	);
 }

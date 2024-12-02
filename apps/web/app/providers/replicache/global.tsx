@@ -4,8 +4,8 @@ import { hc } from "hono/client";
 import { useEffect } from "react";
 import { Replicache } from "replicache";
 import { useRequestInfo } from "~/hooks/use-request-info";
-import { useSession } from "~/hooks/use-session";
 import { useReplicache } from "~/zustand/replicache";
+import { useAuth } from "@clerk/remix";
 
 export function GlobalReplicacheProvider({
 	children,
@@ -15,77 +15,84 @@ export function GlobalReplicacheProvider({
 	const globalRep = useReplicache((state) => state.globalRep);
 	const setGlobalRep = useReplicache((state) => state.setGlobalRep);
 	const { userContext } = useRequestInfo();
-	const { cartID, authUser } = userContext;
-	const session = useSession();
+	const { getToken } = useAuth();
+	const { cartID, tempUserID } = userContext;
 
 	useEffect(() => {
-		if (globalRep) {
-			return;
-		}
+		const setupReplicache = async () => {
+			if (globalRep) {
+				return;
+			}
 
-		const client = hc<Routes>(window.ENV.WORKER_URL);
+			const client = hc<Routes>(window.ENV.WORKER_URL);
 
-		const r = new Replicache({
-			name: "global",
-			licenseKey: window.ENV.REPLICACHE_KEY,
-			mutators: GlobalMutators,
-			pullInterval: null,
-			//@ts-ignore
+			const r = new Replicache({
+				name: "global",
+				licenseKey: window.ENV.REPLICACHE_KEY,
+				mutators: GlobalMutators,
+				pullInterval: null,
+				//@ts-ignore
 
-			puller: async (req) => {
-				const response = await client.replicache.pull.$post(
-					{
-						//@ts-ignore
-						json: req,
-						query: {
-							spaceID: "global" as const,
+				puller: async (req) => {
+					const token = await getToken();
+					const response = await client.replicache.pull.$post(
+						{
+							//@ts-ignore
+							json: req,
+							query: {
+								spaceID: "global" as const,
+							},
 						},
-					},
-					{
-						headers: {
-							"Content-Type": "application/json",
-							"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
-							...(session && { Authorization: `Bearer ${session.id}` }),
-							...(cartID && { "x-cart-id": cartID }),
-							...(authUser?.userID && { "x-user-id": authUser.userID }),
+						{
+							headers: {
+								"Content-Type": "application/json",
+								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+								...(token && { Authorization: `Bearer ${token}` }),
+								...(cartID && { "x-cart-id": cartID }),
+								...(tempUserID && { "x-temp-user-id": tempUserID }),
+							},
 						},
-					},
-				);
+					);
 
-				return {
-					response: response.status === 200 ? await response.json() : undefined,
-					httpRequestInfo: {
-						httpStatusCode: response.status,
-						errorMessage: response.status === 200 ? "" : response.statusText,
-					},
-				};
-			},
-			pusher: async (req) => {
-				const response = await client.replicache.push.$post(
-					{
-						//@ts-ignore
-						json: req,
-						query: {
-							spaceID: "global" as const,
+					return {
+						response:
+							response.status === 200 ? await response.json() : undefined,
+						httpRequestInfo: {
+							httpStatusCode: response.status,
+							errorMessage: response.status === 200 ? "" : response.statusText,
 						},
-					},
-					{
-						headers: {
-							...(session && { Authorization: `Bearer ${session.id}` }),
-							"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+					};
+				},
+				pusher: async (req) => {
+					const token = await getToken();
+					const response = await client.replicache.push.$post(
+						{
+							//@ts-ignore
+							json: req,
+							query: {
+								spaceID: "global" as const,
+							},
 						},
-					},
-				);
-				return {
-					httpRequestInfo: {
-						httpStatusCode: response.status,
-						errorMessage: response.status === 200 ? "" : response.statusText,
-					},
-				};
-			},
-		});
-		setGlobalRep(r);
-	}, [globalRep, setGlobalRep, cartID, authUser, session]);
+						{
+							headers: {
+								...(token && { Authorization: `Bearer ${token}` }),
+								"x-publishable-key": window.ENV.BLAZZING_PUBLISHABLE_KEY,
+							},
+						},
+					);
+					return {
+						httpRequestInfo: {
+							httpStatusCode: response.status,
+							errorMessage: response.status === 200 ? "" : response.statusText,
+						},
+					};
+				},
+			});
+			setGlobalRep(r);
+		};
+
+		setupReplicache();
+	}, [globalRep, setGlobalRep, cartID, getToken, tempUserID]);
 
 	return <>{children}</>;
 }

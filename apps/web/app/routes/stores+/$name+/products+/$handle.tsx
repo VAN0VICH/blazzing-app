@@ -1,4 +1,5 @@
 import type { Routes } from "@blazzing-app/functions";
+import type { Variant } from "@blazzing-app/validators";
 import { Flex, Heading } from "@radix-ui/themes";
 import type { LoaderFunction } from "@remix-run/cloudflare";
 import { useLoaderData, useParams, useSearchParams } from "@remix-run/react";
@@ -9,7 +10,6 @@ import { StoreProductOverview } from "~/components/templates/product/store-produ
 import { useRequestInfo } from "~/hooks/use-request-info";
 import { useReplicache } from "~/zustand/replicache";
 import { useMarketplaceStore } from "~/zustand/store";
-import type { Variant } from "../../../../../../../packages/validators/src/store-entities";
 
 type LoaderData = {
 	variant: Variant;

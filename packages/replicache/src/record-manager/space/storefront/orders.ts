@@ -10,7 +10,29 @@ export const storefrontOrderCVD: GetRowsWTableName = ({ fullRows }) => {
 	return Effect.gen(function* () {
 		const { authUser } = yield* AuthContext;
 		const { get } = yield* Cloudflare;
-		const userID = authUser?.userID;
+		const user = authUser
+			? yield* Effect.tryPromise(() =>
+					manager.query.users
+						.findFirst({
+							where: (users, { eq }) => eq(users.authID, authUser.id),
+							columns: {
+								id: true,
+							},
+						})
+						.catch((err) => {
+							console.error(err);
+							throw err;
+						}),
+				).pipe(
+					Effect.catchTags({
+						UnknownException: () =>
+							new NeonDatabaseError({
+								message: "error getting user:storefront:orders",
+							}),
+					}),
+				)
+			: undefined;
+		const userID = user?.id;
 		const tempUserID = get("temp-user-id");
 		const { manager } = yield* Database;
 		const rowsWTableName: RowsWTableName[] = [];

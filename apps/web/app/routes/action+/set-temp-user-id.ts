@@ -4,7 +4,7 @@ import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { z } from "zod";
 import { userContext } from "~/server/sessions.server";
 const schema = z.object({
-	cartID: z.string(),
+	tempUserID: z.string(),
 });
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -15,9 +15,12 @@ export async function action({ request }: ActionFunctionArgs) {
 		schema,
 	});
 
-	invariantResponse(submission.status === "success", "Invalid cartid received");
-	const { cartID } = submission.value;
-	cookie.cartID = cartID;
+	invariantResponse(
+		submission.status === "success",
+		"Invalid tempUserID received",
+	);
+	const { tempUserID } = submission.value;
+	cookie.tempUserID = tempUserID;
 	return Response.json(
 		{ result: submission.reply() },
 		{

@@ -2,7 +2,6 @@ import type { schema } from "@blazzing-app/db";
 import type { InferSelectModel } from "drizzle-orm";
 
 export namespace Server {
-	export type AuthUser = InferSelectModel<typeof schema.authUsers>;
 	export type Store = InferSelectModel<typeof schema.stores>;
 	export type User = InferSelectModel<typeof schema.users>;
 	export type Address = InferSelectModel<typeof schema.addresses>;
@@ -21,7 +20,6 @@ export namespace Server {
 	export type ClientError = InferSelectModel<typeof schema.clientErrors>;
 	export type Notification = InferSelectModel<typeof schema.notifications>;
 	export type Verification = InferSelectModel<typeof schema.verifications>;
-	export type Session = InferSelectModel<typeof schema.sessions>;
 	export type Customer = InferSelectModel<typeof schema.customers>;
 	export type PaymentProfile = InferSelectModel<typeof schema.paymentProfiles>;
 	export type StripeAccount = InferSelectModel<typeof schema.stripe>;

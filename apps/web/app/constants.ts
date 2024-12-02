@@ -14,7 +14,8 @@ export const noHeaderPaths = (pathname: string) => {
 	const paths = [
 		"/dashboard",
 		"/onboarding",
-		"/login",
+		"/sign-in",
+		"/sign-up",
 		"/verify",
 		"/settings",
 		"/error",
