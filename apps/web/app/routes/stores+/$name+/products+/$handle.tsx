@@ -1,8 +1,6 @@
 import type { Routes } from "@blazzing-app/functions";
-import type { Variant } from "../../../../../../../packages/validators/src/store-entities";
 import { Flex, Heading } from "@radix-ui/themes";
 import type { LoaderFunction } from "@remix-run/cloudflare";
-import { json } from "@remix-run/cloudflare";
 import { useLoaderData, useParams, useSearchParams } from "@remix-run/react";
 import { hc } from "hono/client";
 import React from "react";
@@ -11,6 +9,7 @@ import { StoreProductOverview } from "~/components/templates/product/store-produ
 import { useRequestInfo } from "~/hooks/use-request-info";
 import { useReplicache } from "~/zustand/replicache";
 import { useMarketplaceStore } from "~/zustand/store";
+import type { Variant } from "../../../../../../../packages/validators/src/store-entities";
 
 type LoaderData = {
 	variant: Variant;
@@ -56,7 +55,7 @@ export const loader: LoaderFunction = async ({ context, params, request }) => {
 				statusText: "Not Found",
 			});
 		}
-		return json(
+		return Response.json(
 			{
 				variant: variants[0],
 			},

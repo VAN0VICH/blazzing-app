@@ -1,10 +1,10 @@
 import type { Routes } from "@blazzing-app/functions";
-import type { Store as StoreType } from "../../../../../../packages/validators/src/store-entities";
-import { type LoaderFunction, json } from "@remix-run/cloudflare";
+import type { LoaderFunction } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
 import { hc } from "hono/client";
 import { StoreComponent } from "~/components/templates/store";
 import { useMarketplaceStore } from "~/zustand/store";
+import type { Store as StoreType } from "../../../../../../packages/validators/src/store-entities";
 
 type LoaderData = {
 	store: StoreType;
@@ -41,7 +41,7 @@ export const loader: LoaderFunction = async (args) => {
 				statusText: "Not Found",
 			});
 		}
-		return json(
+		return Response.json(
 			{
 				store,
 			},

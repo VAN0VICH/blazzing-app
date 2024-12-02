@@ -1,6 +1,6 @@
 import { parseWithZod } from "@conform-to/zod";
 import { invariantResponse } from "@epic-web/invariant";
-import { json, type ActionFunctionArgs } from "@remix-run/cloudflare";
+import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { z } from "zod";
 import { userContext } from "~/server/sessions.server";
 const schema = z.object({
@@ -18,7 +18,7 @@ export async function action({ request }: ActionFunctionArgs) {
 	invariantResponse(submission.status === "success", "Invalid theme received");
 	const { cartID } = submission.value;
 	cookie.cartID = cartID;
-	return json(
+	return Response.json(
 		{ result: submission.reply() },
 		{
 			headers: {

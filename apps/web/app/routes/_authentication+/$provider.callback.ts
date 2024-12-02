@@ -1,5 +1,5 @@
 import type { Routes } from "@blazzing-app/functions";
-import { type ActionFunctionArgs, json, redirect } from "@remix-run/cloudflare";
+import { type ActionFunctionArgs, redirect } from "@remix-run/cloudflare";
 import { hc } from "hono/client";
 import { SESSION_KEY } from "~/constants";
 
@@ -29,7 +29,7 @@ export async function loader({ request, context }: ActionFunctionArgs) {
 		codeVerifier === null
 	) {
 		console.error("unauthorized");
-		return json("Unauthorized", {
+		return Response.json("Unauthorized", {
 			status: 401,
 		});
 	}

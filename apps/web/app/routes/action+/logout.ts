@@ -1,6 +1,6 @@
-import { json, type ActionFunctionArgs } from "@remix-run/cloudflare";
-import { Authentication } from "~/lib/authentication";
+import type { ActionFunctionArgs } from "@remix-run/cloudflare";
 import { SESSION_KEY } from "~/constants";
+import { Authentication } from "~/lib/authentication";
 import { userContext } from "~/server/sessions.server";
 
 export async function action({ request, context }: ActionFunctionArgs) {
@@ -21,7 +21,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 	cookie.userSession = null;
 	session.unset(SESSION_KEY);
 
-	return json(
+	return Response.json(
 		{},
 		{
 			headers: {

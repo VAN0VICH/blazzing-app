@@ -1,8 +1,4 @@
-import {
-	json,
-	type LinksFunction,
-	type LoaderFunction,
-} from "@remix-run/cloudflare";
+import type { LinksFunction, LoaderFunction } from "@remix-run/cloudflare";
 import {
 	Links,
 	Meta,
@@ -16,24 +12,24 @@ import { Header } from "./components/layout/header";
 import { Toploader } from "./components/top-loader";
 // import { MobileSidebar, Sidebar } from "./components/layout/sidebar";
 import { Toaster } from "@blazzing-app/ui/toaster";
+import type { AuthSession, Server } from "@blazzing-app/validators";
 import { Theme } from "@radix-ui/themes";
 import "@radix-ui/themes/styles.css";
+import { ClientOnly } from "remix-utils/client-only";
+import { PartykitProvider } from "./client/partykit.client";
 import { MobileSidebar, Sidebar } from "./components/layout/sidebar";
 import { ClientHintCheck, getHints } from "./hooks/use-hints";
 import { useNonce } from "./hooks/use-nonce";
 import { useUserPreferences } from "./hooks/use-user-preferences";
+import { DashboardReplicacheProvider } from "./providers/replicache/dashboard";
+import { GlobalReplicacheProvider } from "./providers/replicache/global";
+import { MarketplaceReplicacheProvider } from "./providers/replicache/marketplace";
 import { prefs, userContext } from "./server/sessions.server";
 import sonnerStyles from "./sonner.css?url";
 import "./tailwind.css";
 import { getDomainUrl } from "./utils/helpers";
 import type { Preferences, Theme as ThemeType } from "./validators/state";
 import vaulStyles from "./vaul.css?url";
-import { DashboardReplicacheProvider } from "./providers/replicache/dashboard";
-import type { AuthSession, Server } from "@blazzing-app/validators";
-import { ClientOnly } from "remix-utils/client-only";
-import { PartykitProvider } from "./client/partykit.client";
-import { MarketplaceReplicacheProvider } from "./providers/replicache/marketplace";
-import { GlobalReplicacheProvider } from "./providers/replicache/global";
 import {
 	GlobalSearchProvider,
 	GlobalStoreProvider,
@@ -58,7 +54,7 @@ export type RootLoaderData = {
 		origin: string;
 		path: string;
 		userPrefs: Preferences;
-		userContext?: {
+		userContext: {
 			cartID?: string;
 			authUser: Server.AuthUser | null;
 			userSession: AuthSession | null;
@@ -81,7 +77,7 @@ export const loader: LoaderFunction = async (args) => {
 	const cookieHeader = request.headers.get("Cookie");
 	const prefsCookie = (await prefs.parse(cookieHeader)) || {};
 	const userContextCookie = (await userContext?.parse(cookieHeader)) || {};
-	return json({
+	return Response.json({
 		ENV: {
 			REPLICACHE_KEY,
 			PARTYKIT_HOST,

@@ -13,7 +13,7 @@
 // 	if (!url.searchParams.get("at") || !url.searchParams.get("rt")) {
 // 		return redirect("/dashboard/auction");
 // 	}
-// 	return json({});
+// 	return Response.json({});
 // };
 
 // export default function LiveAuctionStream() {

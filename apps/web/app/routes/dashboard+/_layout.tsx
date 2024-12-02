@@ -1,10 +1,10 @@
+import type { LoaderFunction } from "@remix-run/cloudflare";
 import { Outlet, redirect } from "@remix-run/react";
 import { SidebarLayoutWrapper } from "~/components/layout/sidebar-wrapper";
-import { DashboardNavbar } from "./components/navbar";
-import DashboardSidebar from "./components/sidebar";
-import { type LoaderFunction, json } from "@remix-run/cloudflare";
 import { DashboardStoreProvider } from "~/zustand/store";
 import { DashboardStoreMutator } from "~/zustand/store-mutator";
+import { DashboardNavbar } from "./components/navbar";
+import DashboardSidebar from "./components/sidebar";
 
 export const loader: LoaderFunction = async (args) => {
 	const { context } = args;
@@ -16,7 +16,7 @@ export const loader: LoaderFunction = async (args) => {
 	if (!authUser.username) {
 		return redirect("/onboarding");
 	}
-	return json(authUser);
+	return Response.json(authUser);
 };
 
 export default function DashboardLayout() {

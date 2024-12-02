@@ -8,9 +8,8 @@ import {
 	type CarouselApi,
 } from "@blazzing-app/ui/carousel";
 import { Icons } from "@blazzing-app/ui/icons";
-import type { Variant } from "../../../../../../packages/validators/src/store-entities";
 import { Flex, Heading, IconButton } from "@radix-ui/themes";
-import { json, type LoaderFunction } from "@remix-run/cloudflare";
+import type { LoaderFunction } from "@remix-run/cloudflare";
 import {
 	useLoaderData,
 	useNavigate,
@@ -24,6 +23,7 @@ import { ProductOverview } from "~/components/templates/product/product-overview
 import { useRequestInfo } from "~/hooks/use-request-info";
 import { useReplicache } from "~/zustand/replicache";
 import { useMarketplaceStore } from "~/zustand/store";
+import type { Variant } from "../../../../../../packages/validators/src/store-entities";
 type LoaderData = {
 	variant: Variant;
 };
@@ -67,7 +67,7 @@ export const loader: LoaderFunction = async ({ context, params, request }) => {
 				statusText: "Not Found",
 			});
 		}
-		return json(
+		return Response.json(
 			{
 				variant: variants[0],
 			},

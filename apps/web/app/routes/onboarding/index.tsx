@@ -1,11 +1,11 @@
 import type { Routes } from "@blazzing-app/functions";
 import { parseWithZod } from "@conform-to/zod";
-import { json, redirect, type ActionFunctionArgs } from "@remix-run/cloudflare";
+import { redirect, type ActionFunctionArgs } from "@remix-run/cloudflare";
 import { useSearchParams } from "@remix-run/react";
 import { AnimatePresence } from "framer-motion";
 import { hc } from "hono/client";
-import { Onboard, UserOnboardSchema } from "./onboard";
 import { SESSION_KEY } from "~/constants";
+import { Onboard, UserOnboardSchema } from "./onboard";
 
 //
 
@@ -22,10 +22,10 @@ export async function action({
 		schema: UserOnboardSchema,
 	});
 	if (submission.status !== "success") {
-		return json({ result: submission.reply() });
+		return Response.json({ result: submission.reply() });
 	}
 	if (!authUser)
-		return json({
+		return Response.json({
 			result: submission.reply({
 				fieldErrors: {
 					username: ["Unauthorized."],
@@ -52,7 +52,7 @@ export async function action({
 	if (userResponse.ok) {
 		const { result } = await userResponse.json();
 		if (result?.username) {
-			return json({
+			return Response.json({
 				result: submission.reply({
 					fieldErrors: {
 						username: ["Username already exist."],
@@ -78,7 +78,7 @@ export async function action({
 	if (onboardResponse.ok) {
 		const { success, message } = await onboardResponse.json();
 		if (!success) {
-			return json({
+			return Response.json({
 				result: submission.reply({
 					fieldErrors: {
 						username: [message ?? "Error onboarding"],
@@ -89,7 +89,7 @@ export async function action({
 
 		return redirectTo ? redirect(redirectTo) : redirect("/dashboard");
 	}
-	return json({
+	return Response.json({
 		result: submission.reply({
 			fieldErrors: {
 				username: ["Something wrong happened."],

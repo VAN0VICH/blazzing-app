@@ -16,17 +16,15 @@ import {
 	Spinner,
 	TextField,
 } from "@radix-ui/themes";
-import { Form, useActionData, useSearchParams } from "@remix-run/react";
+import { Form, useSearchParams } from "@remix-run/react";
 import { z } from "zod";
 import { useIsPending } from "~/hooks/use-is-pending";
-import type { action } from ".";
 import { StepHeader } from "./step-header";
 export const UserOnboardSchema = OnboardSchema.and(
 	z.object({ redirectTo: z.string().optional() }),
 );
 
 export function Onboard() {
-	const actionData = useActionData<typeof action>();
 	const isPending = useIsPending();
 	const [searchParams] = useSearchParams();
 	const redirectTo = searchParams.get("redirectTo");
@@ -34,7 +32,6 @@ export function Onboard() {
 		id: "onboard-form",
 		constraint: getZodConstraint(UserOnboardSchema),
 		defaultValue: { username: "", countryCode: "", redirectTo },
-		lastResult: actionData?.result,
 		onValidate({ formData }) {
 			const result = parseWithZod(formData, {
 				schema: UserOnboardSchema,

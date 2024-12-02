@@ -1,5 +1,5 @@
 import { DesktopCheckout } from "./components/desktop";
-import { type LoaderFunction, json } from "@remix-run/cloudflare";
+import type { LoaderFunction } from "@remix-run/cloudflare";
 import { useLoaderData } from "@remix-run/react";
 import { ClientOnly } from "remix-utils/client-only";
 import { SidebarLayoutWrapper } from "~/components/layout/sidebar-wrapper";
@@ -12,7 +12,7 @@ export const loader: LoaderFunction = async (args) => {
 	const cookieHeader = args.request.headers.get("Cookie");
 	const userContextCookie = (await userContext?.parse(cookieHeader)) || {};
 
-	return json({
+	return Response.json({
 		cartID: userContextCookie.cartID,
 	});
 };

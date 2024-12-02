@@ -7,7 +7,7 @@ import { Hero } from "~/components/landing/hero";
 // export const loader: LoaderFunction = async ({ context }) => {
 // 	const { authUser } = context;
 // 	if (authUser) return redirect("/marketplace");
-// 	return json({});
+// 	return Response.json({});
 // };
 export const meta: MetaFunction = () => {
 	return [
