@@ -10,7 +10,7 @@ type LoaderData = {
 };
 export const loader: LoaderFunction = async (args) => {
 	const cookieHeader = args.request.headers.get("Cookie");
-	const userContextCookie = (await userContext.parse(cookieHeader)) || {};
+	const userContextCookie = (await userContext?.parse(cookieHeader)) || {};
 
 	return json({
 		cartID: userContextCookie.cartID,

@@ -29,7 +29,7 @@ export function useOptimisticUserContextMode() {
 			f.formAction === "/action/logout",
 	);
 	if (userContext?.formData) {
-		const submission = parseWithZod(userContext.formData, {
+		const submission = parseWithZod(userContext?.formData, {
 			schema: z.object({
 				cartID: z.optional(z.string()),
 			}),

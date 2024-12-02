@@ -74,7 +74,7 @@ export default function Page() {
 	const params = useParams();
 	const [searchParams] = useSearchParams();
 	const { variant: serverVariant } = useLoaderData<LoaderData>();
-	const cartID = userContext.cartID;
+	const cartID = userContext?.cartID;
 	const isInitialized = useMarketplaceStore((state) => state.isInitialized);
 	const rep = useReplicache((state) => state.marketplaceRep);
 

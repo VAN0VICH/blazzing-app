@@ -6,7 +6,7 @@ import { userContext } from "~/server/sessions.server";
 export async function action({ request, context }: ActionFunctionArgs) {
 	const { session } = context;
 	const cookieHeader = request.headers.get("Cookie");
-	const cookie = (await userContext.parse(cookieHeader)) || {};
+	const cookie = (await userContext?.parse(cookieHeader)) || {};
 	const auth = Authentication({
 		env: context.cloudflare.env,
 	});
@@ -25,7 +25,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
 		{},
 		{
 			headers: {
-				"Set-Cookie": await userContext.serialize(cookie, {
+				"Set-Cookie": await userContext?.serialize(cookie, {
 					maxAge: 31536000,
 					path: "/",
 					httpOnly: true,

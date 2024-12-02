@@ -9,7 +9,7 @@ const schema = z.object({
 
 export async function action({ request }: ActionFunctionArgs) {
 	const cookieHeader = request.headers.get("Cookie");
-	const cookie = (await userContext.parse(cookieHeader)) || {};
+	const cookie = (await userContext?.parse(cookieHeader)) || {};
 	const formData = await request.formData();
 	const submission = parseWithZod(formData, {
 		schema,
@@ -22,7 +22,7 @@ export async function action({ request }: ActionFunctionArgs) {
 		{ result: submission.reply() },
 		{
 			headers: {
-				"Set-Cookie": await userContext.serialize(cookie, {
+				"Set-Cookie": await userContext?.serialize(cookie, {
 					maxAge: 31536000,
 					path: "/",
 					httpOnly: true,
