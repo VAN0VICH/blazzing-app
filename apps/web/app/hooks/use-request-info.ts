@@ -1,4 +1,5 @@
 import { parseWithZod } from "@conform-to/zod";
+import { invariant } from "@epic-web/invariant";
 import { useFetchers, useRouteLoaderData } from "@remix-run/react";
 import { z } from "zod";
 import type { RootLoaderData } from "~/root";
@@ -8,7 +9,8 @@ import type { RootLoaderData } from "~/root";
  */
 export function useRequestInfo() {
 	const data = useRouteLoaderData<RootLoaderData>("root");
-	// invariant(data?.requestInfo, "No requestInfo found in root loader");
+	console.log("data in route router loader", data);
+	invariant(data?.requestInfo, "No requestInfo found in root loader");
 	const optimisticUserContext = useOptimisticUserContextMode();
 
 	return {

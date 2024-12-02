@@ -54,7 +54,7 @@ export type RootLoaderData = {
 		origin: string;
 		path: string;
 		userPrefs: Preferences;
-		userContext: {
+		userContext?: {
 			cartID?: string;
 			authUser: Server.AuthUser | null;
 			userSession: AuthSession | null;
