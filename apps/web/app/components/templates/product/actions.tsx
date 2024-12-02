@@ -76,7 +76,8 @@ const Actions = ({
 						title: selectedVariant.title ?? "",
 						quantity: 1,
 						createdAt: new Date().toISOString(),
-						variant: selectedVariant as StoreVariant,
+						//@ts-ignore
+						variant: selectedVariant,
 						variantID: selectedVariant.id,
 						productID: selectedVariant.productID,
 						product: selectedVariant.product,

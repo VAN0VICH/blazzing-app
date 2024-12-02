@@ -12,7 +12,7 @@ export function useUserPreferences(): Preferences {
 		theme:
 			optimisticUpdates?.theme ??
 			data?.requestInfo.userPrefs.theme ??
-			hints.theme,
+			hints?.theme,
 		...(optimisticUpdates?.accentColor && {
 			accentColor: optimisticUpdates.accentColor,
 		}),
