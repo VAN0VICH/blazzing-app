@@ -24,11 +24,11 @@ app
 		const wrapped = cors({
 			origin:
 				c.env.ENVIRONMENT === "production"
-					? ["https://blazzing.app", "http://localhost:3000"]
+					? ["https://blazzing.app"]
 					: [
 							"http://localhost:3000",
 							"http://localhost:5173",
-							"https://development.blazzing-app.pages.dev",
+							"https://dev.blazzing-app.pages.dev",
 							"https://blazzing-app.com",
 							"http://localhost:8788",
 						],
@@ -42,11 +42,11 @@ app
 		const wrapped = csrf({
 			origin:
 				c.env.ENVIRONMENT === "production"
-					? ["https://blazzing.app", "http://localhost:3000"]
+					? ["https://blazzing.app"]
 					: [
 							"http://localhost:5173",
 							"http://localhost:3000",
-							"https://development.blazzing-app.pages.dev",
+							"https://dev.blazzing-app.pages.dev",
 							"https://blazzing-app.com",
 							"http://localhost:8788",
 						],
