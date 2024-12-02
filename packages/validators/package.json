@@ -1,6 +1,6 @@
 {
 	"name": "@blazzing-app/validators",
-	"version": "0.1.60",
+	"version": "0.1.61",
 
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -10,9 +10,7 @@
 	},
 	"exports": {
 		".": {
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.js",
-			"types": "./dist/index.d.ts"
+			"import": "./src/index.ts"
 		}
 	},
 
