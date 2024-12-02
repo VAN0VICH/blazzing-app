@@ -3,7 +3,6 @@ import { schema, type Db } from "@blazzing-app/db";
 import { Database } from "@blazzing-app/shared";
 import { generateID } from "@blazzing-app/utils";
 import type {
-	AuthSession,
 	GoogleProfile,
 	InsertAuth,
 	Server,
@@ -48,17 +47,6 @@ export namespace AuthApi {
 			async (c) => {
 				const { sessionID } = c.req.valid("query");
 
-				const cached = await c.env.KV.get(sessionID);
-				if (cached) {
-					console.log("cache hit for ", sessionID);
-					return c.json(
-						JSON.parse(cached) as {
-							user: Server.AuthUser;
-							session: AuthSession;
-						},
-					);
-				}
-
 				const db = c.get("db" as never) as Db;
 
 				const session = await db.query.sessions.findFirst({
@@ -71,7 +59,6 @@ export namespace AuthApi {
 					user: session?.user ?? null,
 					session: session ?? null,
 				};
-				c.env.KV.put(sessionID, JSON.stringify(result));
 
 				return c.json(result);
 			},

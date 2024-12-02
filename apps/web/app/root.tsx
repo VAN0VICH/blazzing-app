@@ -77,6 +77,7 @@ export const loader: LoaderFunction = async (args) => {
 	const cookieHeader = request.headers.get("Cookie");
 	const prefsCookie = (await prefs.parse(cookieHeader)) || {};
 	const userContextCookie = (await userContext?.parse(cookieHeader)) || {};
+	console.log("user context cookie", userContextCookie);
 	return Response.json({
 		ENV: {
 			REPLICACHE_KEY,
