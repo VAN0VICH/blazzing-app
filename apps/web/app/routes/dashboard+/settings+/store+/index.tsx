@@ -277,7 +277,6 @@ const AddAdminDialog = ({
 	});
 	const onSubmit = React.useCallback(
 		async (data: { email: string }) => {
-			console.log("submitting...", storeID);
 			if (storeID) {
 				await rep?.mutate.addAdmin({
 					email: data.email,
@@ -368,7 +367,6 @@ const ImageUpload = ({ store }: { store: StoreType | undefined }) => {
 			setImage(store.image);
 		}
 	}, [store]);
-	console.log("store", store);
 	return (
 		<>
 			{image && store && (
@@ -472,7 +470,6 @@ const ImageCrop = ({
 		setIsLoading(false);
 	}, [croppedArea, storeID, image, setOpen, dashboardRep]);
 	const onCropComplete = (_: Area, croppedPixels: Area) => {
-		console.log("crop", croppedPixels);
 		setCroppedArea(croppedPixels);
 	};
 

@@ -41,6 +41,7 @@ const deleteProduct = fn(
 	}),
 	(input) =>
 		Effect.gen(function* () {
+			const { keys } = input;
 			const tableMutator = yield* TableMutator;
 			const { manager } = yield* Database;
 			const { bindings } = yield* Cloudflare;
@@ -63,6 +64,7 @@ const deleteProduct = fn(
 					},
 				}),
 			).pipe(
+				Effect.tapError((err) => Effect.sync(() => console.log(err))),
 				Effect.catchTags({
 					UnknownException: () =>
 						new NeonDatabaseError({
@@ -89,9 +91,12 @@ const deleteProduct = fn(
 										`collection_handle_${product.collectionHandle}`,
 									),
 								),
+								Effect.tryPromise(() =>
+									bindings.KV.delete(`variant_${product.baseVariant.handle}`),
+								),
 							],
 							{
-								concurrency: 4,
+								concurrency: 5,
 							},
 						).pipe(
 							Effect.catchTags({
@@ -101,7 +106,6 @@ const deleteProduct = fn(
 					}
 				}),
 			);
-			const { keys } = input;
 
 			return yield* tableMutator.delete(keys, "products");
 		}),

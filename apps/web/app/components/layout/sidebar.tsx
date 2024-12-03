@@ -4,6 +4,7 @@ import { Box, Dialog, Flex, Heading, IconButton, Kbd } from "@radix-ui/themes";
 import { Link, useFetcher, useLocation } from "@remix-run/react";
 import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { noSidebarPaths } from "~/constants";
 import { useUserPreferences } from "~/hooks/use-user-preferences";
 import type { action } from "~/routes/action+/set-preferences";
 export type SidebarItem = {
@@ -39,8 +40,6 @@ const items: SidebarItem[] = [
 		items: [],
 	},
 ];
-
-const noSidebarPaths = new Set(["/", "/onboarding", "/login", "/verify"]);
 
 const Sidebar = () => {
 	const fetcher = useFetcher<typeof action>();

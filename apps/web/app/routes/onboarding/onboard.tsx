@@ -16,15 +16,17 @@ import {
 	Spinner,
 	TextField,
 } from "@radix-ui/themes";
-import { Form, useSearchParams } from "@remix-run/react";
+import { Form, useActionData, useSearchParams } from "@remix-run/react";
 import { z } from "zod";
 import { useIsPending } from "~/hooks/use-is-pending";
 import { StepHeader } from "./step-header";
+import type { action } from ".";
 export const UserOnboardSchema = OnboardSchema.and(
 	z.object({ redirectTo: z.string().optional() }),
 );
 
 export function Onboard() {
+	const actionData = useActionData<typeof action>;
 	const isPending = useIsPending();
 	const [searchParams] = useSearchParams();
 	const redirectTo = searchParams.get("redirectTo");

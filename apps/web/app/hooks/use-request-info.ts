@@ -9,7 +9,6 @@ import type { RootLoaderData } from "~/root";
  */
 export function useRequestInfo() {
 	const data = useRouteLoaderData<RootLoaderData>("root");
-	console.log("data in route router loader", data);
 	invariant(data?.requestInfo, "No requestInfo found in root loader");
 	const optimisticUserContext = useOptimisticUserContextMode();
 

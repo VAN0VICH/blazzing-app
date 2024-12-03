@@ -109,15 +109,6 @@ export namespace CartService {
 								const newShippingAddressID = generateID({ prefix: "address" });
 
 								if (!existingCustomer || !existingUser) {
-									yield* Console.log(
-										"no existing user or customer... Creating a new one",
-										existingUser,
-										existingCustomer,
-										checkoutInfo.email,
-										checkoutInfo.phone,
-										!existingUser &&
-											(!!checkoutInfo.email || !!checkoutInfo.phone),
-									);
 									yield* Effect.all([
 										!existingUser &&
 										(!!checkoutInfo.email || !!checkoutInfo.phone)

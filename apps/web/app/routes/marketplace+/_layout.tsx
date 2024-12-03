@@ -13,7 +13,6 @@ export default function MarketplaceLayout() {
 
 	const products = useMarketplaceStore((state) => state.products);
 	const isInitialized = useMarketplaceStore((state) => state.isInitialized);
-	console.log("products from marketplace", products);
 	return (
 		<SidebarLayoutWrapper>
 			<div className="absolute -z-10 left-0 right-0 h-[550px] opacity-60 bg-gradient-to-b from-brand-2 to-transparent " />

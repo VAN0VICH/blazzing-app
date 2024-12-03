@@ -5,7 +5,7 @@ const WebEnvSchema = z.object({
 	REPLICACHE_KEY: z.string(),
 	ENVIRONMENT: z.enum(["production", "test", "staging", "development"]),
 	PARTYKIT_HOST: z.string().optional(),
-	HONEYPOT_SECRET: z.string().optional(),
+	LIVEKIT_SERVER_URL: z.string().optional(),
 	STRIPE_PUBLISHABLE_KEY: z.string().optional(),
 	BLAZZING_PUBLISHABLE_KEY: z.string(),
 	CLERK_PUBLISHABLE_KEY: z.string(),
@@ -17,6 +17,6 @@ const WebEnvSchema = z.object({
 });
 
 type WebEnv = z.infer<typeof WebEnvSchema>;
-type WebBindings = { SESSION_KV: KVNamespace; KV: KVNamespace };
+type WebBindings = { KV: KVNamespace };
 export { WebEnvSchema };
 export type { WebEnv, WebBindings };

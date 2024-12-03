@@ -1,4 +1,4 @@
-import { Clock, Console, Effect, Layer } from "effect";
+import { Clock, Effect, Layer } from "effect";
 import type { PatchOperation, PullResponseOKV1 } from "replicache";
 
 import type { Db } from "@blazzing-app/db";
@@ -133,7 +133,6 @@ export const pull = ({
 								const displayID = yield* Effect.tryPromise(() =>
 									bindings.KV.get(`order_display_id_${storeID}`),
 								).pipe(Effect.orDie);
-								yield* Console.log("display id 1", displayID);
 
 								spacePatch.push({
 									key: "display_id",

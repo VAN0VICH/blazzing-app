@@ -62,7 +62,6 @@ interface DashboardSidebarProps {
 const DashboardSidebar = ({ children }: DashboardSidebarProps) => {
 	const { pathname } = useLocation();
 	const mainPath = pathname.split("/")[2];
-	console.log("pathname", pathname);
 
 	return (
 		<Flex width="100%" height="100%" position="relative" inset="0">

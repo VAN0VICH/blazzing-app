@@ -53,6 +53,7 @@ export async function action(args: ActionFunctionArgs) {
 	if (submission.status !== "success") {
 		return Response.json({ result: submission.reply() });
 	}
+	//@ts-ignore
 	const honoClient = hc<Routes>(args.context.cloudflare.env.WORKER_URL);
 	const url = new URL(request.url);
 	const redirectTo = url.searchParams.get("redirectTo");

@@ -14,6 +14,7 @@ import {
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { cache } from "hono/cache";
 export namespace OrderApi {
+	//@ts-ignore
 	export const route = new OpenAPIHono<{
 		Bindings: WorkerBindings & WorkerEnv;
 	}>().openapi(
@@ -62,7 +63,6 @@ export namespace OrderApi {
 		}),
 		//@ts-ignore
 		async (c) => {
-			console.log("what");
 			const { id } = c.req.valid("query");
 			const cached = await c.env.KV.get(`order_${JSON.stringify(id)}`);
 			if (cached) {

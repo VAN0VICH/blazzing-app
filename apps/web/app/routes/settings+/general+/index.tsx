@@ -466,18 +466,6 @@ const ImageUpload = ({ user }: { user: StoreUser | undefined }) => {
 			setImage(user.avatar);
 		}
 	}, [user]);
-	console.log("user avatar", user?.avatar);
-	console.log(
-		"check",
-		typeof user?.avatar === "string"
-			? user.avatar
-			: (user?.avatar?.cropped?.url ??
-					toImageURL(
-						user?.avatar?.cropped?.base64,
-						user?.avatar?.cropped?.fileType,
-					)),
-	);
-
 	return (
 		<>
 			{image && user && (
@@ -586,7 +574,6 @@ const ImageCrop = ({
 		setIsLoading(false);
 	}, [croppedArea, userID, image, setOpen, rep]);
 	const onCropComplete = (_: Area, croppedPixels: Area) => {
-		console.log("crop", croppedPixels);
 		setCroppedArea(croppedPixels);
 	};
 

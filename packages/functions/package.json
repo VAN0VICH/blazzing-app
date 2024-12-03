@@ -1,6 +1,6 @@
 {
 	"name": "@blazzing-app/functions",
-	"version": "0.1.61",
+	"version": "0.1.62",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"module": "./dist/index.mjs",
@@ -18,7 +18,7 @@
 		"build": "tsup src/index.ts --format cjs,esm --dts --out-dir dist",
 		"dev": "wrangler dev src/index.ts",
 		"deploy-prod": "wrangler deploy --minify -e production src/index.ts",
-		"deploy-dev": "wrangler deploy --minify -e dev src/index.ts",
+		"deploy-dev": "wrangler deploy --minify -e development src/index.ts",
 		"publish-packages": "pnpm changeset version && changeset publish",
 		"changeset-init": "pnpm changeset init",
 		"format": "biome format src",

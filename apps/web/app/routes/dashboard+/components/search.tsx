@@ -81,9 +81,7 @@ export function DashboardSearchCombobox() {
 		if (!searchWorker) return;
 
 		const handleMessage = (event: MessageEvent) => {
-			console.log("Message received in React component");
 			const { type, payload } = event.data as SearchWorkerResponse;
-			console.log("type", type);
 			if (typeof type === "string" && type === "DASHBOARD_SEARCH") {
 				startTransition(() => {
 					const variants: Variant[] = [];

@@ -21,7 +21,6 @@ const Products = ({
 	isDashboard?: boolean;
 	isMarketplace?: boolean;
 }) => {
-	console.log("products", products);
 	if (!isInitialized)
 		return (
 			<Flex direction="column" gap="2" pt="2">
