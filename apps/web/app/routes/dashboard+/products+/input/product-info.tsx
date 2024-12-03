@@ -68,7 +68,6 @@ export function ProductInfo({
 		},
 	});
 
-	console.log("errors", methods.formState.errors);
 	const onSave = React.useCallback(
 		async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 			e.preventDefault();

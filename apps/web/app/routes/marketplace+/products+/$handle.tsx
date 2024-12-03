@@ -143,9 +143,13 @@ export default function ProductPage() {
 	);
 
 	const selectedVariant = React.useMemo(
-		() => variants.find((v) => v.handle === selectedVariantHandle) ?? variant,
-		[selectedVariantHandle, variants, variant],
+		() =>
+			variants.find((v) => v.handle === selectedVariantHandle) ??
+			variant ??
+			serverVariant,
+		[selectedVariantHandle, variants, variant, serverVariant],
 	);
+	console.log("selected variant", selectedVariant);
 
 	const [api, setApi] = React.useState<CarouselApi>();
 
