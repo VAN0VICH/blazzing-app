@@ -9,7 +9,6 @@ type WorkerEnv = {
 	ENVIRONMENT: "development" | "production" | "staging";
 	IMAGE_API_TOKEN: string;
 	ACCOUNT_ID: string;
-	BLAZZING_PUBLISHABLE_KEY: string;
 };
 
 export type { WorkerBindings, WorkerEnv };
