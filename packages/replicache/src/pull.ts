@@ -1,4 +1,4 @@
-import { Clock, Console, Effect, Layer } from "effect";
+import { Clock, Effect, Layer } from "effect";
 import type { PatchOperation, PullResponseOKV1 } from "replicache";
 
 import type { Db } from "@blazzing-app/db";

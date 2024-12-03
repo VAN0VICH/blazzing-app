@@ -1,4 +1,4 @@
-import { Console, Effect, pipe } from "effect";
+import { Effect, pipe } from "effect";
 
 import type { TableName } from "@blazzing-app/db";
 import { AuthContext, Cloudflare, Database } from "@blazzing-app/shared";

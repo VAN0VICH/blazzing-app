@@ -12,6 +12,7 @@ function PartykitProvider() {
 	const marketplaceRep = useReplicache((state) => state.marketplaceRep);
 	const { userContext } = useRequestInfo();
 	const { cartID, tempUserID } = userContext;
+	//@ts-ignore
 	const client = hc<Routes>(window.ENV.WORKER_URL);
 	const { getToken } = useAuth();
 

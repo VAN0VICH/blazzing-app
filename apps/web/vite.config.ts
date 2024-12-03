@@ -2,6 +2,7 @@ import {
 	vitePlugin as remix,
 	cloudflareDevProxyVitePlugin as remixCloudflareDevProxy,
 } from "@remix-run/dev";
+import { getLoadContext } from "./load-context";
 import { flatRoutes } from "remix-flat-routes";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -10,11 +11,13 @@ export default defineConfig({
 	ssr: {
 		noExternal: ["react-easy-crop", "tslib", "react-dropzone"],
 		resolve: {
-			externalConditions: ["workerd", "worker"],
+			conditions: ["workerd", "worker", "browser"],
 		},
 	},
 	plugins: [
-		remixCloudflareDevProxy({}),
+		remixCloudflareDevProxy({
+			getLoadContext,
+		}),
 
 		// MillionLint.vite(),
 		remix({

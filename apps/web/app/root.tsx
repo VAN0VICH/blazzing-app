@@ -40,6 +40,7 @@ import {
 	GlobalStoreMutator,
 	MarketplaceStoreMutator,
 } from "./zustand/store-mutator";
+import type { WebEnv } from "load-context";
 export const links: LinksFunction = () => {
 	return [
 		// Preload svg sprite as a resource to avoid render blocking
@@ -49,7 +50,7 @@ export const links: LinksFunction = () => {
 	].filter(Boolean);
 };
 export type RootLoaderData = {
-	ENV: Env;
+	ENV: WebEnv;
 	requestInfo: {
 		hints: ReturnType<typeof getHints>;
 		origin: string;
@@ -62,44 +63,51 @@ export type RootLoaderData = {
 	};
 };
 export const loader: LoaderFunction = (args) => {
-	return rootAuthLoader(args, async ({ request, context: { cloudflare } }) => {
-		// Add logic to fetch data
-		const {
-			REPLICACHE_KEY,
-			PARTYKIT_HOST,
-			WORKER_URL,
-			BLAZZING_PUBLISHABLE_KEY,
-		} = cloudflare.env;
-
-		const cookieHeader = request.headers.get("Cookie");
-		const prefsCookie = (await prefs.parse(cookieHeader)) || {};
-		const userContextCookie = (await userContext?.parse(cookieHeader)) || {};
-		return {
-			ENV: {
+	return rootAuthLoader(
+		args,
+		async ({ request, context: { cloudflare } }) => {
+			// Add logic to fetch data
+			const {
 				REPLICACHE_KEY,
 				PARTYKIT_HOST,
 				WORKER_URL,
 				BLAZZING_PUBLISHABLE_KEY,
-			},
+			} = cloudflare.env;
 
-			requestInfo: {
-				hints: getHints(request),
-				origin: getDomainUrl(request),
-				path: new URL(request.url).pathname,
-				userPrefs: {
-					theme: prefsCookie.theme,
-					sidebarState: prefsCookie.sidebarState,
-					accentColor: prefsCookie.accentColor,
-					scaling: prefsCookie.scaling,
-					grayColor: prefsCookie.grayColor,
+			const cookieHeader = request.headers.get("Cookie");
+			const prefsCookie = (await prefs.parse(cookieHeader)) || {};
+			const userContextCookie = (await userContext?.parse(cookieHeader)) || {};
+			return {
+				ENV: {
+					REPLICACHE_KEY,
+					PARTYKIT_HOST,
+					WORKER_URL,
+					BLAZZING_PUBLISHABLE_KEY,
 				},
-				userContext: {
-					cartID: userContextCookie.cartID,
-					tempUserID: userContextCookie.tempUserID,
+
+				requestInfo: {
+					hints: getHints(request),
+					origin: getDomainUrl(request),
+					path: new URL(request.url).pathname,
+					userPrefs: {
+						theme: prefsCookie.theme,
+						sidebarState: prefsCookie.sidebarState,
+						accentColor: prefsCookie.accentColor,
+						scaling: prefsCookie.scaling,
+						grayColor: prefsCookie.grayColor,
+					},
+					userContext: {
+						cartID: userContextCookie.cartID,
+						tempUserID: userContextCookie.tempUserID,
+					},
 				},
-			},
-		};
-	});
+			};
+		},
+		{
+			publishableKey: args.context.cloudflare.env.CLERK_PUBLISHABLE_KEY,
+			secretKey: args.context.cloudflare.env.CLERK_SECRET_KEY,
+		},
+	);
 };
 
 function App() {

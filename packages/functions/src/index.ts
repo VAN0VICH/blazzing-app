@@ -12,7 +12,6 @@ import { ProductApi } from "./api/product";
 import { ReplicacheApi } from "./api/replicache";
 import { StoreApi } from "./api/store";
 import { UserApi } from "./api/user";
-import { PaymentApi } from "./api/payment";
 import { VariantApi } from "./api/variant";
 import { withKey } from "./middleware/with-key";
 
@@ -65,8 +64,7 @@ const routes = app
 	.route("/product", ProductApi.route)
 	.route("/variant", VariantApi.route)
 	.route("/cart", CartApi.route)
-	.route("/order", OrderApi.route)
-	.route("/payment", PaymentApi.route);
+	.route("/order", OrderApi.route);
 app.doc("/doc", () => ({
 	openapi: "3.0.0",
 	info: {
