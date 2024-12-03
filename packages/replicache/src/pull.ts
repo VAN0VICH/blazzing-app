@@ -133,7 +133,6 @@ export const pull = ({
 								const displayID = yield* Effect.tryPromise(() =>
 									bindings.KV.get(`order_display_id_${storeID}`),
 								).pipe(Effect.orDie);
-								yield* Console.log("display id 1", displayID);
 
 								spacePatch.push({
 									key: "display_id",

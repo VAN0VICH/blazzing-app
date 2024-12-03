@@ -77,7 +77,6 @@ export const notificationsCVD: GetRowsWTableName = ({ fullRows = false }) => {
 					new NeonDatabaseError({ message: error.message }),
 			}),
 		);
-		yield* Console.log("notificationsCVD", JSON.stringify(notificationsCVD));
 		return notificationsCVD;
 	});
 };

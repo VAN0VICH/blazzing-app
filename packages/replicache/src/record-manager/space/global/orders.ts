@@ -194,7 +194,6 @@ export const ordersCVD: GetRowsWTableName = ({ fullRows }) => {
 						}),
 					)
 				: yield* Effect.succeed([]);
-		yield* Console.log("ORDERS CVD", JSON.stringify(ordersCVD));
 		return ordersCVD;
 	});
 };
