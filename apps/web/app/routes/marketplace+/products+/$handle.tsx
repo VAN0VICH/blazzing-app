@@ -95,7 +95,6 @@ export default function ProductPage() {
 	const variant = useSubscribe(
 		rep,
 		async (tx) => {
-			console.log("params handle", params.handle);
 			if (!params.handle) return undefined;
 			const result = await tx
 				.scan({
@@ -107,7 +106,6 @@ export default function ProductPage() {
 				})
 				.entries()
 				.toArray();
-			console.log("result", result);
 
 			const [item] = result;
 			return item?.[1] as Variant | undefined;
@@ -115,7 +113,6 @@ export default function ProductPage() {
 		{ dependencies: [params.handle], default: undefined },
 	);
 
-	console.log("variant", variant);
 	const variants = useMarketplaceStore((state) =>
 		state.variants.filter((v) => v.productID === variant?.productID),
 	);
@@ -149,7 +146,6 @@ export default function ProductPage() {
 			serverVariant,
 		[selectedVariantHandle, variants, variant, serverVariant],
 	);
-	console.log("selected variant", selectedVariant);
 
 	const [api, setApi] = React.useState<CarouselApi>();
 
@@ -328,11 +324,9 @@ const Page = ({
 	selectedVariantHandle: string;
 	setSelectedVariantHandle: (handle: string) => void;
 }) => {
-	console.log("product variant from page", productVariant);
 	const variants = useMarketplaceStore((state) =>
 		state.variants.filter((v) => v.product.id === productVariant?.productID),
 	);
-	console.log("variants from page", variants);
 	const selectedVariant = React.useMemo(
 		() =>
 			variants.find((v) => v.handle === selectedVariantHandle) ??

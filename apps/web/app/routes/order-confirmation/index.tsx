@@ -47,7 +47,6 @@ export const loader: LoaderFunction = async (args) => {
 };
 export default function OrderConfirmation() {
 	const { orders } = useLoaderData<LoaderData>();
-	console.log("orders", orders);
 	return (
 		<SidebarLayoutWrapper>
 			<div className="fixed -z-10 left-0 right-0 h-[550px] opacity-60 bg-gradient-to-b from-accent-4 to-transparent " />

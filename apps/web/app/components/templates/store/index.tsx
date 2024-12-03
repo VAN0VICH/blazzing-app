@@ -246,7 +246,6 @@ const HeaderImageCrop = ({
 	}, [croppedArea, storeID, setOpen, dashboardRep, image]);
 
 	const onCropComplete = (_: Area, croppedPixels: Area) => {
-		console.log("crop", croppedPixels);
 		setCroppedArea(croppedPixels);
 	};
 
