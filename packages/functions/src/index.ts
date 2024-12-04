@@ -12,7 +12,6 @@ import { ProductApi } from "./api/product";
 import { ReplicacheApi } from "./api/replicache";
 import { StoreApi } from "./api/store";
 import { UserApi } from "./api/user";
-import { PaymentApi } from "./api/payment";
 import { VariantApi } from "./api/variant";
 import { withKey } from "./middleware/with-key";
 
@@ -24,11 +23,13 @@ app
 		const wrapped = cors({
 			origin:
 				c.env.ENVIRONMENT === "production"
-					? ["https://blazzing.app", "http://localhost:3000"]
+					? ["https://blazzing.app"]
 					: [
+							"https://7heavens.vercel.app",
+							"https://7heavens.pages.dev",
 							"http://localhost:3000",
 							"http://localhost:5173",
-							"https://development.blazzing-app.pages.dev",
+							"https://dev.blazzing-app.pages.dev",
 							"https://blazzing-app.com",
 							"http://localhost:8788",
 						],
@@ -42,11 +43,13 @@ app
 		const wrapped = csrf({
 			origin:
 				c.env.ENVIRONMENT === "production"
-					? ["https://blazzing.app", "http://localhost:3000"]
+					? ["https://blazzing.app"]
 					: [
+							"https://7heavens.vercel.app",
+							"https://7heavens.pages.dev",
 							"http://localhost:5173",
 							"http://localhost:3000",
-							"https://development.blazzing-app.pages.dev",
+							"https://dev.blazzing-app.pages.dev",
 							"https://blazzing-app.com",
 							"http://localhost:8788",
 						],
@@ -65,8 +68,7 @@ const routes = app
 	.route("/product", ProductApi.route)
 	.route("/variant", VariantApi.route)
 	.route("/cart", CartApi.route)
-	.route("/order", OrderApi.route)
-	.route("/payment", PaymentApi.route);
+	.route("/order", OrderApi.route);
 app.doc("/doc", () => ({
 	openapi: "3.0.0",
 	info: {

@@ -1,6 +1,6 @@
 {
 	"name": "@blazzing-app/replicache",
-	"version": "0.1.61",
+	"version": "0.1.70",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"module": "./dist/index.mjs",

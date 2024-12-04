@@ -27,21 +27,22 @@ function GeneralInfo({ variant, isDashboard }: GeneralInfoProps) {
 	const displayText = isTruncated
 		? truncateString(variant?.description ?? "", 200)
 		: (variant?.description ?? "");
+
 	return (
 		<Grid>
 			<Link
-				to={isDashboard ? "/store" : `/stores/${variant?.product?.store.name}`}
+				to={isDashboard ? "/store" : `/stores/${variant?.product?.store?.name}`}
 				className="flex flex-col w-fit"
 			>
 				<Flex gap="2">
 					<Avatar
-						src={variant?.product?.store.image?.url}
+						src={variant?.product?.store?.image?.url}
 						fallback={<ImagePlaceholder />}
 					/>
 
 					<Flex justify="between" gap="2">
 						<Text className="font-medium text-lg">
-							{variant?.product?.store.name}
+							{variant?.product?.store?.name}
 						</Text>
 					</Flex>
 				</Flex>

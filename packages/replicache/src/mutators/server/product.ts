@@ -1,4 +1,4 @@
-import { Effect } from "effect";
+import { Console, Effect } from "effect";
 
 import {
 	CreateProductSchema,
@@ -41,6 +41,7 @@ const deleteProduct = fn(
 	}),
 	(input) =>
 		Effect.gen(function* () {
+			const { keys } = input;
 			const tableMutator = yield* TableMutator;
 			const { manager } = yield* Database;
 			const { bindings } = yield* Cloudflare;
@@ -63,6 +64,7 @@ const deleteProduct = fn(
 					},
 				}),
 			).pipe(
+				Effect.tapError((err) => Effect.sync(() => console.log(err))),
 				Effect.catchTags({
 					UnknownException: () =>
 						new NeonDatabaseError({
@@ -89,9 +91,12 @@ const deleteProduct = fn(
 										`collection_handle_${product.collectionHandle}`,
 									),
 								),
+								Effect.tryPromise(() =>
+									bindings.KV.delete(`variant_${product.baseVariant.handle}`),
+								),
 							],
 							{
-								concurrency: 4,
+								concurrency: 5,
 							},
 						).pipe(
 							Effect.catchTags({
@@ -101,7 +106,6 @@ const deleteProduct = fn(
 					}
 				}),
 			);
-			const { keys } = input;
 
 			return yield* tableMutator.delete(keys, "products");
 		}),
@@ -148,9 +152,10 @@ const updateProduct = fn(UpdateProductSchema, (input) =>
 			{ concurrency: 2 },
 		);
 
-		if (updates.status || updates.available) {
+		if (updates.status || updates.available === false) {
+			yield* Console.log("deleting line items with product id", id);
 			/* delete all the existing line items in the cart so that the user doesn't accidentally buy a product with a modified price */
-			yield* Effect.tryPromise(() =>
+			const lineItems = yield* Effect.tryPromise(() =>
 				manager
 					.delete(schema.lineItems)
 					.where(
@@ -158,13 +163,24 @@ const updateProduct = fn(UpdateProductSchema, (input) =>
 							eq(schema.lineItems.productID, id),
 							isNotNull(schema.lineItems.cartID),
 						),
-					),
+					)
+					.returning(),
 			).pipe(
 				Effect.catchTags({
 					UnknownException: (error) =>
 						new NeonDatabaseError({ message: error.message }),
 				}),
 			);
+			yield* Console.log("deleted line items", lineItems);
+			yield* Effect.forEach(
+				lineItems,
+				(item) =>
+					item.cartID
+						? tableMutator.update(item.cartID, {}, "carts")
+						: Effect.succeed({}),
+				{ concurrency: "unbounded" },
+			);
+
 			yield* Effect.all(
 				[
 					Effect.tryPromise(() => bindings.KV.delete(`product_${product.id}`)),

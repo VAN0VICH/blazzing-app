@@ -31,6 +31,7 @@ export const DesktopCheckout = ({
 			.filter((item) => item.cartID === cartID),
 	);
 
+	//@ts-ignore
 	const [honoClient] = React.useState(() => hc<Routes>(window.ENV.WORKER_URL));
 	const navigate = useNavigate();
 
@@ -91,7 +92,6 @@ export const DesktopCheckout = ({
 		console.log("response status", response.status);
 		if (response.ok) {
 			const { result: orderIDs } = await response.json();
-			console.log("order ids", orderIDs);
 
 			if (orderIDs.length > 0) {
 				return navigate(

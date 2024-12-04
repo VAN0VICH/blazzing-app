@@ -10,6 +10,7 @@ import type { GetRowsWTableName } from "../types";
 export const storeCVD: GetRowsWTableName = ({ fullRows }) => {
 	return Effect.gen(function* () {
 		const { authUser } = yield* AuthContext;
+		const { manager } = yield* Database;
 		const user = authUser
 			? yield* Effect.tryPromise(() =>
 					manager.query.users
@@ -34,7 +35,6 @@ export const storeCVD: GetRowsWTableName = ({ fullRows }) => {
 			: undefined;
 		const userID = user?.id;
 		if (!userID) return [];
-		const { manager } = yield* Database;
 		const rowsWTableName: RowsWTableName[] = [];
 
 		const storesIDs = (yield* Effect.tryPromise(() =>

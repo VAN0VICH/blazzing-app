@@ -24,7 +24,7 @@ export default function AuthLayout() {
 		>
 			<Box display={{ initial: "none", md: "block" }}>
 				<img
-					src="https://cdn.midjourney.com/845a8afa-1b61-478c-aff5-013bb5bb3d89/0_0.jpeg"
+					src="https://images.unsplash.com/photo-1726501615020-c191eb696705"
 					alt="Onboarding"
 					className="h-full max-h-screen w-full object-cover brightness-[0.7] grayscale"
 				/>

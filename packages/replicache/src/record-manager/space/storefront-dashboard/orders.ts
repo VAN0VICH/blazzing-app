@@ -12,6 +12,7 @@ export const storefrontDashboardOrderCVD: GetRowsWTableName = ({
 }) => {
 	return Effect.gen(function* () {
 		const { authUser } = yield* AuthContext;
+		const { manager } = yield* Database;
 		const user = authUser
 			? yield* Effect.tryPromise(() =>
 					manager.query.users
@@ -29,14 +30,13 @@ export const storefrontDashboardOrderCVD: GetRowsWTableName = ({
 					Effect.catchTags({
 						UnknownException: () =>
 							new NeonDatabaseError({
-								message: "error getting user:store-dashboard:store",
+								message: "error getting user:store-dashboard:orders",
 							}),
 					}),
 				)
 			: undefined;
 		const userID = user?.id;
 		if (!userID) return [];
-		const { manager } = yield* Database;
 		const rowsWTableName: RowsWTableName[] = [];
 		const storesIDs = (yield* Effect.tryPromise(() =>
 			manager.query.adminsToStores.findMany({

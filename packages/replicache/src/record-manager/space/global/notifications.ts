@@ -1,4 +1,4 @@
-import { Console, Effect, pipe } from "effect";
+import { Effect, pipe } from "effect";
 
 import type { TableName } from "@blazzing-app/db";
 import { AuthContext, Cloudflare, Database } from "@blazzing-app/shared";
@@ -77,7 +77,6 @@ export const notificationsCVD: GetRowsWTableName = ({ fullRows = false }) => {
 					new NeonDatabaseError({ message: error.message }),
 			}),
 		);
-		yield* Console.log("notificationsCVD", JSON.stringify(notificationsCVD));
 		return notificationsCVD;
 	});
 };

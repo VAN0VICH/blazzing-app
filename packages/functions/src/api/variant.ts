@@ -33,7 +33,9 @@ export namespace VariantApi {
 		async (c) => {
 			const { handle, storeID } = c.req.valid("query");
 			const db = c.get("db" as never) as Db;
-			const cached = await c.env.KV.get(`variant_${JSON.stringify(handle)}`);
+			const cached = await c.env.KV.get(
+				`variant_${JSON.stringify(handle)}_${storeID}`,
+			);
 			if (cached) {
 				console.log(`Cache hit for variant handle: ${handle}!`);
 				return c.json({

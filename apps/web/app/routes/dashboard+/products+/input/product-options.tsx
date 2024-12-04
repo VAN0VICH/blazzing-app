@@ -194,7 +194,6 @@ const OptionInput = ({
 	const [editMode, setEditMode] = React.useState(fresh ?? false);
 	const [optionName, setOptionName] = React.useState(option.name ?? "");
 	const [optionValues, setOptionValues] = React.useState<string[]>([]);
-	console.log("option", option);
 
 	const onSave = React.useCallback(
 		async ({

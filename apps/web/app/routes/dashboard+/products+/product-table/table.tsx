@@ -43,7 +43,6 @@ function ProductsTable({
 	);
 	useHotkeys(["D"], () => {
 		const rows = table.getFilteredSelectedRowModel().rows;
-		console.log("rows", rows);
 		deleteProduct(rows.map((r) => r.original.id));
 		table.toggleAllPageRowsSelected(false);
 	});
@@ -53,7 +52,6 @@ function ProductsTable({
 		table.toggleAllPageRowsSelected(false);
 	});
 	const navigate = useNavigate();
-	console.log("products", products);
 	const table = useDataTable({
 		columns,
 		data: products,
@@ -77,7 +75,6 @@ function ProductsTable({
 			navigate(`/dashboard/products/${row.original.id}`);
 		}
 		if (e.key === " ") {
-			console.log("space");
 			e.preventDefault();
 			e.stopPropagation();
 			row.toggleSelected(!row.getIsSelected());

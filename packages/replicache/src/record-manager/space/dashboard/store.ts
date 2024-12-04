@@ -239,12 +239,7 @@ export const storeCVD: GetRowsWTableName = ({ fullRows }) => {
 							Effect.sync(() =>
 								rowsWTableName.push({
 									tableName: "variants" as const,
-									rows: store.products.flatMap((value) =>
-										value.variants.flatMap((v) => ({
-											...v,
-											prices: v,
-										})),
-									),
+									rows: store.products.flatMap((value) => value.variants),
 								}),
 							),
 							Effect.sync(() =>

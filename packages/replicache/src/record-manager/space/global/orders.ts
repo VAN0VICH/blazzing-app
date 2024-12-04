@@ -1,4 +1,4 @@
-import { Console, Effect, pipe } from "effect";
+import { Effect, pipe } from "effect";
 
 import { AuthContext, Cloudflare, Database } from "@blazzing-app/shared";
 import { NeonDatabaseError, NotFound } from "@blazzing-app/validators";
@@ -194,7 +194,6 @@ export const ordersCVD: GetRowsWTableName = ({ fullRows }) => {
 						}),
 					)
 				: yield* Effect.succeed([]);
-		yield* Console.log("ORDERS CVD", JSON.stringify(ordersCVD));
 		return ordersCVD;
 	});
 };

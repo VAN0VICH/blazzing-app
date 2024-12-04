@@ -96,7 +96,15 @@ const createLineItem = fn(CreateLineItemSchema, (input) =>
 			);
 		}
 
-		return yield* tableMutator.set(lineItem, "lineItems");
+		return yield* Effect.all(
+			[
+				tableMutator.set(lineItem, "lineItems"),
+				lineItem.cartID
+					? tableMutator.update(lineItem.cartID, {}, "carts")
+					: Effect.succeed({}),
+			],
+			{ concurrency: 2 },
+		);
 	}),
 );
 
@@ -165,7 +173,15 @@ const updateLineItem = fn(UpdateLineItemSchema, (input) =>
 				"orders",
 			);
 		}
-		return yield* tableMutator.update(id, { quantity }, "lineItems");
+		return yield* Effect.all(
+			[
+				tableMutator.update(id, { quantity }, "lineItems"),
+				lineItem?.cartID
+					? tableMutator.update(lineItem.cartID, {}, "carts")
+					: Effect.succeed({}),
+			],
+			{ concurrency: 2 },
+		);
 	}),
 );
 const deleteLineItem = fn(
@@ -233,7 +249,15 @@ const deleteLineItem = fn(
 					"orders",
 				);
 			}
-			return yield* tableMutator.delete(id, "lineItems");
+			yield* Effect.all(
+				[
+					tableMutator.delete(id, "lineItems"),
+					lineItem?.cartID
+						? tableMutator.update(lineItem.cartID, {}, "carts")
+						: Effect.succeed({}),
+				],
+				{ concurrency: 2 },
+			);
 		}),
 );
 export { createLineItem, deleteLineItem, updateLineItem };

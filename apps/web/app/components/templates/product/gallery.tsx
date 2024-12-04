@@ -30,7 +30,6 @@ const Gallery = ({ images }: GalleryProps) => {
 			height="100%"
 			gap="4"
 			onClick={(e) => {
-				console.log("clicked 2");
 				e.stopPropagation();
 
 				navigate("/marketplace", {

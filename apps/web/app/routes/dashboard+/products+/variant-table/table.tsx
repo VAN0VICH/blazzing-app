@@ -51,7 +51,6 @@ export default function VariantTable({
 	const parentRef = React.useRef<HTMLDivElement>(null);
 	useHotkeys(["D"], () => {
 		const rows = table.getFilteredSelectedRowModel().rows;
-		console.log("rows", rows);
 		deleteVariant(rows.map((r) => r.original.id));
 		table.toggleAllPageRowsSelected(false);
 	});
@@ -70,7 +69,6 @@ export default function VariantTable({
 			setVariantID(row.original.id);
 		}
 		if (e.key === " ") {
-			console.log("space");
 			e.preventDefault();
 			e.stopPropagation();
 			row.toggleSelected(!row.getIsSelected());

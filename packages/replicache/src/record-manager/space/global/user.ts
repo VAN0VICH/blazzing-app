@@ -1,4 +1,4 @@
-import { Console, Effect, pipe } from "effect";
+import { Effect, pipe } from "effect";
 
 import { AuthContext, Database } from "@blazzing-app/shared";
 import { NeonDatabaseError } from "@blazzing-app/validators";
@@ -54,7 +54,6 @@ export const userCVD: GetRowsWTableName = ({ fullRows = false }) => {
 					new NeonDatabaseError({ message: error.message }),
 			}),
 		);
-		yield* Console.log("USER CVD RESULT", JSON.stringify(result));
 		return result;
 	});
 };

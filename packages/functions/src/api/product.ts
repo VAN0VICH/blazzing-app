@@ -1,5 +1,9 @@
 import type { Db } from "@blazzing-app/db";
-import type { WorkerBindings, WorkerEnv } from "@blazzing-app/validators";
+import type {
+	StoreProduct,
+	WorkerBindings,
+	WorkerEnv,
+} from "@blazzing-app/validators";
 import {
 	PriceSchema,
 	ProductSchema,
@@ -61,7 +65,9 @@ export namespace ProductApi {
 			}),
 			async (c) => {
 				const { id, storeID } = c.req.valid("query");
-				const cached = await c.env.KV.get(`product_${JSON.stringify(id)}`);
+				const cached = await c.env.KV.get(
+					`product_${JSON.stringify(id)}_${storeID}`,
+				);
 				if (cached) {
 					console.log(`Cache hit for product with id:${id}!`);
 					return c.json({
@@ -144,7 +150,9 @@ export namespace ProductApi {
 			}),
 			async (c) => {
 				const { handle, storeID } = c.req.valid("query");
-				const cached = await c.env.KV.get(`product_${JSON.stringify(handle)}`);
+				const cached = await c.env.KV.get(
+					`product_${JSON.stringify(handle)}_${storeID}`,
+				);
 				if (cached) {
 					console.log(`Cache hit for product with handle:${handle}!`);
 					return c.json({
@@ -194,6 +202,7 @@ export namespace ProductApi {
 						},
 					},
 				});
+				//@ts-ignore
 				const result = variants
 					.map((variant) => {
 						if (
@@ -203,9 +212,9 @@ export namespace ProductApi {
 							return undefined;
 						return variant.product;
 					})
-					.filter(Boolean);
+					.filter(Boolean) as StoreProduct[];
 				await c.env.KV.put(
-					`product_${JSON.stringify(handle)}`,
+					`product_${JSON.stringify(handle)}_${storeID}`,
 					JSON.stringify(result),
 				);
 
@@ -245,7 +254,7 @@ export namespace ProductApi {
 			}),
 			async (c) => {
 				const { storeID } = c.req.valid("query");
-				const cached = await c.env.KV.get(`product_list_${storeID}`);
+				const cached = await c.env.KV.get(`product_list_${storeID}_${storeID}`);
 				if (cached) {
 					console.log("Cache hit for product list!");
 					return c.json({
@@ -318,7 +327,9 @@ export namespace ProductApi {
 			}),
 			async (c) => {
 				const { handle, storeID } = c.req.valid("query");
-				const cached = await c.env.KV.get(`collection_handle_${handle}`);
+				const cached = await c.env.KV.get(
+					`collection_handle_${handle}_${storeID}`,
+				);
 				if (cached) {
 					console.log(`Cache hit for collection handle: ${handle}!`);
 					return c.json({
