@@ -1,6 +1,6 @@
 {
 	"name": "@blazzing-app/functions",
-	"version": "0.1.62",
+	"version": "0.1.70",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"module": "./dist/index.mjs",

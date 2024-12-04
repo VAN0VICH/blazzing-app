@@ -10,6 +10,7 @@ export const storefrontOrderCVD: GetRowsWTableName = ({ fullRows }) => {
 	return Effect.gen(function* () {
 		const { authUser } = yield* AuthContext;
 		const { get } = yield* Cloudflare;
+		const { manager } = yield* Database;
 		const user = authUser
 			? yield* Effect.tryPromise(() =>
 					manager.query.users
@@ -34,7 +35,6 @@ export const storefrontOrderCVD: GetRowsWTableName = ({ fullRows }) => {
 			: undefined;
 		const userID = user?.id;
 		const tempUserID = get("temp-user-id");
-		const { manager } = yield* Database;
 		const rowsWTableName: RowsWTableName[] = [];
 
 		const orderData = yield* Effect.tryPromise(() =>

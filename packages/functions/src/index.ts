@@ -25,6 +25,8 @@ app
 				c.env.ENVIRONMENT === "production"
 					? ["https://blazzing.app"]
 					: [
+							"https://7heavens.vercel.app",
+							"https://7heavens.pages.dev",
 							"http://localhost:3000",
 							"http://localhost:5173",
 							"https://dev.blazzing-app.pages.dev",
@@ -43,6 +45,8 @@ app
 				c.env.ENVIRONMENT === "production"
 					? ["https://blazzing.app"]
 					: [
+							"https://7heavens.vercel.app",
+							"https://7heavens.pages.dev",
 							"http://localhost:5173",
 							"http://localhost:3000",
 							"https://dev.blazzing-app.pages.dev",
