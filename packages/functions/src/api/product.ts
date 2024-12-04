@@ -202,7 +202,7 @@ export namespace ProductApi {
 						},
 					},
 				});
-				console.log("variants", variants);
+				//@ts-ignore
 				const result = variants
 					.map((variant) => {
 						if (
