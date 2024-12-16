@@ -1,6 +1,6 @@
 {
 	"name": "@blazzing-app/utils",
-	"version": "0.1.70",
+	"version": "0.1.71",
 
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -10,7 +10,9 @@
 	},
 	"exports": {
 		".": {
-			"import": "./src/index.ts"
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js",
+			"types": "./dist/index.d.ts"
 		}
 	},
 

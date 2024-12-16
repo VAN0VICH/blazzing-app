@@ -1,6 +1,7 @@
 {
 	"name": "@blazzing-app/replicache",
-	"version": "0.1.70",
+	"version": "0.1.71",
+
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
 	"module": "./dist/index.mjs",
@@ -9,7 +10,9 @@
 	},
 	"exports": {
 		".": {
-			"import": "./src/index.ts"
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.js",
+			"types": "./dist/index.d.ts"
 		}
 	},
 

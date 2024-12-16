@@ -218,26 +218,17 @@ export default function ProductPage() {
 				<main className="flex w-full justify-center relative">
 					<CarouselContent className="shadow-none w-screen h-screen">
 						<CarouselItem className="border-accent-8 border-b-[0.1px]">
-							{isInitialized && !variant ? (
-								<Heading
-									size="7"
-									className="font-freeman mt-80 text-white dark:text-black"
-								>
-									Product does not exist or has been deleted.
-								</Heading>
-							) : (
-								<ProductOverview
-									baseVariantIDOrHandle={
-										selectedVariant?.product?.baseVariant.handle!
-									}
-									variants={variants}
-									selectedVariant={selectedVariant ?? variant ?? serverVariant}
-									setVariantIDOrHandle={setSelectedVariantHandle}
-									selectedVariantIDOrHandle={selectedVariantHandle}
-									cartID={cartID}
-									tempUserID={tempUserID}
-								/>
-							)}
+							<ProductOverview
+								baseVariantIDOrHandle={
+									selectedVariant?.product?.baseVariant.handle!
+								}
+								variants={variants}
+								selectedVariant={selectedVariant ?? variant ?? serverVariant}
+								setVariantIDOrHandle={setSelectedVariantHandle}
+								selectedVariantIDOrHandle={selectedVariantHandle}
+								cartID={cartID}
+								tempUserID={tempUserID}
+							/>
 						</CarouselItem>
 						{feedVariants.map((p, index) => {
 							return (
